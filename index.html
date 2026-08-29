@@ -1,47 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EuroPath Education — Your Pathway to European Education</title>
+<title>Edupath Education — Партнёрское предложение</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
   :root {
-    --navy: #0b1e3f;
     --ink: #080a14;
+    --navy: #0b1e3f;
+    --slate: #1c202e;
     --electric: #3ddfff;
     --lime: #c6ff3d;
+    --lime-d: #8bd01a;
     --coral: #ff5c3d;
+    --magenta: #ff3d8b;
     --amber: #ffb800;
     --gray: #6b7280;
     --light: #e8ecf1;
-    --off: #f4f5f7;
+    --off-white: #f4f5f7;
     --dark: #1a1a2e;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
   html { scroll-behavior: smooth; }
+
+  /* ─── Top-left ribbon ─── */
+  .ribbon {
+    position: fixed; top: 0; left: 0; z-index: 200;
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    color: var(--ink);
+    padding: 6px 20px 6px 16px;
+    font-size: 11px; font-weight: 800; letter-spacing: 1px;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+    box-shadow: 0 2px 12px rgba(61,223,255,0.3);
+  }
 
   body {
     font-family: 'Inter', -apple-system, sans-serif;
-    background: #fff;
+    background: var(--off-white);
     color: var(--dark);
     overflow-x: hidden;
   }
 
+  /* ─── Nav ─── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(8,10,20,0.9);
+    background: rgba(8,10,20,0.85);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(61,223,255,0.12);
-    padding: 12px 40px;
+    border-bottom: 1px solid rgba(61,223,255,0.15);
+    padding: 12px 40px 12px 160px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  nav .brand { color: #fff; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-  nav .brand span { color: var(--electric); }
+  nav .brand {
+    font-size: 18px; font-weight: 800; color: #fff;
+    letter-spacing: -0.5px;
+  }
+  nav .brand span { color: var(--electric); font-weight: 600; font-size: 14px; }
   nav ul { display: flex; gap: 28px; list-style: none; }
-  nav ul a { color: var(--gray); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+  nav ul a {
+    color: var(--gray); text-decoration: none; font-size: 12px; font-weight: 500;
+    transition: color 0.2s;
+  }
   nav ul a:hover { color: var(--electric); }
   nav .cta {
     background: linear-gradient(135deg, var(--electric), var(--lime));
@@ -51,225 +74,1057 @@
   }
   nav .cta:hover { transform: scale(1.05); }
 
+  /* ─── Hero ─── */
   .hero {
     min-height: 100vh;
     background: linear-gradient(160deg, var(--navy) 0%, var(--ink) 100%);
     display: flex; align-items: center; justify-content: center;
-    padding: 100px 40px 60px;
-    position: relative;
+    position: relative; overflow: hidden;
+    padding: 80px 40px 40px;
   }
-  .hero-content { max-width: 900px; text-align: center; color: #fff; }
+  .hero::before {
+    content: ''; position: absolute;
+    top: -100px; right: -100px; width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(61,223,255,0.08) 0%, transparent 70%);
+  }
+  .hero::after {
+    content: ''; position: absolute;
+    bottom: -150px; left: -100px; width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,92,61,0.06) 0%, transparent 70%);
+  }
+  .hero-content { max-width: 900px; text-align: center; position: relative; z-index: 1; }
   .hero-tag {
     display: inline-block;
-    color: var(--electric);
+    background: rgba(61,223,255,0.1);
     border: 1px solid rgba(61,223,255,0.3);
+    color: var(--electric);
     padding: 6px 16px; border-radius: 20px;
-    font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    font-size: 11px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase;
     margin-bottom: 24px;
   }
   .hero h1 {
-    font-size: 54px; font-weight: 900; line-height: 1.1;
-    letter-spacing: -1.5px; margin-bottom: 20px;
+    font-size: 56px; font-weight: 900; color: #fff;
+    line-height: 1.05; letter-spacing: -1.5px;
+    margin-bottom: 20px;
   }
-  .hero h1 .grad { background: linear-gradient(135deg, var(--electric), var(--lime)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .hero p { font-size: 18px; color: var(--gray); max-width: 600px; margin: 0 auto 32px; }
-  .hero-stats { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-  .stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 24px; min-width: 140px; }
-  .stat .num { font-size: 30px; font-weight: 800; color: var(--electric); }
-  .stat .label { font-size: 11px; color: var(--gray); margin-top: 4px; }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 18px; color: var(--gray); line-height: 1.6;
+    max-width: 600px; margin: 0 auto 32px;
+  }
+  .hero-stats {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 16px 24px;
+    min-width: 140px;
+  }
+  .hero-stat .num {
+    font-size: 32px; font-weight: 800; display: block;
+  }
+  .hero-stat:nth-child(1) .num { color: var(--electric); }
+  .hero-stat:nth-child(2) .num { color: var(--coral); }
+  .hero-stat:nth-child(3) .num { color: var(--lime); }
+  .hero-stat .label {
+    font-size: 11px; color: var(--gray); margin-top: 4px;
+  }
+  .scroll-hint {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    color: var(--gray); font-size: 11px; text-align: center;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
 
-  section { padding: 80px 40px; max-width: 1100px; margin: 0 auto; }
-  .section-tag { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--electric); margin-bottom: 8px; }
-  .section-title { font-size: 34px; font-weight: 800; color: var(--ink); letter-spacing: -1px; margin-bottom: 12px; }
-  .section-sub { font-size: 15px; color: var(--gray); margin-bottom: 40px; max-width: 600px; }
+  /* ─── Sections ─── */
+  section {
+    padding: 80px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--electric);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 36px; font-weight: 800; color: var(--ink);
+    letter-spacing: -1px; margin-bottom: 12px;
+  }
+  .section-sub {
+    font-size: 15px; color: var(--gray); margin-bottom: 40px;
+    max-width: 600px;
+  }
 
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .card { background: #fff; border-radius: 14px; padding: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-  .card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-  .card p { font-size: 13px; color: var(--gray); line-height: 1.5; }
-
-  .dest-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-  .dest-head { height: 120px; background: linear-gradient(135deg, var(--navy), var(--ink)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 800; }
-  .dest-body { padding: 20px; }
-  .dest-body h4 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-  .dest-body p { font-size: 13px; color: var(--gray); margin-bottom: 8px; }
-  .dest-body .price { font-size: 13px; color: var(--electric); font-weight: 700; }
-
-  .process { display: flex; gap: 24px; justify-content: space-between; position: relative; margin-top: 30px; }
-  .process::before { content: ''; position: absolute; top: 30px; left: 10%; right: 10%; height: 3px; background: linear-gradient(90deg, var(--electric), var(--lime), var(--coral)); border-radius: 2px; }
-  .pstep { flex: 1; text-align: center; position: relative; z-index: 1; }
-  .pstep .circle { width: 60px; height: 60px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; margin: 0 auto 14px; border: 3px solid var(--electric); }
-  .pstep h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .pstep p { font-size: 12px; color: var(--gray); line-height: 1.5; }
-
-  .cta-section {
+  /* ─── Mission ─── */
+  .mission-card {
     background: linear-gradient(135deg, var(--navy), var(--ink));
-    border-radius: 24px; padding: 60px 48px; text-align: center; color: #fff;
+    border-radius: 20px; padding: 48px;
+    position: relative; overflow: hidden;
   }
-  .cta-section h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
-  .cta-section p { color: var(--gray); margin-bottom: 28px; }
+  .mission-card::before {
+    content: ''; position: absolute;
+    top: -50px; right: -50px; width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(61,223,255,0.06) 0%, transparent 70%);
+  }
+  .mission-card h3 {
+    font-size: 14px; color: var(--electric); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px;
+  }
+  .mission-card p {
+    font-size: 22px; color: #fff; line-height: 1.5; font-weight: 300;
+  }
+  .mission-card p strong { font-weight: 600; color: var(--electric); }
+
+  /* ─── Benefits ─── */
+  .benefits-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  .benefit-col h3 {
+    font-size: 16px; font-weight: 700; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .benefit-col.univ h3 { color: var(--electric); }
+  .benefit-col.stud h3 { color: var(--coral); }
+  .benefit-col h3 .icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .benefit-col.univ .icon { background: rgba(61,223,255,0.15); }
+  .benefit-col.stud .icon { background: rgba(255,92,61,0.15); }
+  .benefit-list {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .benefit-item {
+    background: #fff; border-radius: 12px; padding: 18px 20px;
+    border-left: 3px solid;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .benefit-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  }
+  .benefit-col.univ .benefit-item { border-color: var(--electric); }
+  .benefit-col.stud .benefit-item { border-color: var(--coral); }
+  .benefit-item h4 {
+    font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px;
+  }
+  .benefit-item p {
+    font-size: 13px; color: var(--gray); line-height: 1.5;
+  }
+
+  /* ─── Why Italy / Best Cases ─── */
+  .why-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-bottom: 32px;
+  }
+  .why-card {
+    background: #fff; border-radius: 12px; padding: 24px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: all 0.25s;
+    border-bottom: 3px solid transparent;
+  }
+  .why-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+    border-bottom-color: var(--electric);
+  }
+  .why-card:nth-child(2):hover { border-bottom-color: var(--lime-d); }
+  .why-card:nth-child(3):hover { border-bottom-color: var(--coral); }
+  .why-card:nth-child(4):hover { border-bottom-color: var(--amber); }
+  .why-card:nth-child(5):hover { border-bottom-color: var(--magenta); }
+  .why-card:nth-child(6):hover { border-bottom-color: var(--electric); }
+  .why-card:nth-child(7):hover { border-bottom-color: var(--lime-d); }
+  .why-card:nth-child(8):hover { border-bottom-color: var(--coral); }
+  .why-icon {
+    font-size: 32px; display: block; margin-bottom: 12px;
+  }
+  .why-card h4 {
+    font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .why-card p {
+    font-size: 12px; color: var(--gray); line-height: 1.5;
+  }
+  .why-banner {
+    background: linear-gradient(135deg, var(--navy), var(--ink));
+    border-radius: 16px; padding: 32px 36px;
+    position: relative; overflow: hidden;
+  }
+  .why-banner::before {
+    content: ''; position: absolute;
+    top: -40px; right: -40px; width: 180px; height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(61,223,255,0.06) 0%, transparent 70%);
+  }
+  .why-banner-content { position: relative; z-index: 1; }
+  .why-banner h4 {
+    font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px;
+  }
+  .why-banner p {
+    font-size: 13px; color: var(--gray); line-height: 1.6;
+  }
+
+  /* ─── Packages ─── */
+  .pkg-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  .pkg-card {
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+  }
+  .pkg-card:hover { transform: translateY(-4px); }
+  .pkg-head {
+    padding: 24px 28px; color: #fff;
+  }
+  .pkg-card.p1 .pkg-head {
+    background: linear-gradient(135deg, var(--slate), var(--ink));
+  }
+  .pkg-card.p2 .pkg-head {
+    background: linear-gradient(135deg, var(--coral), #d03515);
+  }
+  .pkg-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; opacity: 0.7; margin-bottom: 6px;
+  }
+  .pkg-card.p1 .pkg-tag { color: var(--electric); }
+  .pkg-name {
+    font-size: 20px; font-weight: 700; margin-bottom: 8px;
+  }
+  .pkg-price {
+    font-size: 40px; font-weight: 900; line-height: 1;
+  }
+  .pkg-card.p1 .pkg-price { color: var(--electric); }
+  .pkg-duration {
+    font-size: 12px; opacity: 0.7; margin-top: 6px;
+  }
+  .pkg-body {
+    background: #fff; padding: 24px 28px;
+  }
+  .pkg-body ul { list-style: none; }
+  .pkg-body li {
+    padding: 8px 0 8px 28px; position: relative;
+    font-size: 13px; color: var(--dark); line-height: 1.5;
+    border-bottom: 1px solid var(--light);
+  }
+  .pkg-body li:last-child { border-bottom: none; }
+  .pkg-body li::before {
+    content: '✓'; position: absolute; left: 0; top: 8px;
+    font-weight: 800; font-size: 14px;
+  }
+  .pkg-card.p1 .pkg-body li::before { color: var(--electric); }
+  .pkg-card.p2 .pkg-body li::before { color: var(--lime-d); }
+
+  /* ─── Process Timeline ─── */
+  .process-section {
+    background: linear-gradient(160deg, var(--navy) 0%, var(--ink) 100%);
+    border-radius: 24px; padding: 60px 48px;
+    position: relative; overflow: hidden;
+  }
+  .process-section::before {
+    content: ''; position: absolute;
+    top: -80px; right: -80px; width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(198,255,61,0.04) 0%, transparent 70%);
+  }
+  .process-section .section-tag { color: var(--lime); }
+  .process-section .section-title { color: #fff; }
+  .process-section .section-sub { color: var(--gray); }
+
+  .timeline {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    position: relative; margin-top: 40px;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .timeline::before {
+    content: ''; position: absolute;
+    top: 30px; left: 5%; right: 5%; height: 3px;
+    background: linear-gradient(90deg, var(--electric), var(--lime), var(--coral), var(--amber));
+    border-radius: 2px;
+  }
+  .step {
+    flex: 1; min-width: 180px; text-align: center;
+    position: relative; z-index: 1;
+  }
+  .step-circle {
+    width: 60px; height: 60px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px; font-weight: 900; color: #fff;
+    border: 3px solid var(--ink);
+  }
+  .step:nth-child(1) .step-circle { background: var(--electric); color: var(--ink); }
+  .step:nth-child(2) .step-circle { background: var(--lime); color: var(--ink); }
+  .step:nth-child(3) .step-circle { background: var(--coral); }
+  .step:nth-child(4) .step-circle { background: var(--amber); color: var(--ink); }
+  .step h4 {
+    font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px;
+  }
+  .step p {
+    font-size: 11px; color: var(--gray); line-height: 1.5;
+  }
+  .step .pct {
+    font-size: 20px; font-weight: 800; margin-top: 8px; display: block;
+  }
+  .step:nth-child(1) .pct { color: var(--electric); }
+  .step:nth-child(2) .pct { color: var(--lime); }
+  .step:nth-child(3) .pct { color: var(--coral); }
+  .step:nth-child(4) .pct { color: var(--amber); }
+
+  /* ─── Payment Structure ─── */
+  .pay-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  }
+  .pay-card {
+    border-radius: 14px; padding: 28px 24px; text-align: center;
+    transition: transform 0.2s;
+  }
+  .pay-card:hover { transform: translateY(-3px); }
+  .pay-card.p1 { background: linear-gradient(135deg, rgba(61,223,255,0.1), rgba(61,223,255,0.03)); border: 1px solid rgba(61,223,255,0.2); }
+  .pay-card.p2 { background: linear-gradient(135deg, rgba(198,255,61,0.1), rgba(198,255,61,0.03)); border: 1px solid rgba(198,255,61,0.2); }
+  .pay-card.p3 { background: linear-gradient(135deg, rgba(255,92,61,0.1), rgba(255,92,61,0.03)); border: 1px solid rgba(255,92,61,0.2); }
+  .pay-pct {
+    font-size: 48px; font-weight: 900; line-height: 1; margin-bottom: 8px;
+  }
+  .pay-card.p1 .pay-pct { color: var(--electric); }
+  .pay-card.p2 .pay-pct { color: var(--lime-d); }
+  .pay-card.p3 .pay-pct { color: var(--coral); }
+  .pay-when {
+    font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px;
+  }
+  .pay-desc {
+    font-size: 12px; color: var(--gray); line-height: 1.5;
+  }
+
+  /* ─── What We Provide ─── */
+  .provide-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .provide-card {
+    background: #fff; border-radius: 12px; padding: 24px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: all 0.2s;
+    border-top: 3px solid transparent;
+  }
+  .provide-card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+    border-top-color: var(--electric);
+  }
+  .provide-card .icon {
+    font-size: 28px; margin-bottom: 12px; display: block;
+  }
+  .provide-card h4 {
+    font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px;
+  }
+  .provide-card p {
+    font-size: 12px; color: var(--gray); line-height: 1.5;
+  }
+
+  /* ─── Additional Services ─── */
+  .addon-banner {
+    background: linear-gradient(135deg, var(--slate), var(--ink));
+    border-radius: 16px; padding: 32px 36px;
+    display: flex; align-items: center; gap: 32px;
+    position: relative; overflow: hidden;
+  }
+  .addon-banner::before {
+    content: ''; position: absolute;
+    top: -40px; right: -40px; width: 150px; height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,184,0,0.08) 0%, transparent 70%);
+  }
+  .addon-icon {
+    font-size: 48px; flex-shrink: 0;
+  }
+  .addon-content { flex: 1; }
+  .addon-content h4 {
+    font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px;
+  }
+  .addon-content p {
+    font-size: 13px; color: var(--gray); line-height: 1.5;
+  }
+  .addon-badge {
+    background: rgba(255,184,0,0.15);
+    color: var(--amber);
+    padding: 6px 14px; border-radius: 16px;
+    font-size: 11px; font-weight: 700;
+    display: inline-block; margin-top: 10px;
+  }
+
+  /* ─── Location ─── */
+  .location-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    align-items: center;
+  }
+  .location-info h3 {
+    font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 12px;
+  }
+  .location-info p {
+    font-size: 14px; color: var(--gray); line-height: 1.6; margin-bottom: 16px;
+  }
+  .location-meta {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .location-meta-item {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px; color: var(--dark);
+  }
+  .location-meta-item .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .location-map {
+    background: linear-gradient(135deg, var(--navy), var(--ink));
+    border-radius: 16px; padding: 40px;
+    text-align: center; position: relative; overflow: hidden;
+    min-height: 280px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .location-map::before {
+    content: ''; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 200px; height: 200px; border-radius: 50%;
+    border: 2px solid rgba(61,223,255,0.1);
+  }
+  .location-map::after {
+    content: ''; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 120px; height: 120px; border-radius: 50%;
+    border: 2px solid rgba(61,223,255,0.15);
+  }
+  .location-map .pin {
+    font-size: 36px; z-index: 1;
+  }
+  .location-map .city {
+    font-size: 24px; font-weight: 800; color: var(--electric);
+    z-index: 1; margin-top: 8px;
+  }
+  .location-map .country {
+    font-size: 13px; color: var(--gray); z-index: 1; margin-top: 4px;
+  }
+
+  /* ─── Corporation ─── */
+  .corp-card {
+    background: #fff; border-radius: 16px; padding: 36px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  }
+  .corp-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+  }
+  .corp-item {
+    border-left: 3px solid var(--electric);
+    padding-left: 16px;
+  }
+  .corp-item .label {
+    font-size: 10px; font-weight: 700; color: var(--gray);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .corp-item .value {
+    font-size: 14px; font-weight: 600; color: var(--ink);
+  }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    background: linear-gradient(160deg, var(--navy), var(--ink));
+    border-radius: 24px; padding: 60px 48px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: ''; position: absolute;
+    top: -60px; left: -60px; width: 250px; height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(61,223,255,0.06) 0%, transparent 70%);
+  }
+  .cta-section h2 {
+    font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 12px;
+  }
+  .cta-section p {
+    font-size: 15px; color: var(--gray); margin-bottom: 28px;
+  }
   .cta-button {
     display: inline-block;
     background: linear-gradient(135deg, var(--electric), var(--lime));
     color: var(--ink); padding: 14px 36px; border-radius: 28px;
     font-size: 15px; font-weight: 800; text-decoration: none;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
-  .cta-button:hover { transform: scale(1.05); }
+  .cta-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 32px rgba(61,223,255,0.3);
+  }
+  .cta-contacts {
+    margin-top: 28px; display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
+  }
+  .cta-contact {
+    font-size: 13px; color: var(--gray);
+  }
+  .cta-contact strong { color: #fff; }
 
-  footer { background: var(--ink); padding: 40px; text-align: center; color: var(--gray); }
-  footer .brand { color: #fff; font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+  /* ─── Footer ─── */
+  footer {
+    background: var(--ink); padding: 32px 40px; text-align: center;
+  }
+  footer p {
+    font-size: 11px; color: var(--gray);
+  }
+  footer .brand {
+    font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 8px;
+  }
   footer .brand span { color: var(--electric); }
-  footer p { font-size: 12px; }
 
+  /* ─── Animations ─── */
+  .fade-in {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .fade-in.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ─── Responsive ─── */
   @media (max-width: 768px) {
     nav ul { display: none; }
     .hero h1 { font-size: 36px; }
-    .grid-3, .grid-4 { grid-template-columns: 1fr; }
-    .process { flex-direction: column; }
-    .process::before { display: none; }
+    .benefits-grid, .pkg-grid, .location-grid, .corp-grid { grid-template-columns: 1fr; }
+    .pay-grid, .provide-grid, .why-grid { grid-template-columns: 1fr; }
+    .timeline { flex-direction: column; }
+    .timeline::before { display: none; }
     section { padding: 60px 20px; }
   }
 </style>
 </head>
 <body>
 
+<!-- ─── Nav ─── -->
 <nav>
-  <div class="brand">EuroPath <span>Education</span></div>
+  <div class="brand">Edupath <span>Education</span></div>
   <ul>
-    <li><a href="#destinations">Destinations</a></li>
-    <li><a href="#programs">Programs</a></li>
-    <li><a href="#process">Your Journey</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#mission">Миссия</a></li>
+    <li><a href="#benefits">Преимущества</a></li>
+    <li><a href="#why-italy">Почему Италия</a></li>
+    <li><a href="#packages">Пакеты</a></li>
+    <li><a href="#process">Процесс</a></li>
+    <li><a href="#payment">Оплата</a></li>
+    <li><a href="#location">Локация</a></li>
     <li><a href="login.html">Student Portal</a></li>
   </ul>
   <a href="login.html" class="cta">Student Portal</a>
 </nav>
 
+<!-- ─── Hero ─── -->
 <div class="hero">
   <div class="hero-content">
-    <div class="hero-tag">Higher Education in Europe · 2026</div>
-    <h1>Your Pathway To <span class="grad">European Education</span></h1>
-    <p>Connecting ambitious students with high-quality, affordable universities in Italy, France, Germany, and beyond. We manage your journey from program selection to arrival.</p>
+    <div class="hero-tag">Партнёрское предложение · 2026</div>
+    <h1>Ваши студенты —<br>в <span class="grad">университеты Италии</span></h1>
+    <p>Edupath Education — консалтинговая компания в Италии. Мы сопровождаем студентов от подачи документов до получения диплома. Партнёрим с вузами-источниками по университетскому каналу.</p>
     <div class="hero-stats">
-      <div class="stat"><div class="num">15+</div><div class="label">Partner Universities</div></div>
-      <div class="stat"><div class="num">€3K–8K</div><div class="label">Annual Tuition Range</div></div>
-      <div class="stat"><div class="num">95%</div><div class="label">Admission Rate</div></div>
+      <div class="hero-stat">
+        <span class="num">30</span>
+        <div class="label">студентов в год</div>
+      </div>
+      <div class="hero-stat">
+        <span class="num">95%</span>
+        <div class="label">уровень зачисления</div>
+      </div>
+      <div class="hero-stat">
+        <span class="num">90%</span>
+        <div class="label">получили стипендию</div>
+      </div>
     </div>
   </div>
+  <div class="scroll-hint">↓ Листайте вниз</div>
 </div>
 
-<section id="destinations">
-  <div class="section-tag">Study Destinations</div>
-  <div class="section-title">Global Pathways</div>
-  <div class="section-sub">Start with Italy and France, expanding across Europe.</div>
-  <div class="grid-3">
-    <div class="dest-card">
-      <div class="dest-head" style="background: linear-gradient(135deg, #2c5ce0, #1a3ba0);">🇮🇹 Italy</div>
-      <div class="dest-body">
-        <h4>Italy</h4>
-        <p>Bologna, Sapienza, PoliMi, Bocconi — English-taught programs with strong scholarship options.</p>
-        <p class="price">From €3,000/year</p>
+<!-- ─── Mission ─── -->
+<section id="mission" class="fade-in">
+  <div class="section-tag">Наша миссия</div>
+  <div class="section-title">Что мы делаем</div>
+  <div class="section-sub">Мы находимся в Италии и работаем с университетами и госорганами лично — не удалённо.</div>
+
+  <div class="mission-card">
+    <h3>Миссия Edupath Education</h3>
+    <p>Мы помогаем международным выпускникам получить доступ к <strong>итальянскому высшему образованию</strong> — от подачи документов до получения диплома. Специализируемся на <strong>региональных стипендиях DSU/EDISU</strong>, которые покрывают обучение, стипендию до €7 000/год, общежитие и питание. Сопровождаем студента <strong>весь срок обучения</strong>, а не только на этапе поступления.</p>
+  </div>
+</section>
+
+<!-- ─── Benefits ─── -->
+<section id="benefits" class="fade-in">
+  <div class="section-tag">Преимущества</div>
+  <div class="section-title">Что получают стороны</div>
+  <div class="section-sub">Партнёрство с Edupath выгодно всем — университету, студенту и партнёру.</div>
+
+  <div class="benefits-grid">
+    <div class="benefit-col univ">
+      <h3><span class="icon">🎓</span> Преимущества для университета-партнёра</h3>
+      <div class="benefit-list">
+        <div class="benefit-item">
+          <h4>Комиссия 15%</h4>
+          <p>От стоимости пакета за каждого зачисленного студента. Пример: 5 студентов × €2 340 × 15% = €1 755 за цикл.</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Дополнительный канал набора</h4>
+          <p>Ваши выпускники получают доступ к топовым итальянским университетам без необходимости разбираться в системе самостоятельно.</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Повышение престижа</h4>
+          <p>Студенты, поступившие в итальянские вузы — это показатель качества вашего обучения. Логотип партнёра на материалах Edupath.</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Обмен преподавателями</h4>
+          <p>1–2 преподавателя в год — гостевые лекции и стажировки в итальянских университетах-партнёрах.</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Летние школы в Италии</h4>
+          <p>Совместная летняя программа для ваших студентов (1–2 недели в Италии).</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Ежеквартальные тренинги</h4>
+          <p>Тренинги для офиса международного сотрудничества по итальянской системе образования.</p>
+        </div>
       </div>
     </div>
-    <div class="dest-card">
-      <div class="dest-head" style="background: linear-gradient(135deg, #1e4a66, #10304a);">🇫🇷 France</div>
-      <div class="dest-body">
-        <h4>France</h4>
-        <p>Sorbonne, Sciences Po, HEC, Aix-Marseille — bachelor, master, and business tracks.</p>
-        <p class="price">From €3,500/year</p>
+
+    <div class="benefit-col stud">
+      <h3><span class="icon">🇮🇹</span> Преимущества для студентов</h3>
+      <div class="benefit-list">
+        <div class="benefit-item">
+          <h4>Стипендия DSU/EDISU</h4>
+          <p>Покрывает обучение (€0), стипендию до €7 000/год, общежитие (€0) и питание (€0). Назначается по доходу семьи (ISEE).</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Поступление в топовые вузы</h4>
+          <p>Bologna, Padova, Sapienza, PoliMi, PoliTo и другие. Подбираем 3–5 программ под профиль и бюджет.</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Сопровождение весь срок</h4>
+          <p>От подачи до диплома: продление стипендии, зачисление на курс, бюрократия. Мы не исчезаем после зачисления.</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Экстренная поддержка 24/7</h4>
+          <p>Горячая линия для студентов и родителей. Локальный контакт в каждом университетском городе.</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Codice Fiscale + банк</h4>
+          <p>Помощь в получении налогового номера и открытии банковского счёта в Италии.</p>
+        </div>
+        <div class="benefit-item">
+          <h4>Адаптация и жильё</h4>
+          <p>Поиск жилья, аэропорт-встреча, SIM-карта, знакомство с городом — опциональные add-ons.</p>
+        </div>
       </div>
     </div>
-    <div class="dest-card">
-      <div class="dest-head" style="background: linear-gradient(135deg, #2e6b4e, #1a4530);">🇩🇪 Germany</div>
-      <div class="dest-body">
-        <h4>Germany</h4>
-        <p>Engineering and technology hubs with low tuition and strong industry links.</p>
-        <p class="price">From €2,500/year</p>
+  </div>
+</section>
+
+<!-- ─── Why Italy / Best Cases ─── -->
+<section id="why-italy" class="fade-in">
+  <div class="section-tag">Почему Италия</div>
+  <div class="section-title">Что получает студент — beyond поступления</div>
+  <div class="section-sub">Это не просто учёба за рубежом. Это карьерный капитал, который работает всю жизнь.</div>
+
+  <div class="why-grid">
+    <div class="why-card">
+      <span class="why-icon">🇮🇹</span>
+      <h4>Изучает итальянский язык</h4>
+      <p>Второй язык в резюме — преимущество на рынке труда. Итальянский открывает доступ к компаниям в Италии, Швейцарии и ЕС.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">📚</span>
+      <h4>Публикации в топовых журналах</h4>
+      <p>Итальянские университеты сотрудничают с высокорейтинговыми научными журналами. Студент может публиковать работы под руководством европейских профессоров.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🎓</span>
+      <h4>Работа с профессорами мирового уровня</h4>
+      <p>Преподаватели из Bologna, Sapienza, PoliMi — авторы учебников, участники международных конференций. Прямой доступ к менторству.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🌍</span>
+      <h4>Обмен в США, Канаду и другие страны</h4>
+      <p>Через программы обмена студент может поехать на семестр в Америку, Канаду или другой университет ЕС. Италия — мост к глобальным возможностям.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🔄</span>
+      <h4>Erasmus+ обменные программы</h4>
+      <p>Студент может участвовать в Erasmus — учиться 1–2 семестра в другой стране ЕС, с финансированием от Еврокомиссии.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🤝</span>
+      <h4>Международная сеть контактов</h4>
+      <p>Однокурсники из 50+ стран. Нетворкинг, который остаётся на всю жизнь — будущие партнёры, коллеги, работодатели по всему миру.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">📜</span>
+      <h4>Европейский диплом</h4>
+      <p>Диплом признаётся во всех странах ЕС и за его пределами. Cutting-edge предметы по европейским стандартам — Bolonia Process, ECTS.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">💼</span>
+      <h4>Опыт работы во время учёбы</h4>
+      <p>Стажировки в итальянских и международных компаниях. European work experience в резюме — мощный сигнал для любого работодателя.</p>
+    </div>
+  </div>
+
+  <div class="why-banner">
+    <div class="why-banner-content">
+      <h4>Итог: студент получает не просто диплом — он получает карьерный капитал</h4>
+      <p>Второй язык · Европейский диплом · Международная сеть · Опыт работы в ЕС · Возможность обмена в США/Канаду · Публикации · Менторство от топовых профессоров</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Packages ─── -->
+<section id="packages" class="fade-in">
+  <div class="section-tag">Пакеты услуг</div>
+  <div class="section-title">Два пакета — выбирайте под потребности</div>
+  <div class="section-sub">От базового поступления до полного сопровождения на весь срок обучения.</div>
+
+  <div class="pkg-grid">
+    <div class="pkg-card p1">
+      <div class="pkg-head">
+        <div class="pkg-tag">Package 1</div>
+        <div class="pkg-name">Admission Concierge</div>
+        <div class="pkg-price">€1 950</div>
+        <div class="pkg-duration">Срок ведения: 2–4 месяца</div>
+      </div>
+      <div class="pkg-body">
+        <ul>
+          <li>Подбор программ (до 5 вузов)</li>
+          <li>Аудит документов</li>
+          <li>Подача через платформы вузов</li>
+          <li>Отслеживание и зачисление</li>
+          <li>Экстренная поддержка 24/7</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pkg-card p2">
+      <div class="pkg-head">
+        <div class="pkg-tag">Package 2</div>
+        <div class="pkg-name">Full Package</div>
+        <div class="pkg-price">€2 340</div>
+        <div class="pkg-duration">Срок ведения: 2 года</div>
+      </div>
+      <div class="pkg-body">
+        <ul>
+          <li>Всё из Package 1, плюс:</li>
+          <li>Стипендия DSU/EDISU + ISEE</li>
+          <li>Codice Fiscale + банковский счёт</li>
+          <li>Сопровождение весь срок обучения</li>
+          <li>Стипендия: €7K/год + общежитие + питание</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<section id="programs">
-  <div class="section-tag">Academic Programs</div>
-  <div class="section-title">Disciplines We Cover</div>
-  <div class="section-sub">English-taught programs at bachelor and master level.</div>
-  <div class="grid-4">
-    <div class="card"><h4>Business & Management</h4><p>Marketing, finance, entrepreneurship, MBA tracks.</p></div>
-    <div class="card"><h4>Computer Science & IT</h4><p>Software engineering, AI, data science, cybersecurity.</p></div>
-    <div class="card"><h4>Engineering</h4><p>Mechanical, electrical, civil, aerospace, robotics.</p></div>
-    <div class="card"><h4>Medicine & Health</h4><p>Medicine, nursing, pharmacy, public health, dentistry.</p></div>
-    <div class="card"><h4>Arts & Humanities</h4><p>Literature, history, philosophy, languages, design.</p></div>
-    <div class="card"><h4>Social Sciences</h4><p>Psychology, sociology, political science, economics.</p></div>
-    <div class="card"><h4>Law & Legal Studies</h4><p>International law, corporate law, human rights.</p></div>
-    <div class="card"><h4>Natural Sciences</h4><p>Biology, chemistry, physics, mathematics, environment.</p></div>
-  </div>
-</section>
+<!-- ─── What We Provide ─── -->
+<section id="provide" class="fade-in">
+  <div class="section-tag">Что мы делаем</div>
+  <div class="section-title">Полный спектр услуг</div>
+  <div class="section-sub">От первого контакта до диплома — мы ведём студента на каждом этапе.</div>
 
-<section id="process">
-  <div class="section-tag">Your Journey</div>
-  <div class="section-title">Six-Step Student Lifecycle</div>
-  <div class="section-sub">From discovery to settlement, we guide you every step of the way.</div>
-  <div class="process">
-    <div class="pstep"><div class="circle">1</div><h4>Discovery</h4><p>Consultation, country choice, program matching.</p></div>
-    <div class="pstep"><div class="circle">2</div><h4>Screening</h4><p>Academic records, language, visa eligibility.</p></div>
-    <div class="pstep"><div class="circle">3</div><h4>Onboarding</h4><p>Agreement, payment, student ID, tracking.</p></div>
-    <div class="pstep"><div class="circle">4</div><h4>Admission</h4><p>Applications, CV, motivation letter, documents.</p></div>
-    <div class="pstep"><div class="circle">5</div><h4>Visa</h4><p>Documentation, mock interviews, embassy prep.</p></div>
-    <div class="pstep"><div class="circle">6</div><h4>Arrival</h4><p>Housing, airport pickup, city orientation.</p></div>
-  </div>
-</section>
-
-<section id="services">
-  <div class="section-tag">Service Packages</div>
-  <div class="section-title">Choose Your Support Level</div>
-  <div class="section-sub">Transparent packages from basic admission to full settlement support.</div>
-  <div class="grid-3">
-    <div class="card" style="border-top: 4px solid var(--electric);">
-      <h4>Basic Package</h4>
-      <p>University selection, application build and submission, documentation tracking.</p>
+  <div class="provide-grid">
+    <div class="provide-card">
+      <span class="icon">📋</span>
+      <h4>Подбор программ</h4>
+      <p>3–5 университетов под профиль, бюджет и языковой уровень студента.</p>
     </div>
-    <div class="card" style="border-top: 4px solid var(--lime);">
-      <h4>Premium Package</h4>
-      <p>Everything in Basic, plus visa support, accommodation, pre-departure briefing.</p>
+    <div class="provide-card">
+      <span class="icon">📝</span>
+      <h4>Аудит документов</h4>
+      <p>Диплом, транскрипт, апостилирование, перевод — проверяем и координируем.</p>
     </div>
-    <div class="card" style="border-top: 4px solid var(--coral);">
-      <h4>Full Concierge</h4>
-      <p>End-to-end: admission, visa, housing, arrival, local support throughout studies.</p>
+    <div class="provide-card">
+      <span class="icon">🎓</span>
+      <h4>Подача в вузы</h4>
+      <p>Регистрация на Universitaly, подача через платформы университетов, отслеживание.</p>
+    </div>
+    <div class="provide-card">
+      <span class="icon">💰</span>
+      <h4>Стипендия DSU/EDISU</h4>
+      <p>Подготовка ISEE, заявка на стипендию и общежитие, апелляции при отказе, продление.</p>
+    </div>
+    <div class="provide-card">
+      <span class="icon">🆔</span>
+      <h4>Codice Fiscale + банк</h4>
+      <p>Помощь в получении налогового номера и открытии итальянского банковского счёта.</p>
+    </div>
+    <div class="provide-card">
+      <span class="icon">🏠</span>
+      <h4>Поиск жилья</h4>
+      <p>Комната, квартира, договор аренды — ищем жильё до прилёта студента.</p>
+    </div>
+    <div class="provide-card">
+      <span class="icon">✈️</span>
+      <h4>Аэропорт-встреча</h4>
+      <p>Встреча в аэропорту Рима/Милана, трансфер до места проживания.</p>
+    </div>
+    <div class="provide-card">
+      <span class="icon">📱</span>
+      <h4>Адаптация</h4>
+      <p>SIM-карта, знакомство с городом, магазинами, транспортом — первый месяц.</p>
+    </div>
+    <div class="provide-card">
+      <span class="icon">🚨</span>
+      <h4>Экстренная поддержка 24/7</h4>
+      <p>Горячая линия для студентов и родителей. Локальный контакт в каждом городе.</p>
     </div>
   </div>
 </section>
 
-<section id="about">
-  <div class="section-tag">About Us</div>
-  <div class="section-title">Why EuroPath Education</div>
-  <div class="section-sub">Expert guidance, personalized support, and proven results.</div>
-  <div class="grid-3">
-    <div class="card"><h4>Safe & Secure Transition</h4><p>Comprehensive support from start to finish.</p></div>
-    <div class="card"><h4>Expert Local Counselors</h4><p>Professionals who understand your unique needs.</p></div>
-    <div class="card"><h4>Curated Pathways</h4><p>Tailored educational routes designed for your success.</p></div>
-    <div class="card"><h4>Best Value Guarantee</h4><p>Affordable education without compromising on quality.</p></div>
-    <div class="card"><h4>Flexible Planning</h4><p>Adaptive timelines that work around your schedule.</p></div>
-    <div class="card"><h4>Transparent Compliance</h4><p>Clear accounting and ethical guidance at every step.</p></div>
+<!-- ─── Process Timeline ─── -->
+<section id="process" class="fade-in">
+  <div class="process-section">
+    <div class="section-tag">Процесс</div>
+    <div class="section-title">Как это работает</div>
+    <div class="section-sub">От первого контакта до прилёта в Италию — четыре этапа.</div>
+
+    <div class="timeline">
+      <div class="step">
+        <div class="step-circle">1</div>
+        <h4>Консультация и подбор</h4>
+        <p>Оценка профиля студента, подбор 3–5 программ, аудит документов</p>
+        <span class="pct">30%</span>
+      </div>
+      <div class="step">
+        <div class="step-circle">2</div>
+        <h4>Подача и зачисление</h4>
+        <p>Регистрация на Universitaly, подача в вузы, получение подтверждения</p>
+        <span class="pct">30%</span>
+      </div>
+      <div class="step">
+        <div class="step-circle">3</div>
+        <h4>Стипендия и виза</h4>
+        <p>Заявка DSU/EDISU, подготовка ISEE, подача на визу, Codice Fiscale</p>
+        <span class="pct">40%</span>
+      </div>
+      <div class="step">
+        <div class="step-circle">4</div>
+        <h4>Прилёт и адаптация</h4>
+        <p>Аэропорт-встреча, жильё, SIM, знакомство с городом — старт обучения</p>
+        <span class="pct">✓</span>
+      </div>
+    </div>
   </div>
 </section>
 
+<!-- ─── Payment Structure ─── -->
+<section id="payment" class="fade-in">
+  <div class="section-tag">Оплата</div>
+  <div class="section-title">Прозрачная структура платежей</div>
+  <div class="section-sub">Студент платит поэтапно — по мере продвижения процесса. Комиссия партнёру выплачивается после зачисления.</div>
+
+  <div class="pay-grid">
+    <div class="pay-card p1">
+      <div class="pay-pct">30%</div>
+      <div class="pay-when">При подписании договора</div>
+      <div class="pay-desc">Старт работы: подбор программ, аудит документов, начало подготовки</div>
+    </div>
+    <div class="pay-card p2">
+      <div class="pay-pct">30%</div>
+      <div class="pay-when">После подтверждения зачисления</div>
+      <div class="pay-desc">Студент зачислен в университет — переходим к стипендии и визе</div>
+    </div>
+    <div class="pay-card p3">
+      <div class="pay-pct">40%</div>
+      <div class="pay-when">При подаче на визу</div>
+      <div class="pay-desc">Финальный этап: виза, Codice Fiscale, подготовка к прилёту</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 24px; background: rgba(255,184,0,0.08); border-left: 3px solid var(--amber); border-radius: 8px; padding: 16px 20px; font-size: 13px; color: var(--dark); line-height: 1.6;">
+    <strong style="color: var(--amber);">Комиссия партнёру:</strong> 15% от стоимости пакета за каждого зачисленного студента. Выплата в течение 30 дней после зачисления. Оплата в евро, банковский перевод.
+  </div>
+</section>
+
+<!-- ─── Additional Services ─── -->
+<section id="addons" class="fade-in">
+  <div class="section-tag">Дополнительно</div>
+  <div class="section-title">База данных и дополнительные услуги</div>
+
+  <div class="addon-banner">
+    <div class="addon-icon">🗄️</div>
+    <div class="addon-content">
+      <h4>База данных университетов и программ</h4>
+      <p>У нас есть собственная база данных итальянских университетов, программ, требований к поступлению, сроков и стипендий. Партнёр может получить доступ к базе для самостоятельной работы со студентами — как дополнительная услуга.</p>
+      <span class="addon-badge">Опционально · По запросу</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+    <div class="provide-card" style="text-align: center; padding: 20px 16px;">
+      <span class="icon">🏠</span>
+      <h4>Поиск жилья</h4>
+      <p style="color: var(--electric); font-weight: 700; font-size: 16px;">€455</p>
+    </div>
+    <div class="provide-card" style="text-align: center; padding: 20px 16px;">
+      <span class="icon">✈️</span>
+      <h4>Аэропорт-встреча</h4>
+      <p style="color: var(--lime-d); font-weight: 700; font-size: 16px;">€130</p>
+    </div>
+    <div class="provide-card" style="text-align: center; padding: 20px 16px;">
+      <span class="icon">📱</span>
+      <h4>Адаптация (1 мес.)</h4>
+      <p style="color: var(--amber); font-weight: 700; font-size: 16px;">€520</p>
+    </div>
+    <div class="provide-card" style="text-align: center; padding: 20px 16px;">
+      <span class="icon">📚</span>
+      <h4>TOLC/IMAT</h4>
+      <p style="color: var(--magenta); font-weight: 700; font-size: 16px;">€390</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Location ─── -->
+<section id="location" class="fade-in">
+  <div class="section-tag">Локация</div>
+  <div class="section-title">Где мы находимся</div>
+  <div class="section-sub">Мы в Италии — работаем с университетами и госорганами лично.</div>
+
+  <div class="location-grid">
+    <div class="location-info">
+      <h3>Edupath Education — Италия, Lazio</h3>
+      <p>Мы базируемся в регионе Лацио (под Римом) и работаем с университетами по всей Италии лично. Это значит, что мы можем решать бюрократические вопросы оперативно — от Codice Fiscale до апелляции по стипендии.</p>
+      <div class="location-meta">
+        <div class="location-meta-item">
+          <div class="dot" style="background: var(--electric);"></div>
+          <span><strong>Юридический адрес:</strong> Via Roma 37, Italy</span>
+        </div>
+        <div class="location-meta-item">
+          <div class="dot" style="background: var(--coral);"></div>
+          <span><strong>Локальные контакты:</strong> Представители в каждом университетском городе</span>
+        </div>
+        <div class="location-meta-item">
+          <div class="dot" style="background: var(--lime);"></div>
+          <span><strong>Языки работы:</strong> Русский, итальянский, английский</span>
+        </div>
+        <div class="location-meta-item">
+          <div class="dot" style="background: var(--amber);"></div>
+          <span><strong>Часовой пояс:</strong> CET (UTC+1) — работаем в рабочие часы Италии</span>
+        </div>
+      </div>
+    </div>
+    <div class="location-map">
+      <div class="pin">📍</div>
+      <div class="city">Lazio</div>
+      <div class="country">Италия · Под Римом</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Corporation ─── -->
+<section id="corp" class="fade-in">
+  <div class="section-tag">О компании</div>
+  <div class="section-title">Edupath Education</div>
+  <div class="section-sub">Консалтинговая компания, базирующаяся в Италии. B2B университетский канал.</div>
+
+  <div class="corp-card">
+    <div class="corp-grid">
+      <div class="corp-item">
+        <div class="label">Руководитель</div>
+        <div class="value">Anar Hasanov</div>
+      </div>
+      <div class="corp-item">
+        <div class="label">Локация</div>
+        <div class="value">Италия, Lazio (под Римом)</div>
+      </div>
+      <div class="corp-item">
+        <div class="label">Юридический адрес</div>
+        <div class="value">Via Roma 37, Italy</div>
+      </div>
+      <div class="corp-item">
+        <div class="label">Модель работы</div>
+        <div class="value">B2B университетский канал (до 30 студентов/год)</div>
+      </div>
+      <div class="corp-item">
+        <div class="label">Специализация</div>
+        <div class="value">Стипендии DSU/EDISU, поступление, сопровождение</div>
+      </div>
+      <div class="corp-item">
+        <div class="label">Университеты-партнёры</div>
+        <div class="value">Bologna, Padova, Sapienza, PoliMi, PoliTo, Iuav и др.</div>
+      </div>
+      <div class="corp-item">
+        <div class="label">Страны-источники</div>
+        <div class="value">Азербайджан, Казахстан, страны СНГ</div>
+      </div>
+      <div class="corp-item">
+        <div class="label">Языки</div>
+        <div class="value">Русский, итальянский, английский</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
 <section id="contact" class="fade-in">
   <div class="cta-section">
-    <h2>Ready for Your Global Journey?</h2>
-    <p>Take the first step towards your international education today.</p>
-    <a href="mailto:hasanov.anar.2023@gmail.com" class="cta-button">Contact an Advisor</a>
+    <h2>Готовы обсудить партнёрство?</h2>
+    <p>Начнём с пилота: 3–5 студентов, бесплатная ознакомительная сессия, без обязательств.</p>
+    <a href="mailto:hasanov.anar.2023@gmail.com" class="cta-button">Написать нам</a>
+    <div class="cta-contacts">
+      <div class="cta-contact"><strong>Anar Hasanov</strong></div>
+      <div class="cta-contact"><strong>+39 3280810631</strong></div>
+      <div class="cta-contact"><strong>hasanov.anar.2023@gmail.com</strong></div>
+
+    </div>
   </div>
 </section>
 
+<!-- ─── Footer ─── -->
 <footer>
-  <div class="brand">EuroPath <span>Education</span></div>
-  <p>Italy, Lazio · Via Roma 37, Italy · hasanov.anar.2023@gmail.com · +39 3280810631</p>
+  <div class="brand">Edupath <span>Education</span></div>
+  <p>Edupath Education · Италия, Lazio · Via Roma 37, Italy<br>
+  Поступление в университеты Италии · Партнёрское предложение · Август 2026</p>
 </footer>
+
+<script>
+  // Scroll fade-in animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Nav active link
+  const navLinks = document.querySelectorAll('nav ul a');
+  const sections = document.querySelectorAll('section');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 100;
+      if (window.scrollY >= sectionTop) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.style.color = '';
+      if (link.getAttribute('href') === '#' + current) {
+        link.style.color = 'var(--electric)';
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
