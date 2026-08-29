@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Login — EuroPath Education</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
   :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; }
@@ -20,6 +21,7 @@
   .toggle { text-align:center; margin-top:20px; font-size:13px; color:var(--gray); }
   .toggle a { color:var(--navy); font-weight:700; cursor:pointer; text-decoration:underline; }
   .error { color:var(--coral); font-size:12px; margin-bottom:14px; display:none; }
+  .info { color:var(--gray); font-size:12px; margin-bottom:14px; display:none; background:#f0f4ff; padding:10px; border-radius:8px; }
 </style>
 </head>
 <body>
@@ -28,9 +30,8 @@
   <h1 id="title">Sign In</h1>
   <p class="sub" id="subtitle">Access your EuroPath application portal</p>
   <div class="error" id="error"></div>
+  <div class="info" id="info"></div>
   <form id="form">
-    <label for="name">Full name</label>
-    <input type="text" id="name" placeholder="Anar Hasanov">
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="you@example.com" required>
     <label for="password">Password</label>
@@ -44,51 +45,73 @@
 </div>
 
 <script>
-  const form = document.getElementById('form');
-  const title = document.getElementById('title');
-  const subtitle = document.getElementById('subtitle');
-  const btn = document.getElementById('btn');
-  const toggleLink = document.getElementById('toggleLink');
-  const toggleText = document.getElementById('toggleText');
-  const nameField = document.getElementById('name');
-  const nameLabel = document.querySelector('label[for="name"]');
-  const error = document.getElementById('error');
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ts_dTn3RfvmNtyy3o5szZw_bGySgw_t';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  let isLogin = true;
+const form = document.getElementById('form');
+const title = document.getElementById('title');
+const subtitle = document.getElementById('subtitle');
+const btn = document.getElementById('btn');
+const toggleLink = document.getElementById('toggleLink');
+const toggleText = document.getElementById('toggleText');
+const error = document.getElementById('error');
+const info = document.getElementById('info');
 
-  toggleLink.addEventListener('click', () => {
-    isLogin = !isLogin;
-    title.textContent = isLogin ? 'Sign In' : 'Create Account';
-    subtitle.textContent = isLogin ? 'Access your EuroPath application portal' : 'Start your European university application';
-    btn.textContent = isLogin ? 'Sign In' : 'Create Account';
-    toggleText.textContent = isLogin ? 'New student?' : 'Already have an account?';
-    toggleLink.textContent = isLogin ? 'Create account' : 'Sign in';
-    nameLabel.textContent = isLogin ? 'Full name (optional)' : 'Full name';
-    nameField.required = !isLogin;
-    error.style.display = 'none';
-  });
+let isLogin = true;
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value.trim().toLowerCase();
-    const password = document.getElementById('password').value;
-    const name = nameField.value.trim();
-    const users = JSON.parse(localStorage.getItem('ep_users') || '{}');
+// Check if already logged in
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) window.location.href = 'dashboard.html';
+})();
 
+toggleLink.addEventListener('click', () => {
+  isLogin = !isLogin;
+  title.textContent = isLogin ? 'Sign In' : 'Create Account';
+  subtitle.textContent = isLogin ? 'Access your EuroPath application portal' : 'Start your European university application';
+  btn.textContent = isLogin ? 'Sign In' : 'Create Account';
+  toggleText.textContent = isLogin ? 'New student?' : 'Already have an account?';
+  toggleLink.textContent = isLogin ? 'Create account' : 'Sign in';
+  error.style.display = 'none';
+  info.style.display = 'none';
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const password = document.getElementById('password').value;
+  error.style.display = 'none';
+  info.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = isLogin ? 'Signing in...' : 'Creating account...';
+
+  try {
     if (isLogin) {
-      if (!users[email]) { error.textContent = 'Account not found.'; error.style.display = 'block'; return; }
-      if (users[email].password !== password) { error.textContent = 'Wrong password.'; error.style.display = 'block'; return; }
-      localStorage.setItem('ep_current_user', email);
+      const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+      if (err) throw err;
       window.location.href = 'dashboard.html';
     } else {
-      if (users[email]) { error.textContent = 'An account with this email already exists.'; error.style.display = 'block'; return; }
-      users[email] = { name, email, password, created: new Date().toISOString() };
-      localStorage.setItem('ep_users', JSON.stringify(users));
-      localStorage.setItem('ep_current_user', email);
-      localStorage.setItem('ep_app_' + email, JSON.stringify({ steps: { account: true } }));
-      window.location.href = 'dashboard.html';
+      const { data, error: err } = await supabase.auth.signUp({ email, password });
+      if (err) throw err;
+      if (data.user && data.session) {
+        window.location.href = 'dashboard.html';
+      } else {
+        info.textContent = 'Account created! Check your email to confirm, then sign in.';
+        info.style.display = 'block';
+        isLogin = true;
+        title.textContent = 'Sign In';
+        btn.textContent = 'Sign In';
+      }
     }
-  });
+  } catch (err) {
+    error.textContent = err.message || 'Something went wrong.';
+    error.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = isLogin ? 'Sign In' : 'Create Account';
+  }
+});
 </script>
 
 </body>

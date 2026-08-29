@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Dashboard — EuroPath Education</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
   :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --amber:#ffb800; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; }
@@ -36,6 +37,7 @@
   .doc-item .name { font-size:13px; font-weight:700; }
   .doc-item .status { font-size:11px; color:var(--gray); margin-top:4px; }
   .doc-item .status.done { color:green; }
+  .doc-item .status.error { color:var(--coral); }
   .doc-item input[type="file"] { margin:8px 0 0; font-size:12px; }
 
   .steps { display:flex; flex-direction:column; gap:10px; }
@@ -46,11 +48,16 @@
 
   .save { margin-top:24px; background:linear-gradient(135deg, var(--electric), var(--lime)); border:none; color:var(--ink); padding:14px 28px; border-radius:24px; font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
   .save:hover { transform:scale(1.03); }
+  .save:disabled { opacity:0.5; cursor:wait; }
 
   .summary { background:#fff; border-radius:16px; padding:24px; margin-top:24px; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
   .summary h3 { margin-bottom:14px; }
   .summary ul { list-style:none; font-size:13px; color:var(--gray); line-height:1.8; }
   .summary ul li strong { color:var(--ink); }
+
+  .toast { position:fixed; bottom:30px; right:30px; background:var(--ink); color:#fff; padding:14px 24px; border-radius:12px; font-size:14px; box-shadow:0 8px 30px rgba(0,0,0,0.2); display:none; z-index:200; }
+  .toast.show { display:block; animation:slideIn .3s; }
+  @keyframes slideIn { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
 
   @media (max-width:768px) { .grid-2, .doc-list { grid-template-columns:1fr; } .container { padding:20px; } }
 </style>
@@ -98,7 +105,7 @@
     </div>
 
     <div class="card">
-      <h3>Required Documents</h3>
+      <h3>Required Documents (max 5 MB each)</h3>
       <div class="doc-list">
         <div class="doc-item"><div class="name">Passport</div><div class="status" id="st-passport">Not uploaded</div><input type="file" data-doc="passport" onchange="handleFile(this)"></div>
         <div class="doc-item"><div class="name">Diploma</div><div class="status" id="st-diploma">Not uploaded</div><input type="file" data-doc="diploma" onchange="handleFile(this)"></div>
@@ -119,143 +126,272 @@
       <div class="step"><input type="checkbox" id="step_review"><label for="step_review">Review and confirm application</label></div>
       <div class="step"><input type="checkbox" id="step_submit"><label for="step_submit">Submit to advisor</label></div>
     </div>
-    <button class="save" onclick="saveApp()">Save Progress</button>
+    <button class="save" id="saveBtn" onclick="saveApp()">Save Progress</button>
   </div>
 
   <div class="summary" id="summaryBox">
     <h3>Application Summary</h3>
     <ul id="summaryList">
-      <li>No information saved yet.</li>
+      <li>Loading...</li>
     </ul>
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-  const current = localStorage.getItem('ep_current_user');
-  if (!current) { window.location.href = 'login.html'; }
-  const users = JSON.parse(localStorage.getItem('ep_users') || '{}');
-  const appKey = 'ep_app_' + current;
-  let app = JSON.parse(localStorage.getItem(appKey) || '{"steps":{"account":true}}');
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ts_dTn3RfvmNtyy3o5szZw_bGySgw_t';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
-  document.getElementById('userName').textContent = users[current]?.name || current;
+let currentUser = null;
+let appRecord = null;
 
-  const universities = {
-    Italy: ['Politecnico di Milano', 'Università di Bologna', 'Sapienza Università di Roma', 'Politecnico di Torino', 'Università di Firenze'],
-    France: ['Sorbonne Université', 'Sciences Po', 'HEC Paris', 'École Polytechnique', 'Aix-Marseille Université'],
-    Germany: ['TU Munich', 'RWTH Aachen', 'Karlsruhe Institute of Technology', 'LMU Munich', 'TU Berlin']
-  };
+const universities = {
+  Italy: ['Politecnico di Milano', 'Università di Bologna', 'Sapienza Università di Roma', 'Politecnico di Torino', 'Università di Firenze'],
+  France: ['Sorbonne Université', 'Sciences Po', 'HEC Paris', 'École Polytechnique', 'Aix-Marseille Université'],
+  Germany: ['TU Munich', 'RWTH Aachen', 'Karlsruhe Institute of Technology', 'LMU Munich', 'TU Berlin']
+};
 
-  const country = document.getElementById('country');
-  const university = document.getElementById('university');
-  const fullName = document.getElementById('fullName');
-  const program = document.getElementById('program');
+const country = document.getElementById('country');
+const university = document.getElementById('university');
+const fullName = document.getElementById('fullName');
+const program = document.getElementById('program');
 
-  function load() {
-    if (app.profile) {
-      fullName.value = app.profile.fullName || '';
-      country.value = app.profile.country || '';
-      program.value = app.profile.program || '';
-      updateUnis(app.profile.country, app.profile.university);
-    }
-    if (app.documents) {
-      for (const [doc, info] of Object.entries(app.documents)) {
-        const st = document.getElementById('st-' + doc);
-        if (st) { st.textContent = info.name + ' · ' + info.size; st.classList.add('done'); }
-      }
-    }
-    if (app.steps) {
-      for (const [k, v] of Object.entries(app.steps)) {
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function init() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+  currentUser = session.user;
+  document.getElementById('userName').textContent = currentUser.email;
+
+  // Load or create application record
+  const { data: existing } = await supabase
+    .from('applications')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .maybeSingle();
+
+  if (existing) {
+    appRecord = existing;
+    fullName.value = appRecord.full_name || '';
+    country.value = appRecord.country || '';
+    program.value = appRecord.program || '';
+    updateUnis(appRecord.country, appRecord.university);
+    if (appRecord.steps) {
+      for (const [k, v] of Object.entries(appRecord.steps)) {
         const el = document.getElementById('step_' + k);
         if (el) el.checked = v;
       }
     }
-    updateProgress();
-    renderSummary();
+  } else {
+    // Create new application
+    const { data: created, error } = await supabase
+      .from('applications')
+      .insert({ user_id: currentUser.id, steps: { account: true, profile: false, documents: false, review: false, submit: false } })
+      .select()
+      .single();
+    if (error) { console.error(error); return; }
+    appRecord = created;
   }
 
-  function updateUnis(selectedCountry, selectedUni) {
-    university.innerHTML = '<option value="">Select university</option>';
-    if (selectedCountry && universities[selectedCountry]) {
-      universities[selectedCountry].forEach(u => {
-        const opt = document.createElement('option');
-        opt.value = u; opt.textContent = u;
-        if (u === selectedUni) opt.selected = true;
-        university.appendChild(opt);
-      });
-      university.disabled = false;
-    } else {
-      university.disabled = true;
-    }
-  }
+  // Load documents
+  await loadDocuments();
+  updateProgress();
+  renderSummary();
+}
 
-  country.addEventListener('change', () => { updateUnis(country.value, ''); });
+async function loadDocuments() {
+  const { data: docs } = await supabase
+    .from('documents')
+    .select('*')
+    .eq('user_id', currentUser.id);
 
-  function handleFile(input) {
-    if (!input.files[0]) return;
-    const doc = input.dataset.doc;
-    const f = input.files[0];
-    app.documents = app.documents || {};
-    app.documents[doc] = { name: f.name, size: (f.size / 1024).toFixed(1) + ' KB', type: f.type };
-    const st = document.getElementById('st-' + doc);
-    st.textContent = f.name + ' · ' + app.documents[doc].size;
-    st.classList.add('done');
-    autoStep();
-  }
-
-  function autoStep() {
-    const docs = app.documents || {};
-    if (Object.keys(docs).length >= 4) document.getElementById('step_documents').checked = true;
-    if (fullName.value && country.value && university.value && program.value) document.getElementById('step_profile').checked = true;
-    updateProgress();
-  }
-
-  function updateProgress() {
-    const steps = ['account','profile','documents','review','submit'];
-    let done = 0;
-    steps.forEach(s => { if (document.getElementById('step_' + s)?.checked) done++; });
-    const pct = Math.round((done / steps.length) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressText').textContent = pct + '% completed';
-  }
-
-  function saveApp() {
-    app.profile = { fullName: fullName.value, country: country.value, university: university.value, program: program.value };
-    app.steps = {};
-    ['account','profile','documents','review','submit'].forEach(s => {
-      app.steps[s] = document.getElementById('step_' + s).checked;
+  if (docs) {
+    docs.forEach(doc => {
+      const st = document.getElementById('st-' + doc.doc_type);
+      if (st) {
+        st.textContent = doc.file_name + ' · ' + (doc.file_size / 1024).toFixed(1) + ' KB';
+        st.classList.add('done');
+        st.classList.remove('error');
+      }
     });
-    localStorage.setItem(appKey, JSON.stringify(app));
-    autoStep();
-    updateProgress();
+  }
+  autoStep();
+}
+
+function updateUnis(selectedCountry, selectedUni) {
+  university.innerHTML = '<option value="">Select university</option>';
+  if (selectedCountry && universities[selectedCountry]) {
+    universities[selectedCountry].forEach(u => {
+      const opt = document.createElement('option');
+      opt.value = u; opt.textContent = u;
+      if (u === selectedUni) opt.selected = true;
+      university.appendChild(opt);
+    });
+    university.disabled = false;
+  } else {
+    university.disabled = true;
+  }
+}
+
+country.addEventListener('change', () => { updateUnis(country.value, ''); });
+
+async function handleFile(input) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  const docType = input.dataset.doc;
+  const st = document.getElementById('st-' + docType);
+
+  // 5 MB check
+  if (file.size > MAX_FILE_SIZE) {
+    st.textContent = 'File too large — max 5 MB';
+    st.classList.add('error');
+    st.classList.remove('done');
+    input.value = '';
+    return;
+  }
+
+  st.textContent = 'Uploading...';
+  st.classList.remove('done', 'error');
+
+  const filePath = currentUser.id + '/' + docType + '/' + file.name;
+
+  // Upload to storage
+  const { error: uploadErr } = await supabase.storage
+    .from('student-documents')
+    .upload(filePath, file, { upsert: true });
+
+  if (uploadErr) {
+    st.textContent = 'Upload failed: ' + uploadErr.message;
+    st.classList.add('error');
+    return;
+  }
+
+  // Delete old document record if exists
+  await supabase.from('documents').delete().eq('user_id', currentUser.id).eq('doc_type', docType);
+
+  // Insert document metadata
+  const { error: dbErr } = await supabase
+    .from('documents')
+    .insert({
+      user_id: currentUser.id,
+      application_id: appRecord.id,
+      doc_type: docType,
+      file_name: file.name,
+      file_size: file.size,
+      storage_path: filePath
+    });
+
+  if (dbErr) {
+    st.textContent = 'Save failed: ' + dbErr.message;
+    st.classList.add('error');
+    return;
+  }
+
+  st.textContent = file.name + ' · ' + (file.size / 1024).toFixed(1) + ' KB';
+  st.classList.add('done');
+  st.classList.remove('error');
+  autoStep();
+  showToast(docType + ' uploaded successfully');
+}
+
+function autoStep() {
+  // Check documents step
+  const docStatuses = ['passport','diploma','transcript','motivation','cv','english'];
+  const uploaded = docStatuses.filter(d => {
+    const st = document.getElementById('st-' + d);
+    return st && st.classList.contains('done');
+  });
+  document.getElementById('step_documents').checked = uploaded.length >= 4;
+
+  // Check profile step
+  if (fullName.value && country.value && university.value && program.value) {
+    document.getElementById('step_profile').checked = true;
+  }
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const steps = ['account','profile','documents','review','submit'];
+  let done = 0;
+  steps.forEach(s => { if (document.getElementById('step_' + s)?.checked) done++; });
+  const pct = Math.round((done / steps.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completed';
+}
+
+async function saveApp() {
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  const steps = {};
+  ['account','profile','documents','review','submit'].forEach(s => {
+    steps[s] = document.getElementById('step_' + s).checked;
+  });
+
+  autoStep();
+
+  const { error } = await supabase
+    .from('applications')
+    .update({
+      full_name: fullName.value,
+      country: country.value,
+      university: university.value,
+      program: program.value,
+      steps: steps
+    })
+    .eq('id', appRecord.id);
+
+  if (error) {
+    showToast('Error: ' + error.message);
+  } else {
+    showToast('Progress saved');
     renderSummary();
-    alert('Progress saved.');
   }
 
-  function renderSummary() {
-    const list = document.getElementById('summaryList');
-    list.innerHTML = '';
-    const p = app.profile || {};
-    const docs = app.documents || {};
-    const items = [
-      ['Student', users[current]?.name || current],
-      ['Full name', p.fullName || '—'],
-      ['Country', p.country || '—'],
-      ['University', p.university || '—'],
-      ['Program', p.program || '—'],
-      ['Documents uploaded', Object.keys(docs).length + ' of 6'],
-      ['Steps completed', Object.values(app.steps || {}).filter(Boolean).length + ' of 5']
-    ];
-    items.forEach(([k, v]) => { const li = document.createElement('li'); li.innerHTML = '<strong>' + k + ':</strong> ' + v; list.appendChild(li); });
-  }
+  btn.disabled = false;
+  btn.textContent = 'Save Progress';
+}
 
-  function logout() {
-    localStorage.removeItem('ep_current_user');
-    window.location.href = 'login.html';
-  }
+function renderSummary() {
+  const list = document.getElementById('summaryList');
+  list.innerHTML = '';
+  const docStatuses = ['passport','diploma','transcript','motivation','cv','english'];
+  const uploaded = docStatuses.filter(d => {
+    const st = document.getElementById('st-' + d);
+    return st && st.classList.contains('done');
+  });
+  const stepsDone = ['account','profile','documents','review','submit'].filter(s => document.getElementById('step_' + s)?.checked);
+  const items = [
+    ['Email', currentUser?.email || '—'],
+    ['Full name', fullName.value || '—'],
+    ['Country', country.value || '—'],
+    ['University', university.value || '—'],
+    ['Program', program.value || '—'],
+    ['Documents uploaded', uploaded.length + ' of 6'],
+    ['Steps completed', stepsDone.length + ' of 5']
+  ];
+  items.forEach(([k, v]) => { const li = document.createElement('li'); li.innerHTML = '<strong>' + k + ':</strong> ' + v; list.appendChild(li); });
+}
 
-  document.querySelectorAll('input[type="text"], select').forEach(el => el.addEventListener('change', autoStep));
+async function logout() {
+  await supabase.auth.signOut();
+  window.location.href = 'login.html';
+}
 
-  load();
+document.querySelectorAll('input[type="text"], select').forEach(el => el.addEventListener('change', autoStep));
+
+init();
 </script>
 
 </body>
