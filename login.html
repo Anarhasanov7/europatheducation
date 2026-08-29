@@ -18,10 +18,14 @@
   input:focus { border-color:var(--electric); }
   button { width:100%; padding:14px; border:none; border-radius:10px; background:linear-gradient(135deg, var(--electric), var(--lime)); color:var(--ink); font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
   button:hover { transform:scale(1.02); }
+  button:disabled { opacity:0.5; cursor:wait; }
   .toggle { text-align:center; margin-top:20px; font-size:13px; color:var(--gray); }
   .toggle a { color:var(--navy); font-weight:700; cursor:pointer; text-decoration:underline; }
-  .error { color:var(--coral); font-size:12px; margin-bottom:14px; display:none; }
-  .info { color:var(--gray); font-size:12px; margin-bottom:14px; display:none; background:#f0f4ff; padding:10px; border-radius:8px; }
+  .error { color:var(--coral); font-size:12px; margin-bottom:14px; display:none; background:#fff0f0; padding:10px; border-radius:8px; }
+  .info { color:#1a4a6a; font-size:12px; margin-bottom:14px; display:none; background:#f0f4ff; padding:10px; border-radius:8px; }
+  .back { text-align:center; margin-top:16px; }
+  .back a { color:var(--gray); font-size:12px; text-decoration:none; }
+  .back a:hover { color:var(--navy); }
 </style>
 </head>
 <body>
@@ -42,11 +46,12 @@
     <span id="toggleText">New student?</span>
     <a id="toggleLink">Create account</a>
   </div>
+  <div class="back"><a href="index.html">← Back to homepage</a></div>
 </div>
 
 <script>
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_ts_dTn3RfvmNtyy3o5szZw_bGySgw_t';
+const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const form = document.getElementById('form');
@@ -88,16 +93,26 @@ form.addEventListener('submit', async (e) => {
 
   try {
     if (isLogin) {
-      const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error: err } = await supabase.auth.signInWithPassword({ email, password });
       if (err) throw err;
       window.location.href = 'dashboard.html';
     } else {
       const { data, error: err } = await supabase.auth.signUp({ email, password });
       if (err) throw err;
       if (data.user && data.session) {
+        // No email confirmation needed — go straight to dashboard
         window.location.href = 'dashboard.html';
+      } else if (data.user && !data.session) {
+        // Email confirmation required
+        info.innerHTML = 'Account created! <strong>Check your email</strong> to confirm your account, then sign in.';
+        info.style.display = 'block';
+        isLogin = true;
+        title.textContent = 'Sign In';
+        btn.textContent = 'Sign In';
+        toggleText.textContent = 'New student?';
+        toggleLink.textContent = 'Create account';
       } else {
-        info.textContent = 'Account created! Check your email to confirm, then sign in.';
+        info.textContent = 'Account created! You can now sign in.';
         info.style.display = 'block';
         isLogin = true;
         title.textContent = 'Sign In';
@@ -105,7 +120,7 @@ form.addEventListener('submit', async (e) => {
       }
     }
   } catch (err) {
-    error.textContent = err.message || 'Something went wrong.';
+    error.textContent = err.message || 'Something went wrong. Please try again.';
     error.style.display = 'block';
   } finally {
     btn.disabled = false;

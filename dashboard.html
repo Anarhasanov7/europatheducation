@@ -141,7 +141,7 @@
 
 <script>
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_ts_dTn3RfvmNtyy3o5szZw_bGySgw_t';
+const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
@@ -167,20 +167,27 @@ function showToast(msg) {
 }
 
 async function init() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) { window.location.href = 'login.html'; return; }
-  currentUser = session.user;
-  document.getElementById('userName').textContent = currentUser.email;
+  try {
+    const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
+    if (sessionErr || !session) { window.location.href = 'login.html'; return; }
+    currentUser = session.user;
+    document.getElementById('userName').textContent = currentUser.email;
 
-  // Load or create application record
-  const { data: existing } = await supabase
-    .from('applications')
-    .select('*')
-    .eq('user_id', currentUser.id)
-    .maybeSingle();
+    // Load or create application record
+    const { data: existing, error: fetchErr } = await supabase
+      .from('applications')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .maybeSingle();
 
-  if (existing) {
-    appRecord = existing;
+    if (fetchErr) {
+      console.error('Error loading application:', fetchErr);
+      document.getElementById('summaryList').innerHTML = '<li>Error loading data: ' + fetchErr.message + '</li>';
+      return;
+    }
+
+    if (existing) {
+      appRecord = existing;
     fullName.value = appRecord.full_name || '';
     country.value = appRecord.country || '';
     program.value = appRecord.program || '';
@@ -198,7 +205,11 @@ async function init() {
       .insert({ user_id: currentUser.id, steps: { account: true, profile: false, documents: false, review: false, submit: false } })
       .select()
       .single();
-    if (error) { console.error(error); return; }
+    if (error) {
+      console.error('Error creating application:', error);
+      document.getElementById('summaryList').innerHTML = '<li>Error: ' + error.message + '</li>';
+      return;
+    }
     appRecord = created;
   }
 
@@ -206,6 +217,10 @@ async function init() {
   await loadDocuments();
   updateProgress();
   renderSummary();
+  } catch (err) {
+    console.error('Dashboard init error:', err);
+    document.getElementById('summaryList').innerHTML = '<li>Error: ' + (err.message || 'Unknown error') + '</li>';
+  }
 }
 
 async function loadDocuments() {
