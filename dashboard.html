@@ -125,7 +125,10 @@
       <div class="step"><input type="checkbox" id="step_review"><label for="step_review">Review and confirm application</label></div>
       <div class="step"><input type="checkbox" id="step_submit"><label for="step_submit">Submit to advisor</label></div>
     </div>
-    <button class="save" id="saveBtn" onclick="saveApp()">Save Progress</button>
+    <div style="display:flex; gap:12px; margin-top:16px;">
+      <button class="save" id="saveBtn" onclick="saveApp()">Save Progress</button>
+      <button class="save" id="submitBtn" onclick="submitApp()" style="background:linear-gradient(135deg, #0b1e3f, #1a3a6e); color:#fff;">Submit Application</button>
+    </div>
   </div>
 
   <div class="summary" id="summaryBox">
@@ -234,6 +237,12 @@ async function init() {
   }
 }
 
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
 async function loadDocuments() {
   const { data: docs } = await sb
     .from('documents')
@@ -244,7 +253,7 @@ async function loadDocuments() {
     docs.forEach(doc => {
       const st = document.getElementById('st-' + doc.doc_type);
       if (st) {
-        st.textContent = doc.file_name + ' · ' + (doc.file_size / 1024).toFixed(1) + ' KB';
+        st.textContent = doc.file_name + ' · ' + formatSize(doc.file_size);
         st.classList.add('done');
         st.classList.remove('error');
       }
@@ -322,7 +331,7 @@ async function handleFile(input) {
     return;
   }
 
-  st.textContent = file.name + ' · ' + (file.size / 1024).toFixed(1) + ' KB';
+  st.textContent = file.name + ' · ' + formatSize(file.size);
   st.classList.add('done');
   st.classList.remove('error');
   autoStep();
@@ -408,6 +417,66 @@ function renderSummary() {
     ['Steps completed', stepsDone.length + ' of 5']
   ];
   items.forEach(([k, v]) => { const li = document.createElement('li'); li.innerHTML = '<strong>' + k + ':</strong> ' + v; list.appendChild(li); });
+}
+
+async function submitApp() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  // Validate required fields
+  if (!fullName.value || !country.value || !university.value || !program.value) {
+    showToast('Please complete your profile first');
+    btn.disabled = false;
+    btn.textContent = 'Submit Application';
+    return;
+  }
+
+  // Check at least 4 documents uploaded
+  const docStatuses = ['passport','diploma','transcript','motivation','cv','english'];
+  const uploaded = docStatuses.filter(d => {
+    const st = document.getElementById('st-' + d);
+    return st && st.classList.contains('done');
+  });
+  if (uploaded.length < 4) {
+    showToast('Please upload at least 4 documents');
+    btn.disabled = false;
+    btn.textContent = 'Submit Application';
+    return;
+  }
+
+  // Mark review and submit steps as done
+  document.getElementById('step_review').checked = true;
+  document.getElementById('step_submit').checked = true;
+  updateProgress();
+
+  const steps = {};
+  ['account','profile','documents','review','submit'].forEach(s => {
+    steps[s] = document.getElementById('step_' + s).checked;
+  });
+
+  const { error } = await sb
+    .from('applications')
+    .update({
+      full_name: fullName.value,
+      country: country.value,
+      university: university.value,
+      program: program.value,
+      steps: steps,
+      status: 'submitted'
+    })
+    .eq('id', appRecord.id);
+
+  if (error) {
+    showToast('Error: ' + error.message);
+    btn.disabled = false;
+    btn.textContent = 'Submit Application';
+  } else {
+    showToast('Application submitted! We will contact you soon.');
+    btn.textContent = 'Submitted ✓';
+    btn.style.background = 'linear-gradient(135deg, #c6ff3d, #3ddfff)';
+    renderSummary();
+  }
 }
 
 async function logout() {
