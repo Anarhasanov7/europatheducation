@@ -26,6 +26,7 @@
   .back { text-align:center; margin-top:16px; }
   .back a { color:var(--gray); font-size:12px; text-decoration:none; }
   .back a:hover { color:var(--navy); }
+  .debug { font-size:11px; color:var(--gray); margin-top:10px; display:none; }
 </style>
 </head>
 <body>
@@ -47,12 +48,31 @@
     <a id="toggleLink">Create account</a>
   </div>
   <div class="back"><a href="index.html">← Back to homepage</a></div>
+  <div class="debug" id="debug"></div>
 </div>
 
 <script>
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let supabase = null;
+
+// Initialize Supabase client
+function initSupabase() {
+  if (typeof window.supabase === 'undefined') {
+    document.getElementById('error').textContent = 'Failed to load Supabase. Please refresh the page.';
+    document.getElementById('error').style.display = 'block';
+    document.getElementById('btn').disabled = true;
+    return false;
+  }
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  return true;
+}
+
+// Try immediately, and also on load
+if (!initSupabase()) {
+  window.addEventListener('load', initSupabase);
+}
 
 const form = document.getElementById('form');
 const title = document.getElementById('title');
@@ -62,13 +82,20 @@ const toggleLink = document.getElementById('toggleLink');
 const toggleText = document.getElementById('toggleText');
 const error = document.getElementById('error');
 const info = document.getElementById('info');
+const debug = document.getElementById('debug');
 
 let isLogin = true;
 
 // Check if already logged in
 (async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) window.location.href = 'dashboard.html';
+  if (!initSupabase()) return;
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) window.location.href = 'dashboard.html';
+  } catch(e) {
+    debug.textContent = 'Session check: ' + e.message;
+    debug.style.display = 'block';
+  }
 })();
 
 toggleLink.addEventListener('click', () => {
@@ -84,6 +111,12 @@ toggleLink.addEventListener('click', () => {
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (!supabase) {
+    error.textContent = 'Supabase not loaded. Please refresh.';
+    error.style.display = 'block';
+    return;
+  }
+
   const email = document.getElementById('email').value.trim().toLowerCase();
   const password = document.getElementById('password').value;
   error.style.display = 'none';
@@ -100,11 +133,9 @@ form.addEventListener('submit', async (e) => {
       const { data, error: err } = await supabase.auth.signUp({ email, password });
       if (err) throw err;
       if (data.user && data.session) {
-        // No email confirmation needed — go straight to dashboard
         window.location.href = 'dashboard.html';
       } else if (data.user && !data.session) {
-        // Email confirmation required
-        info.innerHTML = 'Account created! <strong>Check your email</strong> to confirm your account, then sign in.';
+        info.innerHTML = 'Account created! <strong>Check your email</strong> to confirm, then sign in.';
         info.style.display = 'block';
         isLogin = true;
         title.textContent = 'Sign In';
@@ -122,6 +153,8 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     error.textContent = err.message || 'Something went wrong. Please try again.';
     error.style.display = 'block';
+    debug.textContent = 'Error details: ' + JSON.stringify(err);
+    debug.style.display = 'block';
   } finally {
     btn.disabled = false;
     btn.textContent = isLogin ? 'Sign In' : 'Create Account';
