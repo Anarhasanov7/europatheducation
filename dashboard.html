@@ -143,7 +143,7 @@ const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
-let supabase = null;
+let sb = null;
 let currentUser = null;
 let appRecord = null;
 
@@ -151,7 +151,7 @@ let appRecord = null;
 const sbScript = document.createElement('script');
 sbScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
 sbScript.onload = () => {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   init();
 };
 sbScript.onerror = () => {
@@ -179,13 +179,13 @@ function showToast(msg) {
 
 async function init() {
   try {
-    const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
+    const { data: { session }, error: sessionErr } = await sb.auth.getSession();
     if (sessionErr || !session) { window.location.href = 'login.html'; return; }
     currentUser = session.user;
     document.getElementById('userName').textContent = currentUser.email;
 
     // Load or create application record
-    const { data: existing, error: fetchErr } = await supabase
+    const { data: existing, error: fetchErr } = await sb
       .from('applications')
       .select('*')
       .eq('user_id', currentUser.id)
@@ -211,7 +211,7 @@ async function init() {
     }
   } else {
     // Create new application
-    const { data: created, error } = await supabase
+    const { data: created, error } = await sb
       .from('applications')
       .insert({ user_id: currentUser.id, steps: { account: true, profile: false, documents: false, review: false, submit: false } })
       .select()
@@ -235,7 +235,7 @@ async function init() {
 }
 
 async function loadDocuments() {
-  const { data: docs } = await supabase
+  const { data: docs } = await sb
     .from('documents')
     .select('*')
     .eq('user_id', currentUser.id);
@@ -291,7 +291,7 @@ async function handleFile(input) {
   const filePath = currentUser.id + '/' + docType + '/' + file.name;
 
   // Upload to storage
-  const { error: uploadErr } = await supabase.storage
+  const { error: uploadErr } = await sb.storage
     .from('student-documents')
     .upload(filePath, file, { upsert: true });
 
@@ -302,10 +302,10 @@ async function handleFile(input) {
   }
 
   // Delete old document record if exists
-  await supabase.from('documents').delete().eq('user_id', currentUser.id).eq('doc_type', docType);
+  await sb.from('documents').delete().eq('user_id', currentUser.id).eq('doc_type', docType);
 
   // Insert document metadata
-  const { error: dbErr } = await supabase
+  const { error: dbErr } = await sb
     .from('documents')
     .insert({
       user_id: currentUser.id,
@@ -367,7 +367,7 @@ async function saveApp() {
 
   autoStep();
 
-  const { error } = await supabase
+  const { error } = await sb
     .from('applications')
     .update({
       full_name: fullName.value,
@@ -411,7 +411,7 @@ function renderSummary() {
 }
 
 async function logout() {
-  await supabase.auth.signOut();
+  await sb.auth.signOut();
   window.location.href = 'login.html';
 }
 
