@@ -530,6 +530,28 @@ async function submitApp() {
     btn.disabled = false;
     btn.textContent = 'Submit Application';
   } else {
+    // Send email notification to admin
+    try {
+      const docStatuses2 = ['passport','diploma','transcript','motivation','cv','english'];
+      const uploaded2 = docStatuses2.filter(d => {
+        const st = document.getElementById('st-' + d);
+        return st && st.classList.contains('done');
+      }).length;
+      await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/notify-submission', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+        body: JSON.stringify({
+          student_email: currentUser.email,
+          full_name: fullName.value,
+          country: country.value,
+          university: university.value,
+          program: program.value,
+          documents_count: uploaded2,
+          application_id: appRecord.id
+        })
+      });
+    } catch(e) { console.error('Email notification failed:', e); }
+
     showToast('Application submitted! We will contact you soon.');
     btn.textContent = 'Submitted ✓';
     btn.style.background = 'linear-gradient(135deg, #c6ff3d, #3ddfff)';
