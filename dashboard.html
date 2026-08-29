@@ -336,6 +336,7 @@ async function handleFile(input) {
   st.classList.remove('error');
   autoStep();
   showToast(docType + ' uploaded successfully');
+  renderSummary();
 }
 
 function autoStep() {
