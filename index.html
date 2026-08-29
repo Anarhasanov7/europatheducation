@@ -3,20 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EuroPath Education — Your Pathway to European Education</title>
+<title>Edupath Education — Partnership Proposal</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
   :root {
-    --navy: #0b1e3f;
     --ink: #080a14;
+    --navy: #0b1e3f;
+    --slate: #1c202e;
     --electric: #3ddfff;
     --lime: #c6ff3d;
+    --lime-d: #8bd01a;
     --coral: #ff5c3d;
+    --magenta: #ff3d8b;
     --amber: #ffb800;
     --gray: #6b7280;
     --light: #e8ecf1;
-    --off: #f4f5f7;
+    --off-white: #f4f5f7;
     --dark: #1a1a2e;
   }
 
@@ -25,23 +28,23 @@
 
   body {
     font-family: 'Inter', -apple-system, sans-serif;
-    background: #fff;
+    background: var(--off-white);
     color: var(--dark);
     overflow-x: hidden;
   }
 
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(8,10,20,0.9);
+    background: rgba(8,10,20,0.85);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(61,223,255,0.12);
+    border-bottom: 1px solid rgba(61,223,255,0.15);
     padding: 12px 40px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  nav .brand { color: #fff; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-  nav .brand span { color: var(--electric); }
-  nav ul { display: flex; gap: 28px; list-style: none; }
-  nav ul a { color: var(--gray); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+  nav .brand { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+  nav .brand span { color: var(--electric); font-weight: 600; font-size: 14px; }
+  nav ul { display: flex; gap: 24px; list-style: none; }
+  nav ul a { color: var(--gray); text-decoration: none; font-size: 12px; font-weight: 500; transition: color 0.2s; }
   nav ul a:hover { color: var(--electric); }
   nav .cta {
     background: linear-gradient(135deg, var(--electric), var(--lime));
@@ -55,81 +58,131 @@
     min-height: 100vh;
     background: linear-gradient(160deg, var(--navy) 0%, var(--ink) 100%);
     display: flex; align-items: center; justify-content: center;
-    padding: 100px 40px 60px;
-    position: relative;
+    position: relative; overflow: hidden;
+    padding: 80px 40px 40px;
   }
-  .hero-content { max-width: 900px; text-align: center; color: #fff; }
+  .hero-content { max-width: 900px; text-align: center; position: relative; z-index: 1; }
   .hero-tag {
     display: inline-block;
-    color: var(--electric);
+    background: rgba(61,223,255,0.1);
     border: 1px solid rgba(61,223,255,0.3);
+    color: var(--electric);
     padding: 6px 16px; border-radius: 20px;
-    font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    font-size: 11px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase;
     margin-bottom: 24px;
   }
   .hero h1 {
-    font-size: 54px; font-weight: 900; line-height: 1.1;
-    letter-spacing: -1.5px; margin-bottom: 20px;
+    font-size: 52px; font-weight: 900; color: #fff;
+    line-height: 1.1; letter-spacing: -1.5px;
+    margin-bottom: 20px;
   }
-  .hero h1 .grad { background: linear-gradient(135deg, var(--electric), var(--lime)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .hero p { font-size: 18px; color: var(--gray); max-width: 600px; margin: 0 auto 32px; }
-  .hero-stats { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-  .stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 24px; min-width: 140px; }
-  .stat .num { font-size: 30px; font-weight: 800; color: var(--electric); }
-  .stat .label { font-size: 11px; color: var(--gray); margin-top: 4px; }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 18px; color: var(--gray); line-height: 1.6;
+    max-width: 650px; margin: 0 auto 32px;
+  }
+  .hero-stats {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 16px 24px;
+    min-width: 140px;
+  }
+  .hero-stat .num { font-size: 32px; font-weight: 800; display: block; color: var(--electric); }
+  .hero-stat .label { font-size: 11px; color: var(--gray); margin-top: 4px; }
 
   section { padding: 80px 40px; max-width: 1100px; margin: 0 auto; }
   .section-tag { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--electric); margin-bottom: 8px; }
-  .section-title { font-size: 34px; font-weight: 800; color: var(--ink); letter-spacing: -1px; margin-bottom: 12px; }
+  .section-title { font-size: 36px; font-weight: 800; color: var(--ink); letter-spacing: -1px; margin-bottom: 12px; }
   .section-sub { font-size: 15px; color: var(--gray); margin-bottom: 40px; max-width: 600px; }
 
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .card { background: #fff; border-radius: 14px; padding: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-  .card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-  .card p { font-size: 13px; color: var(--gray); line-height: 1.5; }
+  .mission-card {
+    background: linear-gradient(135deg, var(--navy), var(--ink));
+    border-radius: 20px; padding: 48px;
+    color: #fff;
+  }
+  .mission-card h3 { font-size: 14px; color: var(--electric); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+  .mission-card p { font-size: 20px; color: #fff; line-height: 1.5; font-weight: 300; }
+  .mission-card p strong { font-weight: 600; color: var(--electric); }
 
-  .dest-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-  .dest-head { height: 120px; background: linear-gradient(135deg, var(--navy), var(--ink)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 800; }
-  .dest-body { padding: 20px; }
-  .dest-body h4 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-  .dest-body p { font-size: 13px; color: var(--gray); margin-bottom: 8px; }
-  .dest-body .price { font-size: 13px; color: var(--electric); font-weight: 700; }
+  .benefits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .benefit-col h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .benefit-col.univ h3 { color: var(--electric); }
+  .benefit-col.stud h3 { color: var(--coral); }
+  .benefit-list { display: flex; flex-direction: column; gap: 12px; }
+  .benefit-item { background: #fff; border-radius: 12px; padding: 18px 20px; border-left: 3px solid; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .benefit-col.univ .benefit-item { border-color: var(--electric); }
+  .benefit-col.stud .benefit-item { border-color: var(--coral); }
+  .benefit-item h4 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .benefit-item p { font-size: 13px; color: var(--gray); line-height: 1.5; }
 
-  .process { display: flex; gap: 24px; justify-content: space-between; position: relative; margin-top: 30px; }
-  .process::before { content: ''; position: absolute; top: 30px; left: 10%; right: 10%; height: 3px; background: linear-gradient(90deg, var(--electric), var(--lime), var(--coral)); border-radius: 2px; }
-  .pstep { flex: 1; text-align: center; position: relative; z-index: 1; }
-  .pstep .circle { width: 60px; height: 60px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; margin: 0 auto 14px; border: 3px solid var(--electric); }
-  .pstep h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .pstep p { font-size: 12px; color: var(--gray); line-height: 1.5; }
+  .pkg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .pkg-card { border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+  .pkg-head { padding: 24px 28px; color: #fff; }
+  .pkg-card.p1 .pkg-head { background: linear-gradient(135deg, var(--slate), var(--ink)); }
+  .pkg-card.p2 .pkg-head { background: linear-gradient(135deg, var(--coral), #d03515); }
+  .pkg-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.7; margin-bottom: 6px; }
+  .pkg-name { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .pkg-price { font-size: 40px; font-weight: 900; line-height: 1; color: var(--electric); }
+  .pkg-duration { font-size: 12px; opacity: 0.7; margin-top: 6px; }
+  .pkg-body { background: #fff; padding: 24px 28px; }
+  .pkg-body ul { list-style: none; }
+  .pkg-body li { padding: 8px 0 8px 28px; position: relative; font-size: 13px; color: var(--dark); line-height: 1.5; border-bottom: 1px solid var(--light); }
+  .pkg-body li:last-child { border-bottom: none; }
+  .pkg-body li::before { content: '✓'; position: absolute; left: 0; top: 8px; font-weight: 800; font-size: 14px; color: var(--electric); }
+
+  .timeline { display: flex; align-items: flex-start; justify-content: space-between; position: relative; margin-top: 40px; flex-wrap: wrap; gap: 20px; }
+  .timeline::before { content: ''; position: absolute; top: 30px; left: 5%; right: 5%; height: 3px; background: linear-gradient(90deg, var(--electric), var(--lime), var(--coral), var(--amber)); border-radius: 2px; }
+  .step { flex: 1; min-width: 180px; text-align: center; position: relative; z-index: 1; }
+  .step-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; font-weight: 900; color: #fff; border: 3px solid var(--ink); }
+  .step:nth-child(1) .step-circle { background: var(--electric); color: var(--ink); }
+  .step:nth-child(2) .step-circle { background: var(--lime); color: var(--ink); }
+  .step:nth-child(3) .step-circle { background: var(--coral); }
+  .step:nth-child(4) .step-circle { background: var(--amber); color: var(--ink); }
+  .step h4 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .step p { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+  .uni-section { background: #fff; border-radius: 20px; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+  .uni-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .uni-card { background: #fff; border-radius: 12px; padding: 18px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.06); display: flex; flex-direction: column; align-items: center; min-height: 140px; }
+  .uni-card img { height: 56px; width: auto; max-width: 100%; object-fit: contain; margin-bottom: 10px; }
+  .uni-card .name { font-size: 12px; font-weight: 700; color: var(--ink); margin-top: auto; line-height: 1.3; }
+  .uni-card .country { font-size: 10px; color: var(--gray); margin-top: 4px; }
 
   .cta-section {
-    background: linear-gradient(135deg, var(--navy), var(--ink));
-    border-radius: 24px; padding: 60px 48px; text-align: center; color: #fff;
+    background: linear-gradient(160deg, var(--navy), var(--ink));
+    border-radius: 24px; padding: 60px 48px;
+    text-align: center; color: #fff;
   }
   .cta-section h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
-  .cta-section p { color: var(--gray); margin-bottom: 28px; }
+  .cta-section p { font-size: 15px; color: var(--gray); margin-bottom: 28px; }
   .cta-button {
     display: inline-block;
     background: linear-gradient(135deg, var(--electric), var(--lime));
     color: var(--ink); padding: 14px 36px; border-radius: 28px;
     font-size: 15px; font-weight: 800; text-decoration: none;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
-  .cta-button:hover { transform: scale(1.05); }
+  .cta-button:hover { transform: scale(1.05); box-shadow: 0 8px 32px rgba(61,223,255,0.3); }
 
-  footer { background: var(--ink); padding: 40px; text-align: center; color: var(--gray); }
-  footer .brand { color: #fff; font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+  footer { background: var(--ink); padding: 32px 40px; text-align: center; }
+  footer p { font-size: 11px; color: var(--gray); }
+  footer .brand { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 8px; }
   footer .brand span { color: var(--electric); }
-  footer p { font-size: 12px; }
 
   @media (max-width: 768px) {
     nav ul { display: none; }
     .hero h1 { font-size: 36px; }
-    .grid-3, .grid-4 { grid-template-columns: 1fr; }
-    .process { flex-direction: column; }
-    .process::before { display: none; }
+    .benefits-grid, .pkg-grid { grid-template-columns: 1fr; }
+    .timeline { flex-direction: column; }
+    .timeline::before { display: none; }
+    .uni-grid { grid-template-columns: repeat(2, 1fr); }
     section { padding: 60px 20px; }
   }
 </style>
@@ -137,139 +190,156 @@
 <body>
 
 <nav>
-  <div class="brand">EuroPath <span>Education</span></div>
+  <div class="brand">Edupath <span>Education</span></div>
   <ul>
-    <li><a href="#destinations">Destinations</a></li>
-    <li><a href="#programs">Programs</a></li>
-    <li><a href="#process">Your Journey</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#benefits">Benefits</a></li>
+    <li><a href="#packages">Packages</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#universities">Universities</a></li>
     <li><a href="login.html">Student Portal</a></li>
   </ul>
-  <a href="login.html" class="cta">Student Portal</a>
+  <a href="#contact" class="cta">Get in touch</a>
 </nav>
 
 <div class="hero">
   <div class="hero-content">
-    <div class="hero-tag">Higher Education in Europe · 2026</div>
-    <h1>Your Pathway To <span class="grad">European Education</span></h1>
-    <p>Connecting ambitious students with high-quality, affordable universities in Italy, France, Germany, and beyond. We manage your journey from program selection to arrival.</p>
+    <div class="hero-tag">Partnership Proposal · 2026</div>
+    <h1>Your students —<br>into <span class="grad">universities of Italy and France</span></h1>
+    <p>Edupath Education is a consulting company based in Italy. We guide students from application to graduation. We partner with source universities through the direct university channel in Italy and France.</p>
     <div class="hero-stats">
-      <div class="stat"><div class="num">15+</div><div class="label">Partner Universities</div></div>
-      <div class="stat"><div class="num">€3K–8K</div><div class="label">Annual Tuition Range</div></div>
-      <div class="stat"><div class="num">95%</div><div class="label">Admission Rate</div></div>
+      <div class="hero-stat"><span class="num">30</span><div class="label">students per year</div></div>
+      <div class="hero-stat"><span class="num">95%</span><div class="label">admission rate</div></div>
+      <div class="hero-stat"><span class="num">90%</span><div class="label">received scholarship</div></div>
     </div>
   </div>
 </div>
 
-<section id="destinations">
-  <div class="section-tag">Study Destinations</div>
-  <div class="section-title">Global Pathways</div>
-  <div class="section-sub">Start with Italy and France, expanding across Europe.</div>
-  <div class="grid-3">
-    <div class="dest-card">
-      <div class="dest-head" style="background: linear-gradient(135deg, #2c5ce0, #1a3ba0);">🇮🇹 Italy</div>
-      <div class="dest-body">
-        <h4>Italy</h4>
-        <p>Bologna, Sapienza, PoliMi, Bocconi — English-taught programs with strong scholarship options.</p>
-        <p class="price">From €3,000/year</p>
+<section id="mission" class="fade-in">
+  <div class="section-tag">Our mission</div>
+  <div class="section-title">What we do</div>
+  <div class="section-sub">We are based in Italy and work with universities and government offices in person — not remotely.</div>
+  <div class="mission-card">
+    <h3>Mission of Edupath Education</h3>
+    <p>We help international graduates access <strong>Italian and French higher education</strong> — from document submission to diploma. We specialize in <strong>regional scholarships DSU/EDISU</strong>, covering tuition, scholarships up to €7,000/year, dormitory, and meals. We support the student <strong>throughout the entire study period</strong>, not just at admission.</p>
+  </div>
+</section>
+
+<section id="benefits" class="fade-in">
+  <div class="section-tag">Benefits</div>
+  <div class="section-title">What each side gets</div>
+  <div class="section-sub">Partnership with Edupath benefits everyone — the university, the student, and the partner.</div>
+
+  <div class="benefits-grid">
+    <div class="benefit-col univ">
+      <h3><span class="icon">🎓</span> Benefits for partner universities</h3>
+      <div class="benefit-list">
+        <div class="benefit-item"><h4>15% commission</h4><p>On the package cost for each enrolled student. Example: 5 students × €2,340 × 15% = €1,755 per cycle.</p></div>
+        <div class="benefit-item"><h4>Additional admissions channel</h4><p>Your graduates get access to top Italian and French universities without navigating the system alone.</p></div>
+        <div class="benefit-item"><h4>Pre-selection and preparation</h4><p>Universities receive qualified, exam-ready candidates, saving time and administration.</p></div>
+        <div class="benefit-item"><h4>Strengthened institutional ties</h4><p>Ongoing cooperation builds prestige, trust, and long-term academic connections.</p></div>
       </div>
     </div>
-    <div class="dest-card">
-      <div class="dest-head" style="background: linear-gradient(135deg, #1e4a66, #10304a);">🇫🇷 France</div>
-      <div class="dest-body">
-        <h4>France</h4>
-        <p>Sorbonne, Sciences Po, HEC, Aix-Marseille — bachelor, master, and business tracks.</p>
-        <p class="price">From €3,500/year</p>
-      </div>
-    </div>
-    <div class="dest-card">
-      <div class="dest-head" style="background: linear-gradient(135deg, #2e6b4e, #1a4530);">🇩🇪 Germany</div>
-      <div class="dest-body">
-        <h4>Germany</h4>
-        <p>Engineering and technology hubs with low tuition and strong industry links.</p>
-        <p class="price">From €2,500/year</p>
+    <div class="benefit-col stud">
+      <h3><span class="icon">🌍</span> Benefits for students</h3>
+      <div class="benefit-list">
+        <div class="benefit-item"><h4>DSU/EDISU scholarship</h4><p>Covers tuition (€0), scholarship up to €7,000/year, dormitory (€0), and meals (€0).</p></div>
+        <div class="benefit-item"><h4>Admission to top universities</h4><p>Bologna, Padova, Sapienza, PoliMi, PoliTo, Sorbonne, Sciences Po, HEC, and more.</p></div>
+        <div class="benefit-item"><h4>Full-cycle support</h4><p>From application to diploma: scholarship renewal, enrollment, bureaucracy — we do not disappear after admission.</p></div>
+        <div class="benefit-item"><h4>24/7 emergency support</h4><p>Hotline for students and parents. Local contact in every university city.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="programs">
-  <div class="section-tag">Academic Programs</div>
-  <div class="section-title">Disciplines We Cover</div>
-  <div class="section-sub">English-taught programs at bachelor and master level.</div>
-  <div class="grid-4">
-    <div class="card"><h4>Business & Management</h4><p>Marketing, finance, entrepreneurship, MBA tracks.</p></div>
-    <div class="card"><h4>Computer Science & IT</h4><p>Software engineering, AI, data science, cybersecurity.</p></div>
-    <div class="card"><h4>Engineering</h4><p>Mechanical, electrical, civil, aerospace, robotics.</p></div>
-    <div class="card"><h4>Medicine & Health</h4><p>Medicine, nursing, pharmacy, public health, dentistry.</p></div>
-    <div class="card"><h4>Arts & Humanities</h4><p>Literature, history, philosophy, languages, design.</p></div>
-    <div class="card"><h4>Social Sciences</h4><p>Psychology, sociology, political science, economics.</p></div>
-    <div class="card"><h4>Law & Legal Studies</h4><p>International law, corporate law, human rights.</p></div>
-    <div class="card"><h4>Natural Sciences</h4><p>Biology, chemistry, physics, mathematics, environment.</p></div>
-  </div>
-</section>
-
-<section id="process">
-  <div class="section-tag">Your Journey</div>
-  <div class="section-title">Six-Step Student Lifecycle</div>
-  <div class="section-sub">From discovery to settlement, we guide you every step of the way.</div>
-  <div class="process">
-    <div class="pstep"><div class="circle">1</div><h4>Discovery</h4><p>Consultation, country choice, program matching.</p></div>
-    <div class="pstep"><div class="circle">2</div><h4>Screening</h4><p>Academic records, language, visa eligibility.</p></div>
-    <div class="pstep"><div class="circle">3</div><h4>Onboarding</h4><p>Agreement, payment, student ID, tracking.</p></div>
-    <div class="pstep"><div class="circle">4</div><h4>Admission</h4><p>Applications, CV, motivation letter, documents.</p></div>
-    <div class="pstep"><div class="circle">5</div><h4>Visa</h4><p>Documentation, mock interviews, embassy prep.</p></div>
-    <div class="pstep"><div class="circle">6</div><h4>Arrival</h4><p>Housing, airport pickup, city orientation.</p></div>
-  </div>
-</section>
-
-<section id="services">
-  <div class="section-tag">Service Packages</div>
-  <div class="section-title">Choose Your Support Level</div>
-  <div class="section-sub">Transparent packages from basic admission to full settlement support.</div>
-  <div class="grid-3">
-    <div class="card" style="border-top: 4px solid var(--electric);">
-      <h4>Basic Package</h4>
-      <p>University selection, application build and submission, documentation tracking.</p>
+<section id="packages" class="fade-in">
+  <div class="section-tag">Service packages</div>
+  <div class="section-title">Two packages — choose what fits</div>
+  <div class="section-sub">From basic admission to full support throughout the entire study period.</div>
+  <div class="pkg-grid">
+    <div class="pkg-card p1">
+      <div class="pkg-head"><div class="pkg-tag">Package 1</div><div class="pkg-name">Admission Concierge</div><div class="pkg-price">€1 950</div><div class="pkg-duration">Duration: 2–4 months</div></div>
+      <div class="pkg-body">
+        <ul>
+          <li>Program selection (up to 5 universities)</li>
+          <li>Document audit</li>
+          <li>Submission through university platforms</li>
+          <li>Tracking and enrollment</li>
+          <li>24/7 emergency support</li>
+        </ul>
+      </div>
     </div>
-    <div class="card" style="border-top: 4px solid var(--lime);">
-      <h4>Premium Package</h4>
-      <p>Everything in Basic, plus visa support, accommodation, pre-departure briefing.</p>
-    </div>
-    <div class="card" style="border-top: 4px solid var(--coral);">
-      <h4>Full Concierge</h4>
-      <p>End-to-end: admission, visa, housing, arrival, local support throughout studies.</p>
+    <div class="pkg-card p2">
+      <div class="pkg-head"><div class="pkg-tag">Package 2</div><div class="pkg-name">Full Package</div><div class="pkg-price">€2 340</div><div class="pkg-duration">Duration: 2 years</div></div>
+      <div class="pkg-body">
+        <ul>
+          <li>Everything from Package 1, plus:</li>
+          <li>DSU/EDISU scholarship + ISEE</li>
+          <li>Codice Fiscale + bank account</li>
+          <li>Support throughout the entire study period</li>
+          <li>Scholarship: €7K/year + dormitory + meals</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="about">
-  <div class="section-tag">About Us</div>
-  <div class="section-title">Why EuroPath Education</div>
-  <div class="section-sub">Expert guidance, personalized support, and proven results.</div>
-  <div class="grid-3">
-    <div class="card"><h4>Safe & Secure Transition</h4><p>Comprehensive support from start to finish.</p></div>
-    <div class="card"><h4>Expert Local Counselors</h4><p>Professionals who understand your unique needs.</p></div>
-    <div class="card"><h4>Curated Pathways</h4><p>Tailored educational routes designed for your success.</p></div>
-    <div class="card"><h4>Best Value Guarantee</h4><p>Affordable education without compromising on quality.</p></div>
-    <div class="card"><h4>Flexible Planning</h4><p>Adaptive timelines that work around your schedule.</p></div>
-    <div class="card"><h4>Transparent Compliance</h4><p>Clear accounting and ethical guidance at every step.</p></div>
+<section id="process" class="fade-in">
+  <div class="section-tag">Process</div>
+  <div class="section-title">How it works</div>
+  <div class="section-sub">From first contact to arrival in Italy or France — four stages.</div>
+  <div class="timeline">
+    <div class="step"><div class="step-circle">1</div><h4>Consultation & selection</h4><p>Profile evaluation, 3–5 program selection, document audit</p></div>
+    <div class="step"><div class="step-circle">2</div><h4>Submission & enrollment</h4><p>Universitaly registration, university applications, admission confirmation</p></div>
+    <div class="step"><div class="step-circle">3</div><h4>Scholarship & visa</h4><p>DSU/EDISU application, ISEE preparation, visa, Codice Fiscale</p></div>
+    <div class="step"><div class="step-circle">4</div><h4>Arrival & adaptation</h4><p>Airport pickup, housing, SIM, city orientation — study start</p></div>
+  </div>
+</section>
+
+<section id="universities" class="fade-in">
+  <div class="section-tag">Partner universities</div>
+  <div class="section-title">Top 10 universities: Italy and France</div>
+  <div class="section-sub">We work directly with leading universities in both countries — from PoliMi and Sapienza to Sciences Po and HEC.</div>
+  <div class="uni-section">
+    <div class="section-tag" style="margin-bottom: 24px;">Top 5 Italy</div>
+    <div class="uni-grid" style="margin-bottom: 32px;">
+      <div class="uni-card"><img src="logos/polimi.png" alt="Politecnico di Milano"><div class="name">Politecnico di Milano</div><div class="country">🇮🇹 Italy</div></div>
+      <div class="uni-card"><img src="logos/bologna.png" alt="Università di Bologna"><div class="name">Università di Bologna</div><div class="country">🇮🇹 Italy</div></div>
+      <div class="uni-card"><img src="logos/sapienza.png" alt="Sapienza Università di Roma"><div class="name">Sapienza Università di Roma</div><div class="country">🇮🇹 Italy</div></div>
+      <div class="uni-card"><img src="logos/polito.png" alt="Politecnico di Torino"><div class="name">Politecnico di Torino</div><div class="country">🇮🇹 Italy</div></div>
+      <div class="uni-card"><img src="logos/firenze.png" alt="Università degli Studi di Firenze"><div class="name">Università di Firenze</div><div class="country">🇮🇹 Italy</div></div>
+    </div>
+    <div class="section-tag" style="margin-bottom: 24px;">Top 5 France</div>
+    <div class="uni-grid">
+      <div class="uni-card"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/fc/Sorbonne_University_Logo.svg/330px-Sorbonne_University_Logo.svg.png" alt="Sorbonne Université"><div class="name">Sorbonne Université</div><div class="country">🇫🇷 France</div></div>
+      <div class="uni-card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Paris_Institute_of_Political_Studies.png/330px-Paris_Institute_of_Political_Studies.png" alt="Sciences Po"><div class="name">Sciences Po</div><div class="country">🇫🇷 France</div></div>
+      <div class="uni-card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/HEC_Paris.svg/330px-HEC_Paris.svg.png" alt="HEC Paris"><div class="name">HEC Paris</div><div class="country">🇫🇷 France</div></div>
+      <div class="uni-card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/POLYTECHNIQUE-IP_PARIS.png/330px-POLYTECHNIQUE-IP_PARIS.png" alt="École Polytechnique"><div class="name">École Polytechnique</div><div class="country">🇫🇷 France</div></div>
+      <div class="uni-card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Aix_Marseille_Universit%C3%A9_logo_2024.png/330px-Aix_Marseille_Universit%C3%A9_logo_2024.png" alt="Aix-Marseille Université"><div class="name">Aix-Marseille Université</div><div class="country">🇫🇷 France</div></div>
+    </div>
   </div>
 </section>
 
 <section id="contact" class="fade-in">
   <div class="cta-section">
-    <h2>Ready for Your Global Journey?</h2>
-    <p>Take the first step towards your international education today.</p>
-    <a href="mailto:hasanov.anar.2023@gmail.com" class="cta-button">Contact an Advisor</a>
+    <h2>Ready to discuss partnership?</h2>
+    <p>Let's start with a pilot: 3–5 students, a free intro session, no commitment.</p>
+    <a href="mailto:hasanov.anar.2023@gmail.com" class="cta-button">Email us</a>
+    <p style="margin-top: 24px; color: var(--gray); font-size: 13px;">Anar Hasanov · +39 3280810631 · hasanov.anar.2023@gmail.com</p>
   </div>
 </section>
 
 <footer>
-  <div class="brand">EuroPath <span>Education</span></div>
-  <p>Italy, Lazio · Via Roma 37, Italy · hasanov.anar.2023@gmail.com · +39 3280810631</p>
+  <div class="brand">Edupath <span>Education</span></div>
+  <p>Edupath Education · Italy, Lazio · Via Roma 37, Italy<br>Admission to universities of Italy and France · Partnership Proposal · August 2026</p>
 </footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('section').forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
