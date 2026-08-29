@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Login — EuroPath Education</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
   :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; }
@@ -26,7 +25,7 @@
   .back { text-align:center; margin-top:16px; }
   .back a { color:var(--gray); font-size:12px; text-decoration:none; }
   .back a:hover { color:var(--navy); }
-  .debug { font-size:11px; color:var(--gray); margin-top:10px; display:none; }
+  #status { font-size:11px; color:var(--gray); text-align:center; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -48,32 +47,14 @@
     <a id="toggleLink">Create account</a>
   </div>
   <div class="back"><a href="index.html">← Back to homepage</a></div>
-  <div class="debug" id="debug"></div>
+  <div id="status">Loading...</div>
 </div>
 
 <script>
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 
-let supabase = null;
-
-// Initialize Supabase client
-function initSupabase() {
-  if (typeof window.supabase === 'undefined') {
-    document.getElementById('error').textContent = 'Failed to load Supabase. Please refresh the page.';
-    document.getElementById('error').style.display = 'block';
-    document.getElementById('btn').disabled = true;
-    return false;
-  }
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  return true;
-}
-
-// Try immediately, and also on load
-if (!initSupabase()) {
-  window.addEventListener('load', initSupabase);
-}
-
+const statusEl = document.getElementById('status');
 const form = document.getElementById('form');
 const title = document.getElementById('title');
 const subtitle = document.getElementById('subtitle');
@@ -82,21 +63,27 @@ const toggleLink = document.getElementById('toggleLink');
 const toggleText = document.getElementById('toggleText');
 const error = document.getElementById('error');
 const info = document.getElementById('info');
-const debug = document.getElementById('debug');
 
+let supabase = null;
 let isLogin = true;
 
-// Check if already logged in
-(async () => {
-  if (!initSupabase()) return;
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
+// Load Supabase dynamically
+const script = document.createElement('script');
+script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+script.onload = () => {
+  statusEl.textContent = '';
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // Check if already logged in
+  supabase.auth.getSession().then(({ data: { session } }) => {
     if (session) window.location.href = 'dashboard.html';
-  } catch(e) {
-    debug.textContent = 'Session check: ' + e.message;
-    debug.style.display = 'block';
-  }
-})();
+  });
+};
+script.onerror = () => {
+  statusEl.textContent = 'Failed to load. Please refresh.';
+  btn.disabled = true;
+};
+document.head.appendChild(script);
 
 toggleLink.addEventListener('click', () => {
   isLogin = !isLogin;
@@ -111,8 +98,9 @@ toggleLink.addEventListener('click', () => {
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+
   if (!supabase) {
-    error.textContent = 'Supabase not loaded. Please refresh.';
+    error.textContent = 'Still loading, please wait 2 seconds and try again.';
     error.style.display = 'block';
     return;
   }
@@ -135,7 +123,7 @@ form.addEventListener('submit', async (e) => {
       if (data.user && data.session) {
         window.location.href = 'dashboard.html';
       } else if (data.user && !data.session) {
-        info.innerHTML = 'Account created! <strong>Check your email</strong> to confirm, then sign in.';
+        info.innerHTML = 'Account created! Check your email to confirm, then sign in.';
         info.style.display = 'block';
         isLogin = true;
         title.textContent = 'Sign In';
@@ -151,10 +139,8 @@ form.addEventListener('submit', async (e) => {
       }
     }
   } catch (err) {
-    error.textContent = err.message || 'Something went wrong. Please try again.';
+    error.textContent = err.message || 'Something went wrong.';
     error.style.display = 'block';
-    debug.textContent = 'Error details: ' + JSON.stringify(err);
-    debug.style.display = 'block';
   } finally {
     btn.disabled = false;
     btn.textContent = isLogin ? 'Sign In' : 'Create Account';

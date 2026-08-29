@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Dashboard — EuroPath Education</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
   :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --amber:#ffb800; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; }
@@ -142,11 +141,23 @@
 <script>
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
+let supabase = null;
 let currentUser = null;
 let appRecord = null;
+
+// Load Supabase dynamically
+const sbScript = document.createElement('script');
+sbScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+sbScript.onload = () => {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  init();
+};
+sbScript.onerror = () => {
+  document.getElementById('summaryList').innerHTML = '<li>Failed to load. Please refresh.</li>';
+};
+document.head.appendChild(sbScript);
 
 const universities = {
   Italy: ['Politecnico di Milano', 'Università di Bologna', 'Sapienza Università di Roma', 'Politecnico di Torino', 'Università di Firenze'],
