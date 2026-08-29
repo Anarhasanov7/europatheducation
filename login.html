@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Login — EuroPath Education</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
   :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; }
@@ -13,8 +14,11 @@
   h1 { font-size:24px; font-weight:800; color:var(--ink); margin-bottom:4px; }
   .sub { color:var(--gray); font-size:14px; margin-bottom:28px; }
   label { display:block; font-size:12px; font-weight:600; color:var(--ink); margin-bottom:6px; }
-  input { width:100%; padding:12px 14px; border:1px solid #ddd; border-radius:10px; font-size:14px; margin-bottom:18px; outline:none; }
+  .input-wrap { position:relative; margin-bottom:18px; }
+  input { width:100%; padding:12px 14px; border:1px solid #ddd; border-radius:10px; font-size:14px; outline:none; transition:border-color .2s; }
   input:focus { border-color:var(--electric); }
+  input.invalid { border-color:var(--coral); background:#fff5f5; }
+  .pw-toggle { position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:12px; color:var(--gray); user-select:none; }
   button { width:100%; padding:14px; border:none; border-radius:10px; background:linear-gradient(135deg, var(--electric), var(--lime)); color:var(--ink); font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
   button:hover { transform:scale(1.02); }
   button:disabled { opacity:0.5; cursor:wait; }
@@ -26,6 +30,13 @@
   .back a { color:var(--gray); font-size:12px; text-decoration:none; }
   .back a:hover { color:var(--navy); }
   #status { font-size:11px; color:var(--gray); text-align:center; margin-top:10px; }
+  .pw-strength { font-size:11px; margin-top:-12px; margin-bottom:14px; }
+  .pw-bar { height:4px; border-radius:2px; width:0%; transition:width .3s, background .3s; }
+  .pw-label { color:var(--gray); margin-top:4px; }
+  .forgot { text-align:right; margin-top:-10px; margin-bottom:18px; }
+  .forgot a { font-size:12px; color:var(--navy); cursor:pointer; text-decoration:underline; }
+  .demo-box { background:#f0f4ff; border-radius:10px; padding:12px; margin-top:16px; font-size:12px; color:#1a4a6a; }
+  .demo-box strong { color:var(--navy); }
 </style>
 </head>
 <body>
@@ -37,9 +48,21 @@
   <div class="info" id="info"></div>
   <form id="form">
     <label for="email">Email</label>
-    <input type="email" id="email" placeholder="you@example.com" required>
+    <div class="input-wrap">
+      <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+    </div>
     <label for="password">Password</label>
-    <input type="password" id="password" placeholder="••••••••" required>
+    <div class="input-wrap">
+      <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+      <span class="pw-toggle" id="pwToggle">Show</span>
+    </div>
+    <div class="pw-strength" id="pwStrength" style="display:none;">
+      <div class="pw-bar" id="pwBar"></div>
+      <div class="pw-label" id="pwLabel"></div>
+    </div>
+    <div class="forgot" id="forgotLink" style="display:none;">
+      <a id="resetPw">Forgot password?</a>
+    </div>
     <button type="submit" id="btn">Sign In</button>
   </form>
   <div class="toggle">
@@ -48,6 +71,9 @@
   </div>
   <div class="back"><a href="index.html">← Back to homepage</a></div>
   <div id="status">Loading...</div>
+  <div class="demo-box" id="demoBox">
+    <strong>Demo account:</strong> student@europath.edu / EuroPath2026!
+  </div>
 </div>
 
 <script>
@@ -63,6 +89,14 @@ const toggleLink = document.getElementById('toggleLink');
 const toggleText = document.getElementById('toggleText');
 const error = document.getElementById('error');
 const info = document.getElementById('info');
+const pwToggle = document.getElementById('pwToggle');
+const pwInput = document.getElementById('password');
+const pwStrength = document.getElementById('pwStrength');
+const pwBar = document.getElementById('pwBar');
+const pwLabel = document.getElementById('pwLabel');
+const forgotLink = document.getElementById('forgotLink');
+const resetPw = document.getElementById('resetPw');
+const demoBox = document.getElementById('demoBox');
 
 let sb = null;
 let isLogin = true;
@@ -73,8 +107,6 @@ script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supa
 script.onload = () => {
   statusEl.textContent = '';
   sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  // Check if already logged in
   sb.auth.getSession().then(({ data: { session } }) => {
     if (session) window.location.href = 'dashboard.html';
   });
@@ -85,6 +117,37 @@ script.onerror = () => {
 };
 document.head.appendChild(script);
 
+// Show/hide password
+pwToggle.addEventListener('click', () => {
+  if (pwInput.type === 'password') {
+    pwInput.type = 'text';
+    pwToggle.textContent = 'Hide';
+  } else {
+    pwInput.type = 'password';
+    pwToggle.textContent = 'Show';
+  }
+});
+
+// Password strength meter (signup only)
+pwInput.addEventListener('input', () => {
+  if (isLogin) return;
+  const pw = pwInput.value;
+  if (!pw) { pwBar.style.width = '0%'; pwLabel.textContent = ''; return; }
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const pct = (score / 5) * 100;
+  pwBar.style.width = pct + '%';
+  const labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Excellent'];
+  const colors = ['', '#ff5c3d', '#ffb800', '#3ddfff', '#c6ff3d', '#22c55e'];
+  pwBar.style.background = colors[score];
+  pwLabel.textContent = labels[score];
+  pwLabel.style.color = colors[score];
+});
+
 toggleLink.addEventListener('click', () => {
   isLogin = !isLogin;
   title.textContent = isLogin ? 'Sign In' : 'Create Account';
@@ -94,6 +157,36 @@ toggleLink.addEventListener('click', () => {
   toggleLink.textContent = isLogin ? 'Create account' : 'Sign in';
   error.style.display = 'none';
   info.style.display = 'none';
+  pwStrength.style.display = isLogin ? 'none' : 'block';
+  forgotLink.style.display = isLogin ? 'block' : 'none';
+  demoBox.style.display = isLogin ? 'block' : 'none';
+  pwInput.value = '';
+  pwBar.style.width = '0%';
+  pwLabel.textContent = '';
+});
+
+// Password reset
+resetPw.addEventListener('click', async () => {
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  if (!email) {
+    error.textContent = 'Enter your email above first, then click "Forgot password?"';
+    error.style.display = 'block';
+    return;
+  }
+  if (!sb) return;
+  btn.disabled = true;
+  try {
+    const { error: err } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+    if (err) throw err;
+    info.innerHTML = 'Password reset link sent to <strong>' + email + '</strong>. Check your inbox.';
+    info.style.display = 'block';
+    error.style.display = 'none';
+  } catch (err) {
+    error.textContent = err.message;
+    error.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 form.addEventListener('submit', async (e) => {
@@ -106,9 +199,29 @@ form.addEventListener('submit', async (e) => {
   }
 
   const email = document.getElementById('email').value.trim().toLowerCase();
-  const password = document.getElementById('password').value;
+  const password = pwInput.value;
+
+  // Validate
+  document.getElementById('email').classList.remove('invalid');
+  pwInput.classList.remove('invalid');
   error.style.display = 'none';
   info.style.display = 'none';
+
+  if (!email || !password) {
+    error.textContent = 'Please fill in both fields.';
+    error.style.display = 'block';
+    if (!email) document.getElementById('email').classList.add('invalid');
+    if (!password) pwInput.classList.add('invalid');
+    return;
+  }
+
+  if (!isLogin && password.length < 8) {
+    error.textContent = 'Password must be at least 8 characters.';
+    error.style.display = 'block';
+    pwInput.classList.add('invalid');
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = isLogin ? 'Signing in...' : 'Creating account...';
 
@@ -130,6 +243,8 @@ form.addEventListener('submit', async (e) => {
         btn.textContent = 'Sign In';
         toggleText.textContent = 'New student?';
         toggleLink.textContent = 'Create account';
+        pwStrength.style.display = 'none';
+        forgotLink.style.display = 'block';
       } else {
         info.textContent = 'Account created! You can now sign in.';
         info.style.display = 'block';

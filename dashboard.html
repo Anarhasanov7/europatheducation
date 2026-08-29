@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Dashboard — EuroPath Education</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-  :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --amber:#ffb800; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; }
+  :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --amber:#ffb800; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; --green:#22c55e; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Inter', -apple-system, sans-serif; background:var(--off); color:var(--ink); }
   nav { background:#fff; border-bottom:1px solid #eee; padding:14px 40px; display:flex; justify-content:space-between; align-items:center; }
@@ -19,6 +20,10 @@
   h1 { font-size:28px; font-weight:800; margin-bottom:6px; }
   .sub { color:var(--gray); margin-bottom:30px; }
 
+  .status-badge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; margin-left:12px; vertical-align:middle; }
+  .status-badge.draft { background:#f0f0f0; color:var(--gray); }
+  .status-badge.submitted { background:#e6f9ec; color:var(--green); }
+
   .progress-wrap { background:#fff; border-radius:14px; padding:20px; margin-bottom:24px; box-shadow:0 2px 10px rgba(0,0,0,0.04); }
   .progress-bar { height:10px; background:#eee; border-radius:6px; overflow:hidden; }
   .progress-fill { height:100%; width:0%; background:linear-gradient(90deg, var(--electric), var(--lime)); transition:width .3s; }
@@ -28,16 +33,23 @@
   .card { background:#fff; border-radius:16px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
   .card h3 { font-size:16px; font-weight:700; margin-bottom:16px; }
   label { display:block; font-size:12px; font-weight:600; margin-bottom:6px; }
-  select, input[type="text"], input[type="file"] { width:100%; padding:11px 12px; border:1px solid #ddd; border-radius:10px; font-size:14px; margin-bottom:14px; outline:none; }
+  select, input[type="text"], input[type="file"] { width:100%; padding:11px 12px; border:1px solid #ddd; border-radius:10px; font-size:14px; margin-bottom:14px; outline:none; transition:border-color .2s; }
   select:focus, input:focus { border-color:var(--electric); }
+  select.invalid, input.invalid { border-color:var(--coral); background:#fff5f5; }
+  .field-hint { font-size:11px; color:var(--coral); margin-top:-10px; margin-bottom:10px; display:none; }
 
   .doc-list { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .doc-item { border:1px solid #eee; border-radius:12px; padding:14px; }
+  .doc-item { border:1px solid #eee; border-radius:12px; padding:14px; position:relative; }
   .doc-item .name { font-size:13px; font-weight:700; }
   .doc-item .status { font-size:11px; color:var(--gray); margin-top:4px; }
-  .doc-item .status.done { color:green; }
+  .doc-item .status.done { color:var(--green); }
   .doc-item .status.error { color:var(--coral); }
   .doc-item input[type="file"] { margin:8px 0 0; font-size:12px; }
+  .doc-actions { display:flex; gap:8px; margin-top:6px; }
+  .doc-btn { font-size:11px; padding:4px 10px; border:none; border-radius:6px; cursor:pointer; font-weight:600; }
+  .doc-btn.download { background:var(--light); color:var(--navy); }
+  .doc-btn.delete { background:#fff0f0; color:var(--coral); }
+  .doc-btn:hover { opacity:0.8; }
 
   .steps { display:flex; flex-direction:column; gap:10px; }
   .step { display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px; border:1px solid #eee; }
@@ -45,9 +57,12 @@
   .step label { margin:0; font-size:13px; }
   .step.done { background:rgba(198,255,61,0.08); border-color:var(--lime); }
 
-  .save { margin-top:24px; background:linear-gradient(135deg, var(--electric), var(--lime)); border:none; color:var(--ink); padding:14px 28px; border-radius:24px; font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
+  .btn-row { display:flex; gap:12px; margin-top:16px; flex-wrap:wrap; }
+  .save { background:linear-gradient(135deg, var(--electric), var(--lime)); border:none; color:var(--ink); padding:14px 28px; border-radius:24px; font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
   .save:hover { transform:scale(1.03); }
   .save:disabled { opacity:0.5; cursor:wait; }
+  .submit-btn { background:linear-gradient(135deg, var(--navy), #1a3a6e); color:#fff; }
+  .submit-btn:disabled { opacity:0.5; }
 
   .summary { background:#fff; border-radius:16px; padding:24px; margin-top:24px; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
   .summary h3 { margin-bottom:14px; }
@@ -58,7 +73,13 @@
   .toast.show { display:block; animation:slideIn .3s; }
   @keyframes slideIn { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
 
-  @media (max-width:768px) { .grid-2, .doc-list { grid-template-columns:1fr; } .container { padding:20px; } }
+  @media (max-width:768px) {
+    .grid-2, .doc-list { grid-template-columns:1fr; }
+    .container { padding:20px; }
+    nav { padding:14px 20px; }
+    .btn-row { flex-direction:column; }
+    .btn-row button { width:100%; }
+  }
 </style>
 </head>
 <body>
@@ -72,7 +93,7 @@
 </nav>
 
 <div class="container">
-  <h1>Application Dashboard</h1>
+  <h1>Application Dashboard <span class="status-badge draft" id="statusBadge">Draft</span></h1>
   <p class="sub">Complete your profile, choose a university, and upload the required documents.</p>
 
   <div class="progress-wrap">
@@ -85,10 +106,13 @@
       <h3>Profile & Program</h3>
       <label for="fullName">Full name</label>
       <input type="text" id="fullName" placeholder="Your full name">
+      <div class="field-hint" id="hint-fullName">Please enter your full name</div>
       <label for="country">Preferred country</label>
       <select id="country"><option value="">Select country</option><option value="Italy">Italy</option><option value="France">France</option><option value="Germany">Germany</option></select>
+      <div class="field-hint" id="hint-country">Please select a country</div>
       <label for="university">University</label>
       <select id="university" disabled><option value="">Select country first</option></select>
+      <div class="field-hint" id="hint-university">Please select a university</div>
       <label for="program">Program / Field</label>
       <select id="program">
         <option value="">Select program</option>
@@ -101,17 +125,18 @@
         <option value="Law & Legal Studies">Law & Legal Studies</option>
         <option value="Natural Sciences">Natural Sciences</option>
       </select>
+      <div class="field-hint" id="hint-program">Please select a program</div>
     </div>
 
     <div class="card">
       <h3>Required Documents (max 5 MB each)</h3>
-      <div class="doc-list">
-        <div class="doc-item"><div class="name">Passport</div><div class="status" id="st-passport">Not uploaded</div><input type="file" data-doc="passport" onchange="handleFile(this)"></div>
-        <div class="doc-item"><div class="name">Diploma</div><div class="status" id="st-diploma">Not uploaded</div><input type="file" data-doc="diploma" onchange="handleFile(this)"></div>
-        <div class="doc-item"><div class="name">Transcript</div><div class="status" id="st-transcript">Not uploaded</div><input type="file" data-doc="transcript" onchange="handleFile(this)"></div>
-        <div class="doc-item"><div class="name">Motivation Letter</div><div class="status" id="st-motivation">Not uploaded</div><input type="file" data-doc="motivation" onchange="handleFile(this)"></div>
-        <div class="doc-item"><div class="name">CV / Resume</div><div class="status" id="st-cv">Not uploaded</div><input type="file" data-doc="cv" onchange="handleFile(this)"></div>
-        <div class="doc-item"><div class="name">English Certificate</div><div class="status" id="st-english">Not uploaded</div><input type="file" data-doc="english" onchange="handleFile(this)"></div>
+      <div class="doc-list" id="docList">
+        <div class="doc-item"><div class="name">Passport</div><div class="status" id="st-passport">Not uploaded</div><input type="file" data-doc="passport" onchange="handleFile(this)"><div class="doc-actions" id="actions-passport" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('passport')">Download</button><button class="doc-btn delete" onclick="deleteDoc('passport')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">Diploma</div><div class="status" id="st-diploma">Not uploaded</div><input type="file" data-doc="diploma" onchange="handleFile(this)"><div class="doc-actions" id="actions-diploma" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('diploma')">Download</button><button class="doc-btn delete" onclick="deleteDoc('diploma')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">Transcript</div><div class="status" id="st-transcript">Not uploaded</div><input type="file" data-doc="transcript" onchange="handleFile(this)"><div class="doc-actions" id="actions-transcript" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('transcript')">Download</button><button class="doc-btn delete" onclick="deleteDoc('transcript')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">Motivation Letter</div><div class="status" id="st-motivation">Not uploaded</div><input type="file" data-doc="motivation" onchange="handleFile(this)"><div class="doc-actions" id="actions-motivation" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('motivation')">Download</button><button class="doc-btn delete" onclick="deleteDoc('motivation')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">CV / Resume</div><div class="status" id="st-cv">Not uploaded</div><input type="file" data-doc="cv" onchange="handleFile(this)"><div class="doc-actions" id="actions-cv" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('cv')">Download</button><button class="doc-btn delete" onclick="deleteDoc('cv')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">English Certificate</div><div class="status" id="st-english">Not uploaded</div><input type="file" data-doc="english" onchange="handleFile(this)"><div class="doc-actions" id="actions-english" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('english')">Download</button><button class="doc-btn delete" onclick="deleteDoc('english')">Delete</button></div></div>
       </div>
     </div>
   </div>
@@ -121,13 +146,13 @@
     <div class="steps">
       <div class="step"><input type="checkbox" id="step_account" checked disabled><label for="step_account">Create account</label></div>
       <div class="step"><input type="checkbox" id="step_profile"><label for="step_profile">Complete profile & university selection</label></div>
-      <div class="step"><input type="checkbox" id="step_documents"><label for="step_documents">Upload required documents</label></div>
+      <div class="step"><input type="checkbox" id="step_documents"><label for="step_documents">Upload required documents (at least 4)</label></div>
       <div class="step"><input type="checkbox" id="step_review"><label for="step_review">Review and confirm application</label></div>
       <div class="step"><input type="checkbox" id="step_submit"><label for="step_submit">Submit to advisor</label></div>
     </div>
-    <div style="display:flex; gap:12px; margin-top:16px;">
+    <div class="btn-row">
       <button class="save" id="saveBtn" onclick="saveApp()">Save Progress</button>
-      <button class="save" id="submitBtn" onclick="submitApp()" style="background:linear-gradient(135deg, #0b1e3f, #1a3a6e); color:#fff;">Submit Application</button>
+      <button class="save submit-btn" id="submitBtn" onclick="submitApp()">Submit Application</button>
     </div>
   </div>
 
@@ -144,13 +169,13 @@
 <script>
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 let sb = null;
 let currentUser = null;
 let appRecord = null;
+let docPaths = {};
 
-// Load Supabase dynamically
 const sbScript = document.createElement('script');
 sbScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
 sbScript.onload = () => {
@@ -180,6 +205,12 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
 async function init() {
   try {
     const { data: { session }, error: sessionErr } = await sb.auth.getSession();
@@ -187,7 +218,6 @@ async function init() {
     currentUser = session.user;
     document.getElementById('userName').textContent = currentUser.email;
 
-    // Load or create application record
     const { data: existing, error: fetchErr } = await sb
       .from('applications')
       .select('*')
@@ -202,45 +232,45 @@ async function init() {
 
     if (existing) {
       appRecord = existing;
-    fullName.value = appRecord.full_name || '';
-    country.value = appRecord.country || '';
-    program.value = appRecord.program || '';
-    updateUnis(appRecord.country, appRecord.university);
-    if (appRecord.steps) {
-      for (const [k, v] of Object.entries(appRecord.steps)) {
-        const el = document.getElementById('step_' + k);
-        if (el) el.checked = v;
+      fullName.value = appRecord.full_name || '';
+      country.value = appRecord.country || '';
+      program.value = appRecord.program || '';
+      updateUnis(appRecord.country, appRecord.university);
+      if (appRecord.steps) {
+        for (const [k, v] of Object.entries(appRecord.steps)) {
+          const el = document.getElementById('step_' + k);
+          if (el) el.checked = v;
+        }
       }
+      updateStatusBadge(appRecord.status || 'draft');
+    } else {
+      const { data: created, error } = await sb
+        .from('applications')
+        .insert({ user_id: currentUser.id, steps: { account: true, profile: false, documents: false, review: false, submit: false }, status: 'draft' })
+        .select()
+        .single();
+      if (error) {
+        console.error('Error creating application:', error);
+        document.getElementById('summaryList').innerHTML = '<li>Error: ' + error.message + '</li>';
+        return;
+      }
+      appRecord = created;
+      updateStatusBadge('draft');
     }
-  } else {
-    // Create new application
-    const { data: created, error } = await sb
-      .from('applications')
-      .insert({ user_id: currentUser.id, steps: { account: true, profile: false, documents: false, review: false, submit: false } })
-      .select()
-      .single();
-    if (error) {
-      console.error('Error creating application:', error);
-      document.getElementById('summaryList').innerHTML = '<li>Error: ' + error.message + '</li>';
-      return;
-    }
-    appRecord = created;
-  }
 
-  // Load documents
-  await loadDocuments();
-  updateProgress();
-  renderSummary();
+    await loadDocuments();
+    updateProgress();
+    renderSummary();
   } catch (err) {
     console.error('Dashboard init error:', err);
     document.getElementById('summaryList').innerHTML = '<li>Error: ' + (err.message || 'Unknown error') + '</li>';
   }
 }
 
-function formatSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+function updateStatusBadge(status) {
+  const badge = document.getElementById('statusBadge');
+  badge.textContent = status === 'submitted' ? 'Submitted' : 'Draft';
+  badge.className = 'status-badge ' + status;
 }
 
 async function loadDocuments() {
@@ -249,6 +279,7 @@ async function loadDocuments() {
     .select('*')
     .eq('user_id', currentUser.id);
 
+  docPaths = {};
   if (docs) {
     docs.forEach(doc => {
       const st = document.getElementById('st-' + doc.doc_type);
@@ -257,6 +288,9 @@ async function loadDocuments() {
         st.classList.add('done');
         st.classList.remove('error');
       }
+      docPaths[doc.doc_type] = doc.storage_path;
+      const actions = document.getElementById('actions-' + doc.doc_type);
+      if (actions) actions.style.display = 'flex';
     });
   }
   autoStep();
@@ -285,7 +319,6 @@ async function handleFile(input) {
   const docType = input.dataset.doc;
   const st = document.getElementById('st-' + docType);
 
-  // 5 MB check
   if (file.size > MAX_FILE_SIZE) {
     st.textContent = 'File too large — max 5 MB';
     st.classList.add('error');
@@ -299,7 +332,6 @@ async function handleFile(input) {
 
   const filePath = currentUser.id + '/' + docType + '/' + file.name;
 
-  // Upload to storage
   const { error: uploadErr } = await sb.storage
     .from('student-documents')
     .upload(filePath, file, { upsert: true });
@@ -310,10 +342,8 @@ async function handleFile(input) {
     return;
   }
 
-  // Delete old document record if exists
   await sb.from('documents').delete().eq('user_id', currentUser.id).eq('doc_type', docType);
 
-  // Insert document metadata
   const { error: dbErr } = await sb
     .from('documents')
     .insert({
@@ -334,13 +364,44 @@ async function handleFile(input) {
   st.textContent = file.name + ' · ' + formatSize(file.size);
   st.classList.add('done');
   st.classList.remove('error');
+  docPaths[docType] = filePath;
+  document.getElementById('actions-' + docType).style.display = 'flex';
   autoStep();
   showToast(docType + ' uploaded successfully');
   renderSummary();
 }
 
+async function downloadDoc(docType) {
+  const path = docPaths[docType];
+  if (!path) { showToast('File not found'); return; }
+  const { data, error } = await sb.storage.from('student-documents').download(path);
+  if (error) { showToast('Download failed: ' + error.message); return; }
+  const url = URL.createObjectURL(data);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = path.split('/').pop();
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function deleteDoc(docType) {
+  if (!confirm('Delete this document?')) return;
+  const path = docPaths[docType];
+  if (path) {
+    await sb.storage.from('student-documents').remove([path]);
+  }
+  await sb.from('documents').delete().eq('user_id', currentUser.id).eq('doc_type', docType);
+  const st = document.getElementById('st-' + docType);
+  st.textContent = 'Not uploaded';
+  st.classList.remove('done', 'error');
+  document.getElementById('actions-' + docType).style.display = 'none';
+  delete docPaths[docType];
+  autoStep();
+  showToast(docType + ' deleted');
+  renderSummary();
+}
+
 function autoStep() {
-  // Check documents step
   const docStatuses = ['passport','diploma','transcript','motivation','cv','english'];
   const uploaded = docStatuses.filter(d => {
     const st = document.getElementById('st-' + d);
@@ -348,7 +409,6 @@ function autoStep() {
   });
   document.getElementById('step_documents').checked = uploaded.length >= 4;
 
-  // Check profile step
   if (fullName.value && country.value && university.value && program.value) {
     document.getElementById('step_profile').checked = true;
   }
@@ -365,17 +425,39 @@ function updateProgress() {
   document.getElementById('progressText').textContent = pct + '% completed';
 }
 
+function validateProfile() {
+  let valid = true;
+  const fields = [
+    { el: fullName, hint: 'hint-fullName', check: () => !fullName.value.trim() },
+    { el: country, hint: 'hint-country', check: () => !country.value },
+    { el: university, hint: 'hint-university', check: () => !university.value },
+    { el: program, hint: 'hint-program', check: () => !program.value }
+  ];
+  fields.forEach(f => {
+    const hint = document.getElementById(f.hint);
+    if (f.check()) {
+      f.el.classList.add('invalid');
+      hint.style.display = 'block';
+      valid = false;
+    } else {
+      f.el.classList.remove('invalid');
+      hint.style.display = 'none';
+    }
+  });
+  return valid;
+}
+
 async function saveApp() {
   const btn = document.getElementById('saveBtn');
   btn.disabled = true;
   btn.textContent = 'Saving...';
 
+  autoStep();
+
   const steps = {};
   ['account','profile','documents','review','submit'].forEach(s => {
     steps[s] = document.getElementById('step_' + s).checked;
   });
-
-  autoStep();
 
   const { error } = await sb
     .from('applications')
@@ -399,54 +481,29 @@ async function saveApp() {
   btn.textContent = 'Save Progress';
 }
 
-function renderSummary() {
-  const list = document.getElementById('summaryList');
-  list.innerHTML = '';
-  const docStatuses = ['passport','diploma','transcript','motivation','cv','english'];
-  const uploaded = docStatuses.filter(d => {
-    const st = document.getElementById('st-' + d);
-    return st && st.classList.contains('done');
-  });
-  const stepsDone = ['account','profile','documents','review','submit'].filter(s => document.getElementById('step_' + s)?.checked);
-  const items = [
-    ['Email', currentUser?.email || '—'],
-    ['Full name', fullName.value || '—'],
-    ['Country', country.value || '—'],
-    ['University', university.value || '—'],
-    ['Program', program.value || '—'],
-    ['Documents uploaded', uploaded.length + ' of 6'],
-    ['Steps completed', stepsDone.length + ' of 5']
-  ];
-  items.forEach(([k, v]) => { const li = document.createElement('li'); li.innerHTML = '<strong>' + k + ':</strong> ' + v; list.appendChild(li); });
-}
-
 async function submitApp() {
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Submitting...';
 
-  // Validate required fields
-  if (!fullName.value || !country.value || !university.value || !program.value) {
-    showToast('Please complete your profile first');
-    btn.disabled = false;
-    btn.textContent = 'Submit Application';
+  if (!validateProfile()) {
+    showToast('Please complete all profile fields');
     return;
   }
 
-  // Check at least 4 documents uploaded
   const docStatuses = ['passport','diploma','transcript','motivation','cv','english'];
   const uploaded = docStatuses.filter(d => {
     const st = document.getElementById('st-' + d);
     return st && st.classList.contains('done');
   });
   if (uploaded.length < 4) {
-    showToast('Please upload at least 4 documents');
-    btn.disabled = false;
-    btn.textContent = 'Submit Application';
+    showToast('Please upload at least 4 documents (' + uploaded.length + '/6 uploaded)');
     return;
   }
 
-  // Mark review and submit steps as done
+  if (!confirm('Submit your application to an advisor? You can still edit after submission.')) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
   document.getElementById('step_review').checked = true;
   document.getElementById('step_submit').checked = true;
   updateProgress();
@@ -476,8 +533,32 @@ async function submitApp() {
     showToast('Application submitted! We will contact you soon.');
     btn.textContent = 'Submitted ✓';
     btn.style.background = 'linear-gradient(135deg, #c6ff3d, #3ddfff)';
+    updateStatusBadge('submitted');
     renderSummary();
   }
+}
+
+function renderSummary() {
+  const list = document.getElementById('summaryList');
+  list.innerHTML = '';
+  const docStatuses = ['passport','diploma','transcript','motivation','cv','english'];
+  const uploaded = docStatuses.filter(d => {
+    const st = document.getElementById('st-' + d);
+    return st && st.classList.contains('done');
+  });
+  const stepsDone = ['account','profile','documents','review','submit'].filter(s => document.getElementById('step_' + s)?.checked);
+  const status = appRecord?.status || 'draft';
+  const items = [
+    ['Email', currentUser?.email || '—'],
+    ['Full name', fullName.value || '—'],
+    ['Country', country.value || '—'],
+    ['University', university.value || '—'],
+    ['Program', program.value || '—'],
+    ['Documents uploaded', uploaded.length + ' of 6'],
+    ['Steps completed', stepsDone.length + ' of 5'],
+    ['Status', status.charAt(0).toUpperCase() + status.slice(1)]
+  ];
+  items.forEach(([k, v]) => { const li = document.createElement('li'); li.innerHTML = '<strong>' + k + ':</strong> ' + v; list.appendChild(li); });
 }
 
 async function logout() {
@@ -485,7 +566,12 @@ async function logout() {
   window.location.href = 'login.html';
 }
 
-document.querySelectorAll('input[type="text"], select').forEach(el => el.addEventListener('change', autoStep));
+document.querySelectorAll('input[type="text"], select').forEach(el => el.addEventListener('change', () => {
+  el.classList.remove('invalid');
+  const hint = document.getElementById('hint-' + el.id);
+  if (hint) hint.style.display = 'none';
+  autoStep();
+}));
 </script>
 
 </body>
