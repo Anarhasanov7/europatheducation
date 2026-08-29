@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard — EuroPath Education</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --amber:#ffb800; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', -apple-system, sans-serif; background:var(--off); color:var(--ink); }
+  nav { background:#fff; border-bottom:1px solid #eee; padding:14px 40px; display:flex; justify-content:space-between; align-items:center; }
+  nav .brand { font-size:20px; font-weight:800; }
+  nav .brand span { color:var(--electric); }
+  .user { font-size:13px; color:var(--gray); display:flex; align-items:center; gap:12px; }
+  .user button { background:var(--ink); color:#fff; border:none; padding:6px 14px; border-radius:14px; cursor:pointer; font-size:12px; }
+
+  .container { max-width:1100px; margin:0 auto; padding:40px; }
+  h1 { font-size:28px; font-weight:800; margin-bottom:6px; }
+  .sub { color:var(--gray); margin-bottom:30px; }
+
+  .progress-wrap { background:#fff; border-radius:14px; padding:20px; margin-bottom:24px; box-shadow:0 2px 10px rgba(0,0,0,0.04); }
+  .progress-bar { height:10px; background:#eee; border-radius:6px; overflow:hidden; }
+  .progress-fill { height:100%; width:0%; background:linear-gradient(90deg, var(--electric), var(--lime)); transition:width .3s; }
+  .progress-text { font-size:13px; color:var(--gray); margin-top:8px; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .card { background:#fff; border-radius:16px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+  .card h3 { font-size:16px; font-weight:700; margin-bottom:16px; }
+  label { display:block; font-size:12px; font-weight:600; margin-bottom:6px; }
+  select, input[type="text"], input[type="file"] { width:100%; padding:11px 12px; border:1px solid #ddd; border-radius:10px; font-size:14px; margin-bottom:14px; outline:none; }
+  select:focus, input:focus { border-color:var(--electric); }
+
+  .doc-list { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .doc-item { border:1px solid #eee; border-radius:12px; padding:14px; }
+  .doc-item .name { font-size:13px; font-weight:700; }
+  .doc-item .status { font-size:11px; color:var(--gray); margin-top:4px; }
+  .doc-item .status.done { color:green; }
+  .doc-item input[type="file"] { margin:8px 0 0; font-size:12px; }
+
+  .steps { display:flex; flex-direction:column; gap:10px; }
+  .step { display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px; border:1px solid #eee; }
+  .step input { width:18px; height:18px; accent-color:var(--electric); }
+  .step label { margin:0; font-size:13px; }
+  .step.done { background:rgba(198,255,61,0.08); border-color:var(--lime); }
+
+  .save { margin-top:24px; background:linear-gradient(135deg, var(--electric), var(--lime)); border:none; color:var(--ink); padding:14px 28px; border-radius:24px; font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
+  .save:hover { transform:scale(1.03); }
+
+  .summary { background:#fff; border-radius:16px; padding:24px; margin-top:24px; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+  .summary h3 { margin-bottom:14px; }
+  .summary ul { list-style:none; font-size:13px; color:var(--gray); line-height:1.8; }
+  .summary ul li strong { color:var(--ink); }
+
+  @media (max-width:768px) { .grid-2, .doc-list { grid-template-columns:1fr; } .container { padding:20px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">EuroPath <span>Education</span></div>
+  <div class="user">
+    <span id="userName">Student</span>
+    <button onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<div class="container">
+  <h1>Application Dashboard</h1>
+  <p class="sub">Complete your profile, choose a university, and upload the required documents.</p>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0% completed</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Profile & Program</h3>
+      <label for="fullName">Full name</label>
+      <input type="text" id="fullName" placeholder="Your full name">
+      <label for="country">Preferred country</label>
+      <select id="country"><option value="">Select country</option><option value="Italy">Italy</option><option value="France">France</option><option value="Germany">Germany</option></select>
+      <label for="university">University</label>
+      <select id="university" disabled><option value="">Select country first</option></select>
+      <label for="program">Program / Field</label>
+      <select id="program">
+        <option value="">Select program</option>
+        <option value="Business & Management">Business & Management</option>
+        <option value="Computer Science & IT">Computer Science & IT</option>
+        <option value="Engineering">Engineering</option>
+        <option value="Medicine & Health Sciences">Medicine & Health Sciences</option>
+        <option value="Arts & Humanities">Arts & Humanities</option>
+        <option value="Social Sciences">Social Sciences</option>
+        <option value="Law & Legal Studies">Law & Legal Studies</option>
+        <option value="Natural Sciences">Natural Sciences</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <h3>Required Documents</h3>
+      <div class="doc-list">
+        <div class="doc-item"><div class="name">Passport</div><div class="status" id="st-passport">Not uploaded</div><input type="file" data-doc="passport" onchange="handleFile(this)"></div>
+        <div class="doc-item"><div class="name">Diploma</div><div class="status" id="st-diploma">Not uploaded</div><input type="file" data-doc="diploma" onchange="handleFile(this)"></div>
+        <div class="doc-item"><div class="name">Transcript</div><div class="status" id="st-transcript">Not uploaded</div><input type="file" data-doc="transcript" onchange="handleFile(this)"></div>
+        <div class="doc-item"><div class="name">Motivation Letter</div><div class="status" id="st-motivation">Not uploaded</div><input type="file" data-doc="motivation" onchange="handleFile(this)"></div>
+        <div class="doc-item"><div class="name">CV / Resume</div><div class="status" id="st-cv">Not uploaded</div><input type="file" data-doc="cv" onchange="handleFile(this)"></div>
+        <div class="doc-item"><div class="name">English Certificate</div><div class="status" id="st-english">Not uploaded</div><input type="file" data-doc="english" onchange="handleFile(this)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <h3>Application Steps</h3>
+    <div class="steps">
+      <div class="step"><input type="checkbox" id="step_account" checked disabled><label for="step_account">Create account</label></div>
+      <div class="step"><input type="checkbox" id="step_profile"><label for="step_profile">Complete profile & university selection</label></div>
+      <div class="step"><input type="checkbox" id="step_documents"><label for="step_documents">Upload required documents</label></div>
+      <div class="step"><input type="checkbox" id="step_review"><label for="step_review">Review and confirm application</label></div>
+      <div class="step"><input type="checkbox" id="step_submit"><label for="step_submit">Submit to advisor</label></div>
+    </div>
+    <button class="save" onclick="saveApp()">Save Progress</button>
+  </div>
+
+  <div class="summary" id="summaryBox">
+    <h3>Application Summary</h3>
+    <ul id="summaryList">
+      <li>No information saved yet.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  const current = localStorage.getItem('ep_current_user');
+  if (!current) { window.location.href = 'login.html'; }
+  const users = JSON.parse(localStorage.getItem('ep_users') || '{}');
+  const appKey = 'ep_app_' + current;
+  let app = JSON.parse(localStorage.getItem(appKey) || '{"steps":{"account":true}}');
+
+  document.getElementById('userName').textContent = users[current]?.name || current;
+
+  const universities = {
+    Italy: ['Politecnico di Milano', 'Università di Bologna', 'Sapienza Università di Roma', 'Politecnico di Torino', 'Università di Firenze'],
+    France: ['Sorbonne Université', 'Sciences Po', 'HEC Paris', 'École Polytechnique', 'Aix-Marseille Université'],
+    Germany: ['TU Munich', 'RWTH Aachen', 'Karlsruhe Institute of Technology', 'LMU Munich', 'TU Berlin']
+  };
+
+  const country = document.getElementById('country');
+  const university = document.getElementById('university');
+  const fullName = document.getElementById('fullName');
+  const program = document.getElementById('program');
+
+  function load() {
+    if (app.profile) {
+      fullName.value = app.profile.fullName || '';
+      country.value = app.profile.country || '';
+      program.value = app.profile.program || '';
+      updateUnis(app.profile.country, app.profile.university);
+    }
+    if (app.documents) {
+      for (const [doc, info] of Object.entries(app.documents)) {
+        const st = document.getElementById('st-' + doc);
+        if (st) { st.textContent = info.name + ' · ' + info.size; st.classList.add('done'); }
+      }
+    }
+    if (app.steps) {
+      for (const [k, v] of Object.entries(app.steps)) {
+        const el = document.getElementById('step_' + k);
+        if (el) el.checked = v;
+      }
+    }
+    updateProgress();
+    renderSummary();
+  }
+
+  function updateUnis(selectedCountry, selectedUni) {
+    university.innerHTML = '<option value="">Select university</option>';
+    if (selectedCountry && universities[selectedCountry]) {
+      universities[selectedCountry].forEach(u => {
+        const opt = document.createElement('option');
+        opt.value = u; opt.textContent = u;
+        if (u === selectedUni) opt.selected = true;
+        university.appendChild(opt);
+      });
+      university.disabled = false;
+    } else {
+      university.disabled = true;
+    }
+  }
+
+  country.addEventListener('change', () => { updateUnis(country.value, ''); });
+
+  function handleFile(input) {
+    if (!input.files[0]) return;
+    const doc = input.dataset.doc;
+    const f = input.files[0];
+    app.documents = app.documents || {};
+    app.documents[doc] = { name: f.name, size: (f.size / 1024).toFixed(1) + ' KB', type: f.type };
+    const st = document.getElementById('st-' + doc);
+    st.textContent = f.name + ' · ' + app.documents[doc].size;
+    st.classList.add('done');
+    autoStep();
+  }
+
+  function autoStep() {
+    const docs = app.documents || {};
+    if (Object.keys(docs).length >= 4) document.getElementById('step_documents').checked = true;
+    if (fullName.value && country.value && university.value && program.value) document.getElementById('step_profile').checked = true;
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const steps = ['account','profile','documents','review','submit'];
+    let done = 0;
+    steps.forEach(s => { if (document.getElementById('step_' + s)?.checked) done++; });
+    const pct = Math.round((done / steps.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = pct + '% completed';
+  }
+
+  function saveApp() {
+    app.profile = { fullName: fullName.value, country: country.value, university: university.value, program: program.value };
+    app.steps = {};
+    ['account','profile','documents','review','submit'].forEach(s => {
+      app.steps[s] = document.getElementById('step_' + s).checked;
+    });
+    localStorage.setItem(appKey, JSON.stringify(app));
+    autoStep();
+    updateProgress();
+    renderSummary();
+    alert('Progress saved.');
+  }
+
+  function renderSummary() {
+    const list = document.getElementById('summaryList');
+    list.innerHTML = '';
+    const p = app.profile || {};
+    const docs = app.documents || {};
+    const items = [
+      ['Student', users[current]?.name || current],
+      ['Full name', p.fullName || '—'],
+      ['Country', p.country || '—'],
+      ['University', p.university || '—'],
+      ['Program', p.program || '—'],
+      ['Documents uploaded', Object.keys(docs).length + ' of 6'],
+      ['Steps completed', Object.values(app.steps || {}).filter(Boolean).length + ' of 5']
+    ];
+    items.forEach(([k, v]) => { const li = document.createElement('li'); li.innerHTML = '<strong>' + k + ':</strong> ' + v; list.appendChild(li); });
+  }
+
+  function logout() {
+    localStorage.removeItem('ep_current_user');
+    window.location.href = 'login.html';
+  }
+
+  document.querySelectorAll('input[type="text"], select').forEach(el => el.addEventListener('change', autoStep));
+
+  load();
+</script>
+
+</body>
+</html>

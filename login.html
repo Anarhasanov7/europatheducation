@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Login — EuroPath Education</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', -apple-system, sans-serif; background:linear-gradient(160deg, var(--navy) 0%, var(--ink) 100%); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 20px; }
+  .card { background:#fff; border-radius:20px; padding:40px; width:100%; max-width:420px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+  h1 { font-size:24px; font-weight:800; color:var(--ink); margin-bottom:4px; }
+  .sub { color:var(--gray); font-size:14px; margin-bottom:28px; }
+  label { display:block; font-size:12px; font-weight:600; color:var(--ink); margin-bottom:6px; }
+  input { width:100%; padding:12px 14px; border:1px solid #ddd; border-radius:10px; font-size:14px; margin-bottom:18px; outline:none; }
+  input:focus { border-color:var(--electric); }
+  button { width:100%; padding:14px; border:none; border-radius:10px; background:linear-gradient(135deg, var(--electric), var(--lime)); color:var(--ink); font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
+  button:hover { transform:scale(1.02); }
+  .toggle { text-align:center; margin-top:20px; font-size:13px; color:var(--gray); }
+  .toggle a { color:var(--navy); font-weight:700; cursor:pointer; text-decoration:underline; }
+  .error { color:var(--coral); font-size:12px; margin-bottom:14px; display:none; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1 id="title">Sign In</h1>
+  <p class="sub" id="subtitle">Access your EuroPath application portal</p>
+  <div class="error" id="error"></div>
+  <form id="form">
+    <label for="name">Full name</label>
+    <input type="text" id="name" placeholder="Anar Hasanov">
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="you@example.com" required>
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="••••••••" required>
+    <button type="submit" id="btn">Sign In</button>
+  </form>
+  <div class="toggle">
+    <span id="toggleText">New student?</span>
+    <a id="toggleLink">Create account</a>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('form');
+  const title = document.getElementById('title');
+  const subtitle = document.getElementById('subtitle');
+  const btn = document.getElementById('btn');
+  const toggleLink = document.getElementById('toggleLink');
+  const toggleText = document.getElementById('toggleText');
+  const nameField = document.getElementById('name');
+  const nameLabel = document.querySelector('label[for="name"]');
+  const error = document.getElementById('error');
+
+  let isLogin = true;
+
+  toggleLink.addEventListener('click', () => {
+    isLogin = !isLogin;
+    title.textContent = isLogin ? 'Sign In' : 'Create Account';
+    subtitle.textContent = isLogin ? 'Access your EuroPath application portal' : 'Start your European university application';
+    btn.textContent = isLogin ? 'Sign In' : 'Create Account';
+    toggleText.textContent = isLogin ? 'New student?' : 'Already have an account?';
+    toggleLink.textContent = isLogin ? 'Create account' : 'Sign in';
+    nameLabel.textContent = isLogin ? 'Full name (optional)' : 'Full name';
+    nameField.required = !isLogin;
+    error.style.display = 'none';
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value;
+    const name = nameField.value.trim();
+    const users = JSON.parse(localStorage.getItem('ep_users') || '{}');
+
+    if (isLogin) {
+      if (!users[email]) { error.textContent = 'Account not found.'; error.style.display = 'block'; return; }
+      if (users[email].password !== password) { error.textContent = 'Wrong password.'; error.style.display = 'block'; return; }
+      localStorage.setItem('ep_current_user', email);
+      window.location.href = 'dashboard.html';
+    } else {
+      if (users[email]) { error.textContent = 'An account with this email already exists.'; error.style.display = 'block'; return; }
+      users[email] = { name, email, password, created: new Date().toISOString() };
+      localStorage.setItem('ep_users', JSON.stringify(users));
+      localStorage.setItem('ep_current_user', email);
+      localStorage.setItem('ep_app_' + email, JSON.stringify({ steps: { account: true } }));
+      window.location.href = 'dashboard.html';
+    }
+  });
+</script>
+
+</body>
+</html>
