@@ -185,6 +185,7 @@
       </div>
       <div class="filter-row">
         <select id="fieldFilter" class="filter-select"><option value="">All fields</option></select>
+        <select id="levelFilter" class="filter-select"><option value="">All levels</option><option value="BSc">Bachelor (BSc)</option><option value="MSc">Master (MSc)</option></select>
       </div>
 
       <label for="university">University</label>
@@ -236,6 +237,39 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ─── Education years modal (shown when BSc is selected) ─── -->
+<div class="booking-overlay" id="eduYearsOverlay">
+  <div class="booking-modal" id="eduYearsModal" style="max-width:480px;">
+    <h2 style="margin-bottom:8px;">🎓 Education Background</h2>
+    <p style="color:#666; font-size:14px; margin-bottom:20px;">
+      You selected a <strong>Bachelor's (BSc) program</strong>. To enroll in a bachelor's degree in Italy or France, you need to have completed <strong>11 or 12 years of pre-university education</strong>.
+    </p>
+    <div style="background:#f0f4ff; border-radius:10px; padding:16px; margin-bottom:20px;">
+      <p style="font-size:15px; font-weight:600; color:#0b1e3f; margin-bottom:12px;">Do you have 11 or 12 years of education?</p>
+      <div style="display:flex; gap:12px;">
+        <button onclick="eduYearsAnswer(true)" style="flex:1; padding:14px; border:none; border-radius:10px; background:#22c55e; color:#fff; font-size:15px; font-weight:700; cursor:pointer;">✓ Yes, I do</button>
+        <button onclick="eduYearsAnswer(false)" style="flex:1; padding:14px; border:none; border-radius:10px; background:#ef4444; color:#fff; font-size:15px; font-weight:700; cursor:pointer;">✗ No, I don't</button>
+      </div>
+    </div>
+    <button onclick="closeEduYearsModal()" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; background:#fff; font-size:14px; cursor:pointer; color:#666;">Cancel</button>
+  </div>
+</div>
+
+<!-- ─── Foundation programs modal (shown if education < 11/12 years) ─── -->
+<div class="booking-overlay" id="foundationOverlay">
+  <div class="booking-modal" id="foundationModal" style="max-width:600px; max-height:85vh; overflow-y:auto;">
+    <h2 style="margin-bottom:8px;">📚 Foundation Program</h2>
+    <p style="color:#666; font-size:14px; margin-bottom:20px;">
+      Since you have fewer than 11 years of education, you'll need to complete a <strong>foundation year</strong> before starting your bachelor's degree. Here are the available foundation programs in <span id="foundationCountry"></span>:
+    </p>
+    <div id="foundationList" style="margin-bottom:20px;"></div>
+    <div style="display:flex; gap:12px;">
+      <button onclick="selectFoundation()" id="foundationSelectBtn" disabled style="flex:1; padding:14px; border:none; border-radius:10px; background:linear-gradient(135deg, #3ddfff, #c6ff3d); color:#080a14; font-size:15px; font-weight:700; cursor:pointer;">Add selected foundation program</button>
+      <button onclick="closeFoundationModal()" style="padding:14px 20px; border:1px solid #ddd; border-radius:10px; background:#fff; font-size:14px; cursor:pointer; color:#666;">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- ─── Booking modal ─── -->
 <div class="booking-overlay" id="bookingOverlay">
@@ -326,6 +360,13 @@ const universityData = {
       {n:'Biomedical Engineering',f:'Engineering',l:'MSc',e:true},
       {n:'Management of Built Environment',f:'Business & Management',l:'MSc',e:true},
       {n:'Supply Chain Management',f:'Business & Management',l:'MSc',e:true},
+      {n:'Computer Science and Engineering',f:'Computer Science & IT',l:'BSc',e:true},
+      {n:'Management Engineering',f:'Engineering',l:'BSc',e:true},
+      {n:'Aerospace Engineering',f:'Engineering',l:'BSc',e:true},
+      {n:'Mechanical Engineering',f:'Engineering',l:'BSc',e:true},
+      {n:'Civil Engineering',f:'Engineering',l:'BSc',e:true},
+      {n:'Architecture',f:'Architecture & Design',l:'BSc',e:true},
+      {n:'Industrial Design',f:'Architecture & Design',l:'BSc',e:true},
     ]},
     { name:'Università di Bologna', city:'Bologna', programs:[
       {n:'Business and Management',f:'Business & Management',l:'MSc',e:true},
@@ -354,6 +395,10 @@ const universityData = {
       {n:'Human Resource Management',f:'Business & Management',l:'MSc',e:true},
       {n:'Marketing Management',f:'Business & Management',l:'MSc',e:true},
       {n:'Finance and Risk Management',f:'Economics & Finance',l:'MSc',e:true},
+      {n:'Business and Management',f:'Business & Management',l:'BSc',e:true},
+      {n:'Economics and Finance',f:'Economics & Finance',l:'BSc',e:true},
+      {n:'International Relations',f:'International Relations',l:'BSc',e:true},
+      {n:'Computer Science',f:'Computer Science & IT',l:'BSc',e:true},
     ]},
     { name:'Sapienza Università di Roma', city:'Rome', programs:[
       {n:'Computer Science',f:'Computer Science & IT',l:'MSc',e:true},
@@ -376,6 +421,11 @@ const universityData = {
       {n:'Architecture',f:'Architecture & Design',l:'MSc',e:true},
       {n:'Landscape Architecture',f:'Architecture & Design',l:'MSc',e:true},
       {n:'Cultural Heritage',f:'Arts & Humanities',l:'MSc',e:true},
+      {n:'Computer Science',f:'Computer Science & IT',l:'BSc',e:true},
+      {n:'Mechanical Engineering',f:'Engineering',l:'BSc',e:true},
+      {n:'Civil Engineering',f:'Engineering',l:'BSc',e:true},
+      {n:'Business and Management',f:'Business & Management',l:'BSc',e:true},
+      {n:'Architecture',f:'Architecture & Design',l:'BSc',e:true},
     ]},
     { name:'Politecnico di Torino', city:'Turin', programs:[
       {n:'Computer Engineering',f:'Computer Science & IT',l:'MSc',e:true},
@@ -395,6 +445,10 @@ const universityData = {
       {n:'Urban and Regional Development',f:'Architecture & Design',l:'MSc',e:true},
       {n:'Physics of Complex Systems',f:'Natural Sciences',l:'MSc',e:true},
       {n:'Mathematical Engineering',f:'Natural Sciences',l:'MSc',e:true},
+      {n:'Computer Engineering',f:'Computer Science & IT',l:'BSc',e:true},
+      {n:'Mechanical Engineering',f:'Engineering',l:'BSc',e:true},
+      {n:'Aerospace Engineering',f:'Engineering',l:'BSc',e:true},
+      {n:'Architecture',f:'Architecture & Design',l:'BSc',e:true},
     ]},
     { name:'Università di Padova', city:'Padua', programs:[
       {n:'Computer Science',f:'Computer Science & IT',l:'MSc',e:true},
@@ -416,6 +470,10 @@ const universityData = {
       {n:'International Relations',f:'International Relations',l:'MSc',e:true},
       {n:'Human Rights and Multilevel Governance',f:'Law & Legal Studies',l:'MSc',e:true},
       {n:'Sustainable Agriculture',f:'Natural Sciences',l:'MSc',e:true},
+      {n:'Computer Science',f:'Computer Science & IT',l:'BSc',e:true},
+      {n:'Business and Management',f:'Business & Management',l:'BSc',e:true},
+      {n:'Economics and Finance',f:'Economics & Finance',l:'BSc',e:true},
+      {n:'Psychology',f:'Social Sciences',l:'BSc',e:true},
     ]},
     { name:'Università di Pisa', city:'Pisa', programs:[
       {n:'Computer Science',f:'Computer Science & IT',l:'MSc',e:true},
@@ -608,6 +666,10 @@ const universityData = {
       {n:'Life Sciences',f:'Medicine & Health Sciences',l:'MSc',e:true},
       {n:'Mechanical Engineering',f:'Engineering',l:'MSc',e:true},
       {n:'Environmental Science',f:'Natural Sciences',l:'MSc',e:true},
+      {n:'Computer Science',f:'Computer Science & IT',l:'BSc',e:true},
+      {n:'Mathematics',f:'Natural Sciences',l:'BSc',e:true},
+      {n:'Physics',f:'Natural Sciences',l:'BSc',e:true},
+      {n:'Life Sciences',f:'Medicine & Health Sciences',l:'BSc',e:true},
     ]},
     { name:'Sciences Po Paris', city:'Paris', programs:[
       {n:'International Relations',f:'International Relations',l:'MSc',e:true},
@@ -621,6 +683,9 @@ const universityData = {
       {n:'Communications',f:'Arts & Humanities',l:'MSc',e:true},
       {n:'Finance and Strategy',f:'Economics & Finance',l:'MSc',e:true},
       {n:'Marketing',f:'Business & Management',l:'MSc',e:true},
+      {n:'International Relations',f:'International Relations',l:'BSc',e:true},
+      {n:'European Affairs',f:'Social Sciences',l:'BSc',e:true},
+      {n:'Economics and Society',f:'Economics & Finance',l:'BSc',e:true},
     ]},
     { name:'HEC Paris', city:'Jouy-en-Josas', programs:[
       {n:'International Business',f:'Business & Management',l:'MSc',e:true},
@@ -641,6 +706,9 @@ const universityData = {
       {n:'Mechanical Engineering',f:'Engineering',l:'MSc',e:true},
       {n:'Environmental Engineering',f:'Engineering',l:'MSc',e:true},
       {n:'Economics and Data Science',f:'Economics & Finance',l:'MSc',e:true},
+      {n:'Mathematics',f:'Natural Sciences',l:'BSc',e:true},
+      {n:'Physics',f:'Natural Sciences',l:'BSc',e:true},
+      {n:'Computer Science',f:'Computer Science & IT',l:'BSc',e:true},
     ]},
     { name:'Aix-Marseille Université', city:'Aix-en-Provence/Marseille', programs:[
       {n:'Computer Science',f:'Computer Science & IT',l:'MSc',e:true},
@@ -668,6 +736,10 @@ const universityData = {
       {n:'Aerospace Engineering',f:'Engineering',l:'MSc',e:true},
       {n:'Mechanical Engineering',f:'Engineering',l:'MSc',e:true},
       {n:'Economics',f:'Economics & Finance',l:'MSc',e:true},
+      {n:'Computer Science',f:'Computer Science & IT',l:'BSc',e:true},
+      {n:'Business and Management',f:'Business & Management',l:'BSc',e:true},
+      {n:'Economics and Finance',f:'Economics & Finance',l:'BSc',e:true},
+      {n:'International Relations',f:'International Relations',l:'BSc',e:true},
     ]},
     { name:'Université Paris Cité', city:'Paris', programs:[
       {n:'Computer Science',f:'Computer Science & IT',l:'MSc',e:true},
@@ -1306,6 +1378,26 @@ const universityData = {
   ],
 };
 
+// ─── Foundation / Pathway programs (for students without 11/12 years of education) ───
+const foundationPrograms = {
+  Italy: [
+    { uni:'University of Padova Foundation Year', city:'Padua', desc:'1-year foundation program preparing for bachelor admission. Covers Italian language, academic skills, and subject-specific modules.' },
+    { uni:'University of Pavia Foundation Year', city:'Pavia', desc:'Pre-bachelor foundation program with tracks in Sciences, Humanities, and Economics. Leads directly to bachelor admission.' },
+    { uni:'Politecnico di Milano Foundation', city:'Milan', desc:'Foundation year in Engineering and Design, preparing students for BSc admission at PoliMi and other Italian universities.' },
+    { uni:'University of Bologna Foundation', city:'Bologna', desc:'Foundation year covering Italian/English language, study skills, and core subjects for international students.' },
+    { uni:'Sapienza Foundation Year', city:'Rome', desc:'Preparatory program for international students, with tracks in Sciences, Economics, and Humanities.' },
+    { uni:'University of Trento Foundation', city:'Trento', desc:'Foundation year for international students preparing for bachelor degrees in Engineering, Sciences, or Economics.' },
+  ],
+  France: [
+    { uni:'Sorbonne Université Année Préparatoire', city:'Paris', desc:'1-year preparatory program (Année Préparatoire) for international students before bachelor admission. French language + academic subjects.' },
+    { uni:'Sciences Po Paris Programme Préparatoire', city:'Paris', desc:'1-year preparatory program for international students, covering social sciences methodology and French/English language skills.' },
+    { uni:'Université Paris-Saclay Année Préparatoire', city:'Saclay', desc:'Foundation year in Sciences for international students, preparing for BSc admission in Mathematics, Physics, or Computer Science.' },
+    { uni:'Aix-Marseille Université Année Préparatoire', city:'Aix-en-Provence', desc:'Pre-bachelor foundation program with French language immersion and academic subject preparation.' },
+    { uni:'INSA Lyon Année Préparatoire', city:'Lyon', desc:'Preparatory year (INSA Prep) for international students in Engineering and Sciences, leading to INSA bachelor programs.' },
+    { uni:'Université de Lyon Foundation Year', city:'Lyon', desc:'Foundation program for international students, covering French language and academic skills for bachelor admission.' },
+  ],
+};
+
 // ─── DOM References ───
 const country = document.getElementById('country');
 const university = document.getElementById('university');
@@ -1313,10 +1405,14 @@ const fullName = document.getElementById('fullName');
 const program = document.getElementById('program');
 const englishOnly = document.getElementById('englishOnly');
 const fieldFilter = document.getElementById('fieldFilter');
+const levelFilter = document.getElementById('levelFilter');
 const uniInfo = document.getElementById('uniInfo');
 const programCount = document.getElementById('programCount');
 
 let selectedUniObj = null;
+let pendingBscProgram = null; // Holds the BSc program waiting for education years answer
+let selectedFoundation = null; // Holds the selected foundation program
+let eduYearsConfirmed = false; // Whether the user confirmed 11/12 years of education
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1447,7 +1543,23 @@ function addSelectedProgram() {
     showToast('This program is already in your list');
     return;
   }
-  selectedPrograms.push({ university: university.value, program: program.value });
+
+  // Check if this is a BSc (Bachelor) program — if so, ask about education years
+  const progValue = program.value;
+  const isBSc = progValue.includes('[BSc]');
+  if (isBSc && !eduYearsConfirmed) {
+    // Store the pending program and show the education years modal
+    pendingBscProgram = { university: university.value, program: program.value };
+    document.getElementById('eduYearsOverlay').classList.add('active');
+    return;
+  }
+
+  // If confirmed education years OR it's an MSc, add directly
+  commitProgram(university.value, program.value);
+}
+
+function commitProgram(uni, prog) {
+  selectedPrograms.push({ university: uni, program: prog });
   renderSelectedPrograms();
   // Reset dropdowns for next selection
   university.value = '';
@@ -1458,6 +1570,94 @@ function addSelectedProgram() {
   updateAddBtn();
   autoStep();
   markDirty();
+}
+
+// ─── Education years modal handlers ───
+function eduYearsAnswer(hasEnough) {
+  closeEduYearsModal();
+  if (hasEnough) {
+    // User confirmed 11/12 years — add the BSc program
+    eduYearsConfirmed = true;
+    if (pendingBscProgram) {
+      commitProgram(pendingBscProgram.university, pendingBscProgram.program);
+      pendingBscProgram = null;
+      showToast('✓ Education confirmed. Bachelor program added.');
+    }
+  } else {
+    // User does NOT have 11/12 years — show foundation programs
+    eduYearsConfirmed = false;
+    showFoundationPrograms();
+  }
+}
+
+function closeEduYearsModal() {
+  document.getElementById('eduYearsOverlay').classList.remove('active');
+  pendingBscProgram = null;
+}
+
+// ─── Foundation programs modal ───
+let selectedFoundationIdx = null;
+
+function showFoundationPrograms() {
+  const c = country.value;
+  if (!c || !foundationPrograms[c]) {
+    showToast('No foundation programs available for ' + c);
+    return;
+  }
+  document.getElementById('foundationCountry').textContent = c;
+  const list = document.getElementById('foundationList');
+  list.innerHTML = '';
+  foundationPrograms[c].forEach((fp, i) => {
+    const item = document.createElement('div');
+    item.style.cssText = 'padding:14px; border:2px solid #e0e0e0; border-radius:10px; margin-bottom:10px; cursor:pointer; transition:border-color .2s;';
+    item.onclick = () => selectFoundationItem(i);
+    item.id = 'foundation-item-' + i;
+    item.innerHTML = `
+      <div style="font-weight:700; font-size:15px; color:#0b1e3f; margin-bottom:4px;">${fp.uni}</div>
+      <div style="font-size:12px; color:#666; margin-bottom:6px;">📍 ${fp.city}</div>
+      <div style="font-size:13px; color:#444; line-height:1.5;">${fp.desc}</div>
+    `;
+    list.appendChild(item);
+  });
+  selectedFoundationIdx = null;
+  document.getElementById('foundationSelectBtn').disabled = true;
+  document.getElementById('foundationOverlay').classList.add('active');
+}
+
+function selectFoundationItem(idx) {
+  selectedFoundationIdx = idx;
+  // Highlight selected item
+  const c = country.value;
+  foundationPrograms[c].forEach((fp, i) => {
+    const el = document.getElementById('foundation-item-' + i);
+    if (el) el.style.borderColor = i === idx ? '#3ddfff' : '#e0e0e0';
+  });
+  document.getElementById('foundationSelectBtn').disabled = false;
+}
+
+function selectFoundation() {
+  if (selectedFoundationIdx === null) return;
+  const c = country.value;
+  const fp = foundationPrograms[c][selectedFoundationIdx];
+  selectedFoundation = fp;
+
+  // Replace the pending BSc program with the foundation program
+  if (pendingBscProgram) {
+    commitProgram(fp.uni, 'Foundation Year — ' + fp.city);
+    pendingBscProgram = null;
+  } else {
+    // Direct add (e.g., user clicked from foundation modal without pending program)
+    if (selectedPrograms.length < 3) {
+      commitProgram(fp.uni, 'Foundation Year — ' + fp.city);
+    }
+  }
+  showToast('📚 Foundation program added. After completing it, you can apply for your bachelor degree.');
+  closeFoundationModal();
+}
+
+function closeFoundationModal() {
+  document.getElementById('foundationOverlay').classList.remove('active');
+  selectedFoundationIdx = null;
 }
 
 function removeSelectedProgram(idx) {
@@ -1513,8 +1713,9 @@ function updateUnis(selectedCountry, selectedUni) {
   if (selectedCountry && universityData[selectedCountry]) {
     const eng = englishOnly.checked;
     const field = fieldFilter.value;
+    const level = levelFilter.value;
     const unis = universityData[selectedCountry].filter(u => {
-      const progs = u.programs.filter(p => (!eng || p.e) && (!field || p.f === field));
+      const progs = u.programs.filter(p => (!eng || p.e) && (!field || p.f === field) && (!level || p.l === level));
       return progs.length > 0;
     });
     unis.forEach(u => {
@@ -1534,10 +1735,11 @@ function populateFieldFilter(selectedCountry) {
   fieldFilter.innerHTML = '<option value="">All fields</option>';
   if (!selectedCountry || !universityData[selectedCountry]) return;
   const eng = englishOnly.checked;
+  const level = levelFilter.value;
   const fields = new Set();
   universityData[selectedCountry].forEach(u => {
     u.programs.forEach(p => {
-      if (!eng || p.e) fields.add(p.f);
+      if ((!eng || p.e) && (!level || p.l === level)) fields.add(p.f);
     });
   });
   FIELDS.forEach(f => { if (fields.has(f)) {
@@ -1555,7 +1757,8 @@ function updatePrograms(uniName, selectedProg) {
 
   const eng = englishOnly.checked;
   const field = fieldFilter.value;
-  const progs = selectedUniObj.programs.filter(p => (!eng || p.e) && (!field || p.f === field));
+  const level = levelFilter.value;
+  const progs = selectedUniObj.programs.filter(p => (!eng || p.e) && (!field || p.f === field) && (!level || p.l === level));
 
   program.innerHTML = '<option value="">Select program</option>';
   progs.forEach(p => {
@@ -1574,6 +1777,7 @@ function updatePrograms(uniName, selectedProg) {
 country.addEventListener('change', () => { updateUnis(country.value, ''); });
 englishOnly.addEventListener('change', () => { updateUnis(country.value, university.value); });
 fieldFilter.addEventListener('change', () => { updateUnis(country.value, university.value); });
+levelFilter.addEventListener('change', () => { updateUnis(country.value, university.value); });
 university.addEventListener('change', () => { updatePrograms(university.value, ''); updateAddBtn(); });
 program.addEventListener('change', () => { updateAddBtn(); });
 document.getElementById('addProgramBtn').addEventListener('click', addSelectedProgram);
