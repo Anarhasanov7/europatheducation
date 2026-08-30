@@ -120,7 +120,7 @@ async function loadTicket() {
     }
     const badge = document.getElementById('ticketBadge');
     badge.className = 'badge ' + t.status;
-    badge.textContent = t.status === 'open' ? 'Awaiting reply' : t.status === 'answered' ? 'Replied — you can respond' : t.status;
+    badge.textContent = t.status === 'open' ? 'Awaiting reply' : t.status === 'answered' ? 'Replied — you can respond' : t.status === 'closed' ? 'Closed' : t.status;
 
     // Render conversation
     const conv = document.getElementById('conversation');
@@ -143,7 +143,14 @@ async function loadTicket() {
 
     // Render reply area
     const replyArea = document.getElementById('replyArea');
-    if (data.can_reply) {
+    if (t.status === 'closed') {
+      replyArea.innerHTML = `
+        <div class="wait-notice" style="background:#e0e0e0; color:#666;">
+          🔒 <strong>This ticket has been closed.</strong><br>
+          If you need further help, you can <a href="index.html" style="color:#666; font-weight:600;">open a new ticket</a>.
+        </div>
+      `;
+    } else if (data.can_reply) {
       replyArea.innerHTML = `
         <div class="reply-form">
           <h2>Reply</h2>
