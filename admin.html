@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — EuroPath Education</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --blue:#2E86C1; --lime:#c6ff3d; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; --green:#22c55e; --red:#ef4444; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', -apple-system, sans-serif; background:var(--off); color:var(--ink); }
+
+  /* Login */
+  #loginOverlay { position:fixed; inset:0; background:linear-gradient(135deg,#0b1e3f,#16213e); display:flex; align-items:center; justify-content:center; z-index:100; }
+  .login-box { background:#fff; border-radius:16px; padding:40px; width:380px; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+  .login-box h1 { font-size:24px; margin-bottom:4px; }
+  .login-box .sub { color:var(--gray); margin-bottom:24px; font-size:14px; }
+  .login-box input { width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; margin-bottom:12px; }
+  .login-box button { width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; }
+  .login-box button:hover { background:#1a6ba8; }
+  .login-box button:disabled { opacity:.6; cursor:wait; }
+  .login-error { color:var(--red); font-size:13px; margin-top:8px; display:none; }
+
+  /* Header */
+  .header { background:#fff; border-bottom:1px solid #e0e0e0; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
+  .header h1 { font-size:18px; color:var(--blue); }
+  .header .user-info { font-size:13px; color:var(--gray); }
+  .logout-btn { background:none; border:1px solid #ddd; padding:6px 16px; border-radius:6px; cursor:pointer; font-size:13px; color:#666; }
+  .logout-btn:hover { background:#f5f5f5; }
+
+  /* Stats */
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; padding:24px; max-width:1400px; margin:0 auto; }
+  .stat-card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .stat-card .label { font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.5px; }
+  .stat-card .value { font-size:32px; font-weight:700; margin-top:4px; }
+  .stat-card .value.blue { color:var(--blue); }
+  .stat-card .value.green { color:var(--green); }
+  .stat-card .value.orange { color:#e67e22; }
+
+  /* Filter */
+  .filter-bar { display:flex; gap:12px; padding:0 24px 16px; max-width:1400px; margin:0 auto; }
+  .filter-bar input, .filter-bar select { padding:8px 12px; border:1px solid #ddd; border-radius:6px; font-size:14px; }
+  .filter-bar input { flex:1; }
+
+  /* Table */
+  .table-container { max-width:1400px; margin:0 auto; padding:0 24px 24px; }
+  .table-wrap { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  table { width:100%; border-collapse:collapse; }
+  th { background:#f8f9fa; padding:12px 16px; text-align:left; font-size:11px; text-transform:uppercase; color:#666; letter-spacing:.5px; border-bottom:1px solid #e0e0e0; }
+  td { padding:12px 16px; border-bottom:1px solid #f0f0f0; font-size:14px; }
+  tr:hover { background:#f8f9fa; cursor:pointer; }
+  .badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; text-transform:uppercase; }
+  .badge.submitted { background:#d4edda; color:#155724; }
+  .badge.draft { background:#fff3cd; color:#856404; }
+
+  /* Modal */
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
+  .modal-overlay.active { display:flex; }
+  .modal { background:#fff; border-radius:16px; max-width:700px; width:100%; max-height:85vh; overflow-y:auto; padding:32px; }
+  .modal h2 { font-size:22px; margin-bottom:4px; }
+  .modal .sub { color:#666; font-size:14px; margin-bottom:24px; }
+  .modal-close { float:right; background:none; border:none; font-size:24px; cursor:pointer; color:#999; }
+  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
+  .info-item { padding:12px; background:#f8f9fa; border-radius:8px; }
+  .info-item .key { font-size:11px; color:#888; text-transform:uppercase; }
+  .info-item .val { font-size:15px; font-weight:500; margin-top:2px; word-break:break-word; }
+  .docs-list h3 { font-size:16px; margin-bottom:12px; color:var(--blue); }
+  .doc-item { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#f8f9fa; border-radius:8px; margin-bottom:8px; }
+  .doc-item .doc-type { font-weight:600; color:var(--blue); font-size:14px; }
+  .doc-item .doc-file { color:#666; font-size:13px; margin-left:12px; }
+  .doc-item a { color:var(--blue); text-decoration:none; font-size:13px; font-weight:600; }
+  .doc-item a:hover { text-decoration:underline; }
+  .doc-missing { color:#ccc; font-style:italic; }
+  .empty { text-align:center; padding:60px; color:#888; }
+
+  @media (max-width:768px) {
+    .info-grid { grid-template-columns:1fr; }
+    .stats { grid-template-columns:1fr 1fr; }
+    table { font-size:12px; }
+    th, td { padding:8px; }
+    .hide-mobile { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loginOverlay">
+  <div class="login-box">
+    <h1>Admin Dashboard</h1>
+    <p class="sub">EuroPath Education — Sign in to view applications</p>
+    <input type="email" id="adminEmail" placeholder="Admin email" value="hasanov.anar.2023@gmail.com">
+    <input type="password" id="adminPassword" placeholder="Password">
+    <button id="loginBtn" onclick="adminLogin()">Sign In</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<div class="header" id="mainHeader" style="display:none;">
+  <h1>EuroPath Education — Admin</h1>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <span class="user-info" id="adminInfo"></span>
+    <button class="logout-btn" onclick="adminLogout()">Logout</button>
+  </div>
+</div>
+
+<div class="stats" id="statsSection" style="display:none;">
+  <div class="stat-card"><div class="label">Total Applications</div><div class="value blue" id="statTotal">0</div></div>
+  <div class="stat-card"><div class="label">Submitted</div><div class="value green" id="statSubmitted">0</div></div>
+  <div class="stat-card"><div class="label">Drafts</div><div class="value orange" id="statDraft">0</div></div>
+  <div class="stat-card"><div class="label">Documents</div><div class="value" id="statDocs">0</div></div>
+</div>
+
+<div class="filter-bar" id="filterBar" style="display:none;">
+  <input type="text" id="searchInput" placeholder="Search by name, email, university..." oninput="renderTable()">
+  <select id="statusFilter" onchange="renderTable()">
+    <option value="">All Status</option>
+    <option value="submitted">Submitted</option>
+    <option value="draft">Draft</option>
+  </select>
+</div>
+
+<div class="table-container" id="tableSection" style="display:none;">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Email</th>
+          <th class="hide-mobile">Country</th>
+          <th class="hide-mobile">University</th>
+          <th class="hide-mobile">Program</th>
+          <th>Docs</th>
+          <th>Status</th>
+          <th class="hide-mobile">Date</th>
+        </tr>
+      </thead>
+      <tbody id="appsTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
+let sb;
+let allApps = [];
+let allDocs = [];
+let currentUser = null;
+
+(function loadSB() {
+  if (window.supabase) { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); checkSession(); }
+  else { setTimeout(loadSB, 100); }
+})();
+
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) { currentUser = session.user; showAdmin(); }
+}
+
+async function adminLogin() {
+  const email = document.getElementById('adminEmail').value;
+  const password = document.getElementById('adminPassword').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  btn.disabled = true; btn.textContent = 'Signing in...'; err.style.display = 'none';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    err.textContent = error.message;
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Sign In';
+  } else {
+    currentUser = data.user;
+    showAdmin();
+  }
+}
+
+function adminLogout() {
+  sb.auth.signOut();
+  currentUser = null;
+  document.getElementById('loginOverlay').style.display = 'flex';
+  document.getElementById('mainHeader').style.display = 'none';
+  document.getElementById('statsSection').style.display = 'none';
+  document.getElementById('filterBar').style.display = 'none';
+  document.getElementById('tableSection').style.display = 'none';
+}
+
+async function showAdmin() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('mainHeader').style.display = 'flex';
+  document.getElementById('statsSection').style.display = 'grid';
+  document.getElementById('filterBar').style.display = 'flex';
+  document.getElementById('tableSection').style.display = 'block';
+  document.getElementById('adminInfo').textContent = currentUser.email;
+
+  // Load all applications
+  const { data: apps, error } = await sb.from('applications').select('*').order('created_at', { ascending: false });
+  if (error) { console.error(error); return; }
+  allApps = apps || [];
+
+  // Load all documents
+  const { data: docs } = await sb.from('documents').select('*').order('created_at', { ascending: false });
+  allDocs = docs || [];
+
+  // Stats
+  document.getElementById('statTotal').textContent = allApps.length;
+  document.getElementById('statSubmitted').textContent = allApps.filter(a => a.status === 'submitted').length;
+  document.getElementById('statDraft').textContent = allApps.filter(a => a.status === 'draft').length;
+  document.getElementById('statDocs').textContent = allDocs.length;
+
+  renderTable();
+}
+
+function renderTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const statusF = document.getElementById('statusFilter').value;
+  const tbody = document.getElementById('appsTableBody');
+
+  let filtered = allApps;
+  if (statusF) filtered = filtered.filter(a => a.status === statusF);
+  if (search) filtered = filtered.filter(a =>
+    (a.full_name || '').toLowerCase().includes(search) ||
+    (a.id || '').toLowerCase().includes(search) ||
+    (a.university || '').toLowerCase().includes(search) ||
+    (a.country || '').toLowerCase().includes(search)
+  );
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty"><h3>No applications found</h3></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(a => {
+    const userDocs = allDocs.filter(d => d.user_id === a.user_id);
+    const date = new Date(a.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    return `<tr onclick="openModal('${a.id}')">
+      <td><strong>${a.full_name || '<span style="color:#ccc">Not provided</span>'}</strong></td>
+      <td style="font-size:13px;">${a.user_id.slice(0,8)}...</td>
+      <td class="hide-mobile">${a.country || '—'}</td>
+      <td class="hide-mobile">${a.university || '—'}</td>
+      <td class="hide-mobile">${a.program || '—'}</td>
+      <td>${userDocs.length}/6</td>
+      <td><span class="badge ${a.status}">${a.status}</span></td>
+      <td class="hide-mobile" style="font-size:12px;color:#666;">${date}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function openModal(appId) {
+  const app = allApps.find(a => a.id === appId);
+  if (!app) return;
+  const userDocs = allDocs.filter(d => d.user_id === app.user_id);
+
+  const docLabels = {
+    passport: 'Passport', diploma: 'High School Diploma', transcript: 'Transcript',
+    motivation: 'Motivation Letter', cv: 'CV / Resume', english: 'English Certificate'
+  };
+
+  // Generate signed URLs for each doc
+  let docRows = '';
+  for (const docType of ['passport','diploma','transcript','motivation','cv','english']) {
+    const doc = userDocs.find(d => d.doc_type === docType);
+    if (doc) {
+      const { data } = await sb.storage.from('student-documents').createSignedUrl(doc.storage_path, 604800);
+      const url = data?.signedUrl || '';
+      docRows += `<div class="doc-item">
+        <div><span class="doc-type">${docLabels[docType]}</span><span class="doc-file">${doc.file_name} · ${formatSize(doc.file_size)}</span></div>
+        <a href="${url}" target="_blank" download>Download</a>
+      </div>`;
+    } else {
+      docRows += `<div class="doc-item"><div><span class="doc-type" style="color:#ccc;">${docLabels[docType]}</span></div><span class="doc-missing">Not uploaded</span></div>`;
+    }
+  }
+
+  const date = new Date(app.created_at).toLocaleString('en-GB');
+
+  document.getElementById('modalContent').innerHTML = `
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <h2>${app.full_name || 'Unknown Student'}</h2>
+    <p class="sub">Application ID: ${app.id}</p>
+    <div class="info-grid">
+      <div class="info-item"><div class="key">Status</div><div class="val"><span class="badge ${app.status}">${app.status}</span></div></div>
+      <div class="info-item"><div class="key">Submitted</div><div class="val">${date}</div></div>
+      <div class="info-item"><div class="key">Country</div><div class="val">${app.country || 'Not selected'}</div></div>
+      <div class="info-item"><div class="key">University</div><div class="val">${app.university || 'Not selected'}</div></div>
+      <div class="info-item"><div class="key">Program</div><div class="val">${app.program || 'Not selected'}</div></div>
+      <div class="info-item"><div class="key">Documents</div><div class="val">${userDocs.length} of 6</div></div>
+    </div>
+    <div class="docs-list">
+      <h3>Uploaded Documents</h3>
+      ${docRows}
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1048576).toFixed(1) + ' MB';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
