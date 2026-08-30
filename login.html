@@ -215,11 +215,25 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
-  if (!isLogin && password.length < 8) {
-    error.textContent = 'Password must be at least 8 characters.';
-    error.style.display = 'block';
-    pwInput.classList.add('invalid');
-    return;
+  if (!isLogin) {
+    if (password.length < 8) {
+      error.textContent = 'Password must be at least 8 characters.';
+      error.style.display = 'block';
+      pwInput.classList.add('invalid');
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      error.textContent = 'Password must contain at least one uppercase letter.';
+      error.style.display = 'block';
+      pwInput.classList.add('invalid');
+      return;
+    }
+    if (!/[0-9]/.test(password)) {
+      error.textContent = 'Password must contain at least one number.';
+      error.style.display = 'block';
+      pwInput.classList.add('invalid');
+      return;
+    }
   }
 
   btn.disabled = true;

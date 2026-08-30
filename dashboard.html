@@ -139,14 +139,14 @@
     </div>
 
     <div class="card">
-      <h3>Required Documents (max 5 MB each)</h3>
+      <h3>Required Documents (max 5 MB each, PDF or images only)</h3>
       <div class="doc-list" id="docList">
-        <div class="doc-item"><div class="name">Passport</div><div class="status" id="st-passport">Not uploaded</div><input type="file" data-doc="passport" onchange="handleFile(this)"><div class="doc-actions" id="actions-passport" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('passport')">Download</button><button class="doc-btn delete" onclick="deleteDoc('passport')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">Diploma</div><div class="status" id="st-diploma">Not uploaded</div><input type="file" data-doc="diploma" onchange="handleFile(this)"><div class="doc-actions" id="actions-diploma" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('diploma')">Download</button><button class="doc-btn delete" onclick="deleteDoc('diploma')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">Transcript</div><div class="status" id="st-transcript">Not uploaded</div><input type="file" data-doc="transcript" onchange="handleFile(this)"><div class="doc-actions" id="actions-transcript" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('transcript')">Download</button><button class="doc-btn delete" onclick="deleteDoc('transcript')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">Motivation Letter</div><div class="status" id="st-motivation">Not uploaded</div><input type="file" data-doc="motivation" onchange="handleFile(this)"><div class="doc-actions" id="actions-motivation" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('motivation')">Download</button><button class="doc-btn delete" onclick="deleteDoc('motivation')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">CV / Resume</div><div class="status" id="st-cv">Not uploaded</div><input type="file" data-doc="cv" onchange="handleFile(this)"><div class="doc-actions" id="actions-cv" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('cv')">Download</button><button class="doc-btn delete" onclick="deleteDoc('cv')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">English Certificate</div><div class="status" id="st-english">Not uploaded</div><input type="file" data-doc="english" onchange="handleFile(this)"><div class="doc-actions" id="actions-english" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('english')">Download</button><button class="doc-btn delete" onclick="deleteDoc('english')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">Passport</div><div class="status" id="st-passport">Not uploaded</div><input type="file" data-doc="passport" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-actions" id="actions-passport" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('passport')">Download</button><button class="doc-btn delete" onclick="deleteDoc('passport')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">Diploma</div><div class="status" id="st-diploma">Not uploaded</div><input type="file" data-doc="diploma" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-actions" id="actions-diploma" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('diploma')">Download</button><button class="doc-btn delete" onclick="deleteDoc('diploma')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">Transcript</div><div class="status" id="st-transcript">Not uploaded</div><input type="file" data-doc="transcript" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-actions" id="actions-transcript" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('transcript')">Download</button><button class="doc-btn delete" onclick="deleteDoc('transcript')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">Motivation Letter</div><div class="status" id="st-motivation">Not uploaded</div><input type="file" data-doc="motivation" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-actions" id="actions-motivation" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('motivation')">Download</button><button class="doc-btn delete" onclick="deleteDoc('motivation')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">CV / Resume</div><div class="status" id="st-cv">Not uploaded</div><input type="file" data-doc="cv" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-actions" id="actions-cv" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('cv')">Download</button><button class="doc-btn delete" onclick="deleteDoc('cv')">Delete</button></div></div>
+        <div class="doc-item"><div class="name">English Certificate</div><div class="status" id="st-english">Not uploaded</div><input type="file" data-doc="english" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-actions" id="actions-english" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('english')">Download</button><button class="doc-btn delete" onclick="deleteDoc('english')">Delete</button></div></div>
       </div>
     </div>
   </div>
@@ -1399,6 +1399,9 @@ englishOnly.addEventListener('change', () => { updateUnis(country.value, univers
 fieldFilter.addEventListener('change', () => { updateUnis(country.value, university.value); });
 university.addEventListener('change', () => { updatePrograms(university.value, ''); });
 
+const ALLOWED_TYPES = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+const ALLOWED_EXTS = ['.pdf', '.png', '.jpg', '.jpeg'];
+
 async function handleFile(input) {
   if (!input.files[0]) return;
   const file = input.files[0];
@@ -1407,6 +1410,17 @@ async function handleFile(input) {
 
   if (file.size > MAX_FILE_SIZE) {
     st.textContent = 'File too large — max 5 MB';
+    st.classList.add('error');
+    st.classList.remove('done');
+    input.value = '';
+    return;
+  }
+
+  // Validate file type (check both MIME type and extension)
+  const ext = '.' + (file.name.split('.').pop() || '').toLowerCase();
+  const typeOk = ALLOWED_TYPES.includes(file.type) || ALLOWED_EXTS.includes(ext);
+  if (!typeOk) {
+    st.textContent = 'Invalid file type — PDF, PNG, or JPG only';
     st.classList.add('error');
     st.classList.remove('done');
     input.value = '';

@@ -74,6 +74,14 @@
   .doc-missing { color:#ccc; font-style:italic; }
   .empty { text-align:center; padding:60px; color:#888; }
 
+  /* Pagination */
+  .pagination { display:flex; gap:8px; align-items:center; justify-content:center; padding:16px 24px; max-width:1400px; margin:0 auto; }
+  .pagination button { padding:6px 12px; border:1px solid #ddd; border-radius:6px; background:#fff; cursor:pointer; font-size:13px; color:#333; }
+  .pagination button:hover:not(:disabled) { background:#f0f0f0; }
+  .pagination button:disabled { opacity:0.4; cursor:default; }
+  .pagination button.active { background:var(--electric); color:#080a14; border-color:var(--electric); font-weight:700; }
+  .pagination .page-info { font-size:13px; color:#666; margin:0 8px; }
+
   @media (max-width:768px) {
     .info-grid { grid-template-columns:1fr; }
     .stats { grid-template-columns:1fr 1fr; }
@@ -112,8 +120,8 @@
 </div>
 
 <div class="filter-bar" id="filterBar" style="display:none;">
-  <input type="text" id="searchInput" placeholder="Search by name, email, university..." oninput="renderTable()">
-  <select id="statusFilter" onchange="renderTable()">
+  <input type="text" id="searchInput" placeholder="Search by name, email, university..." oninput="currentPage=1;renderTable()">
+  <select id="statusFilter" onchange="currentPage=1;renderTable()">
     <option value="">All Status</option>
     <option value="submitted">Submitted</option>
     <option value="draft">Draft</option>
@@ -138,6 +146,7 @@
       <tbody id="appsTableBody"></tbody>
     </table>
   </div>
+  <div class="pagination" id="paginationControls"></div>
 </div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
@@ -152,6 +161,8 @@ let sb;
 let allApps = [];
 let allDocs = [];
 let currentUser = null;
+let currentPage = 1;
+const PAGE_SIZE = 25;
 
 (function loadSB() {
   if (window.supabase) { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); checkSession(); }
@@ -221,6 +232,7 @@ function renderTable() {
   const search = document.getElementById('searchInput').value.toLowerCase();
   const statusF = document.getElementById('statusFilter').value;
   const tbody = document.getElementById('appsTableBody');
+  const paginationEl = document.getElementById('paginationControls');
 
   let filtered = allApps;
   if (statusF) filtered = filtered.filter(a => a.status === statusF);
@@ -233,10 +245,17 @@ function renderTable() {
 
   if (filtered.length === 0) {
     tbody.innerHTML = '<tr><td colspan="8" class="empty"><h3>No applications found</h3></td></tr>';
+    paginationEl.innerHTML = '';
     return;
   }
 
-  tbody.innerHTML = filtered.map(a => {
+  // Pagination
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  if (currentPage > totalPages) currentPage = 1;
+  const startIdx = (currentPage - 1) * PAGE_SIZE;
+  const pageItems = filtered.slice(startIdx, startIdx + PAGE_SIZE);
+
+  tbody.innerHTML = pageItems.map(a => {
     const userDocs = allDocs.filter(d => d.user_id === a.user_id);
     const date = new Date(a.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
     return `<tr onclick="openModal('${a.id}')">
@@ -250,6 +269,31 @@ function renderTable() {
       <td class="hide-mobile" style="font-size:12px;color:#666;">${date}</td>
     </tr>`;
   }).join('');
+
+  // Render pagination controls
+  if (totalPages <= 1) {
+    paginationEl.innerHTML = `<span class="page-info">${filtered.length} application${filtered.length !== 1 ? 's' : ''}</span>`;
+  } else {
+    let html = '';
+    html += `<button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
+    html += `<button onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+    const maxButtons = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+    if (endPage - startPage < maxButtons - 1) startPage = Math.max(1, endPage - maxButtons + 1);
+    for (let p = startPage; p <= endPage; p++) {
+      html += `<button onclick="goToPage(${p})" class="${p === currentPage ? 'active' : ''}">${p}</button>`;
+    }
+    html += `<button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+    html += `<button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>»</button>`;
+    html += `<span class="page-info">${filtered.length} total · Page ${currentPage}/${totalPages}</span>`;
+    paginationEl.innerHTML = html;
+  }
+}
+
+function goToPage(page) {
+  currentPage = page;
+  renderTable();
 }
 
 async function openModal(appId) {
