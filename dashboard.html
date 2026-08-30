@@ -1423,12 +1423,13 @@ function renderSelectedPrograms() {
 
 function updateAddBtn() {
   const btn = document.getElementById('addProgramBtn');
+  if (!btn) return;
   const count = selectedPrograms.length;
   btn.textContent = `+ Add this program (${count}/3 selected)`;
   btn.disabled = !university.value || !program.value || count >= 3;
   // Hide hint if at least one program selected
   const hint = document.getElementById('hint-programs');
-  if (hint) hint.style.display = count > 0 ? 'none' : 'none';
+  if (hint) hint.style.display = 'none';
 }
 
 function updateUnis(selectedCountry, selectedUni) {
