@@ -104,6 +104,39 @@
   @keyframes spin { to { transform:rotate(360deg); } }
   .loading-text { font-size:14px; color:var(--gray); }
 
+  /* ─── Booking modal ─── */
+  .booking-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(8,10,20,0.7); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:400; padding:20px; }
+  .booking-overlay.active { display:flex; }
+  .booking-modal { background:#fff; border-radius:20px; padding:36px; max-width:560px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:bookIn .4s; }
+  @keyframes bookIn { from { transform:scale(0.9); opacity:0; } to { transform:scale(1); opacity:1; } }
+  .booking-modal .congrats-icon { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, var(--lime), var(--electric)); display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 16px; }
+  .booking-modal h2 { font-size:24px; font-weight:800; text-align:center; margin-bottom:8px; }
+  .booking-modal .congrats-sub { text-align:center; color:var(--gray); font-size:14px; margin-bottom:24px; line-height:1.6; }
+  .booking-modal .booking-section-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--ink); margin:20px 0 10px; }
+  .booking-modal .tz-info { font-size:11px; color:var(--electric); margin-bottom:12px; }
+  .booking-modal .day-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .booking-modal .day-tab { padding:8px 14px; border:1px solid #ddd; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; background:#fff; transition:all .2s; }
+  .booking-modal .day-tab:hover { border-color:var(--electric); }
+  .booking-modal .day-tab.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .booking-modal .slot-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:20px; }
+  .booking-modal .slot { padding:10px 8px; border:1px solid #ddd; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; text-align:center; background:#fff; transition:all .2s; }
+  .booking-modal .slot:hover { border-color:var(--electric); background:#f0fdff; }
+  .booking-modal .slot.active { background:linear-gradient(135deg, var(--electric), var(--lime)); color:var(--ink); border-color:transparent; font-weight:700; }
+  .booking-modal .slot.disabled { opacity:0.35; cursor:not-allowed; text-decoration:line-through; }
+  .booking-modal .booking-summary { background:#f4f5f7; border-radius:12px; padding:16px; margin-bottom:20px; font-size:13px; line-height:1.7; }
+  .booking-modal .booking-summary strong { color:var(--ink); }
+  .booking-modal .booking-btn { width:100%; padding:14px; border:none; border-radius:12px; background:linear-gradient(135deg, var(--electric), var(--lime)); color:var(--ink); font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
+  .booking-modal .booking-btn:hover { transform:scale(1.02); }
+  .booking-modal .booking-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+  .booking-modal .booking-skip { width:100%; padding:10px; border:none; background:none; color:var(--gray); font-size:13px; cursor:pointer; margin-top:10px; }
+  .booking-modal .booking-skip:hover { color:var(--ink); }
+  .booking-modal .booking-success { text-align:center; padding:20px 0; }
+  .booking-modal .booking-success .success-icon { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, var(--lime), var(--green)); display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px; }
+  @media (max-width:600px) {
+    .booking-modal .slot-grid { grid-template-columns:repeat(3, 1fr); }
+    .booking-modal { padding:24px; }
+  }
+
   @media (max-width:768px) {
     .grid-2, .doc-list { grid-template-columns:1fr; }
     .container { padding:20px; }
@@ -203,6 +236,40 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ─── Booking modal ─── -->
+<div class="booking-overlay" id="bookingOverlay">
+  <div class="booking-modal" id="bookingModal">
+    <div id="bookingContent">
+      <div class="congrats-icon">🎉</div>
+      <h2>Application Submitted!</h2>
+      <p class="congrats-sub">Congratulations! Your application has been received. As a next step, book a <strong>free consultation</strong> with our advisor to discuss your university choices and next steps.</p>
+
+      <div class="booking-section-title">Select a day</div>
+      <div class="day-tabs" id="dayTabs"></div>
+
+      <div class="booking-section-title">Available time slots</div>
+      <div class="tz-info" id="tzInfo"></div>
+      <div class="slot-grid" id="slotGrid"></div>
+
+      <div class="booking-summary" id="bookingSummary" style="display:none;">
+        <strong>Your consultation:</strong><br>
+        <span id="bookingSummaryText"></span>
+      </div>
+
+      <button class="booking-btn" id="confirmBookingBtn" disabled onclick="confirmBooking()">Confirm Booking</button>
+      <button class="booking-skip" onclick="closeBooking()">Skip for now</button>
+    </div>
+    <div id="bookingSuccess" style="display:none;">
+      <div class="booking-success">
+        <div class="success-icon">✓</div>
+        <h2>Booking Confirmed!</h2>
+        <p class="congrats-sub" id="bookingSuccessText"></p>
+        <button class="booking-btn" onclick="closeBooking()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
@@ -1782,6 +1849,8 @@ async function submitApp() {
     btn.textContent = 'Edit Application';
     btn.disabled = false;
     btn.onclick = editApp;
+    // Show free consultation booking modal
+    setTimeout(() => showBookingModal(), 800);
   }
 }
 
@@ -1828,6 +1897,290 @@ function renderSummary() {
     ['Status', status.charAt(0).toUpperCase() + status.slice(1)]
   ];
   items.forEach(([k, v]) => { const li = document.createElement('li'); li.innerHTML = '<strong>' + k + ':</strong> ' + v; list.appendChild(li); });
+}
+
+// ─── Free consultation booking ───
+// Italian time is CET (UTC+1) or CEST (UTC+2) during summer.
+// We use Europe/Rome timezone for generating slots, then convert to the student's local time.
+
+const ITALY_TZ = 'Europe/Rome';
+const WORK_START_HOUR = 9;  // 9 AM Italian time
+const WORK_END_HOUR = 17;   // 5 PM Italian time
+let bookingSelectedDay = null;  // Date object (Italian time)
+let bookingSelectedSlot = null; // { italyTime: "09:00", localTime: "11:00", localTz: "GMT+4" }
+
+function getLocalTimezone() {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  } catch { return 'UTC'; }
+}
+
+function getNextWorkdays(count) {
+  const days = [];
+  const today = new Date();
+  // Start from tomorrow (or today if before 5 PM Italian time)
+  let start = new Date(today);
+  start.setDate(start.getDate() + 1); // Start from tomorrow
+
+  // Check if today is still within working hours in Italy
+  const italyNow = new Date(new Date().toLocaleString('en-US', { timeZone: ITALY_TZ }));
+  const italyHour = italyNow.getHours();
+  if (italyHour < WORK_END_HOUR - 1) {
+    // Still time today — but we skip today to give students time to prepare
+  }
+
+  while (days.length < count) {
+    const day = new Date(start);
+    const dayOfWeek = day.getDay();
+    // Skip weekends (0=Sunday, 6=Saturday)
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      days.push(new Date(day));
+    }
+    start.setDate(start.getDate() + 1);
+  }
+  return days;
+}
+
+function generateSlots(dateObj) {
+  // Generate time slots from 9:00 to 16:30 (last slot 16:00-16:30) in Italian time
+  const slots = [];
+  for (let h = WORK_START_HOUR; h < WORK_END_HOUR; h++) {
+    for (const m of [0, 30]) {
+      if (h === WORK_END_HOUR - 1 && m === 30) continue; // No 16:30 slot
+      const italyTime = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+
+      // Convert to student's local time
+      // Create a date in Italy timezone, then convert
+      const year = dateObj.getFullYear();
+      const month = dateObj.getMonth();
+      const day = dateObj.getDate();
+
+      // Build the Italian time as if it were UTC, then we'll convert
+      const italyDate = new Date(Date.UTC(year, month, day, h, m));
+
+      // Get the offset of Italy at that date (CET=+1 or CEST=+2)
+      const italyOffset = getOffsetForTimezone(ITALY_TZ, italyDate);
+      const utcTime = new Date(italyDate.getTime() - italyOffset * 60000);
+
+      // Get the offset of the student's local timezone at that UTC time
+      const localOffset = getOffsetForTimezone(getLocalTimezone(), utcTime);
+      const localTime = new Date(utcTime.getTime() + localOffset * 60000);
+
+      const localH = localTime.getHours();
+      const localM = localTime.getMinutes();
+      const localTimeStr = String(localH).padStart(2, '0') + ':' + String(localM).padStart(2, '0');
+
+      // Format local timezone offset
+      const localOffsetH = Math.floor(Math.abs(localOffset) / 60);
+      const localOffsetM = Math.abs(localOffset) % 60;
+      const localOffsetSign = localOffset >= 0 ? '+' : '-';
+      const localTzStr = 'UTC' + localOffsetSign + localOffsetH + (localOffsetM ? ':' + String(localOffsetM).padStart(2, '0') : '');
+
+      slots.push({
+        italyTime,
+        localTime: localTimeStr,
+        localTz: localTzStr,
+        utcTime: utcTime.toISOString()
+      });
+    }
+  }
+  return slots;
+}
+
+// Get timezone offset in minutes for a given timezone at a given date
+function getOffsetForTimezone(timeZone, date) {
+  try {
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      timeZoneName: 'shortOffset'
+    });
+    const parts = dtf.formatToParts(date);
+    const tzPart = parts.find(p => p.type === 'timeZoneName');
+    if (tzPart) {
+      // Format: "GMT+4" or "GMT+4:30" or "GMT-3"
+      const match = tzPart.value.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);
+      if (match) {
+        const sign = match[1] === '+' ? 1 : -1;
+        const h = parseInt(match[2]);
+        const m = match[3] ? parseInt(match[3]) : 0;
+        return sign * (h * 60 + m);
+      }
+    }
+  } catch {}
+  // Fallback: try long format
+  try {
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      timeZoneName: 'longOffset'
+    });
+    const parts = dtf.formatToParts(date);
+    const tzPart = parts.find(p => p.type === 'timeZoneName');
+    if (tzPart) {
+      const match = tzPart.value.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);
+      if (match) {
+        const sign = match[1] === '+' ? 1 : -1;
+        const h = parseInt(match[2]);
+        const m = match[3] ? parseInt(match[3]) : 0;
+        return sign * (h * 60 + m);
+      }
+    }
+  } catch {}
+  return 0;
+}
+
+function showBookingModal() {
+  const overlay = document.getElementById('bookingOverlay');
+  const localTz = getLocalTimezone();
+  const localTzLabel = localTz.replace(/_/g, ' ');
+
+  // Show timezone info
+  document.getElementById('tzInfo').textContent = 'Times shown in your local timezone (' + localTzLabel + '). Our advisors work 9:00–17:00 Italian time.';
+
+  // Generate next 5 workdays
+  const days = getNextWorkdays(5);
+  bookingSelectedDay = null;
+  bookingSelectedSlot = null;
+
+  // Render day tabs
+  const dayTabsEl = document.getElementById('dayTabs');
+  dayTabsEl.innerHTML = '';
+  days.forEach((day, i) => {
+    const tab = document.createElement('div');
+    tab.className = 'day-tab';
+    const dayName = day.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    tab.textContent = dayName;
+    tab.onclick = () => selectDay(i, day);
+    dayTabsEl.appendChild(tab);
+  });
+
+  // Auto-select first day
+  selectDay(0, days[0]);
+
+  // Reset views
+  document.getElementById('bookingContent').style.display = 'block';
+  document.getElementById('bookingSuccess').style.display = 'none';
+
+  overlay.classList.add('active');
+}
+
+function selectDay(idx, day) {
+  bookingSelectedDay = day;
+  bookingSelectedSlot = null;
+
+  // Update day tabs
+  document.querySelectorAll('.day-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+
+  // Generate and render slots
+  const slots = generateSlots(day);
+  const grid = document.getElementById('slotGrid');
+  grid.innerHTML = '';
+
+  // Get current time to disable past slots
+  const now = new Date();
+  const isToday = day.toDateString() === now.toDateString();
+
+  slots.forEach((slot, i) => {
+    const el = document.createElement('div');
+    el.className = 'slot';
+
+    // Check if this slot is in the past (only for today)
+    if (isToday) {
+      const slotDate = new Date(slot.utcTime);
+      if (slotDate < now) {
+        el.classList.add('disabled');
+        el.textContent = slot.localTime;
+        el.onclick = null;
+        grid.appendChild(el);
+        return;
+      }
+    }
+
+    el.textContent = slot.localTime;
+    el.onclick = () => selectSlot(i, slot, el);
+    grid.appendChild(el);
+  });
+
+  updateBookingSummary();
+}
+
+function selectSlot(idx, slot, el) {
+  bookingSelectedSlot = slot;
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  updateBookingSummary();
+}
+
+function updateBookingSummary() {
+  const summary = document.getElementById('bookingSummary');
+  const summaryText = document.getElementById('bookingSummaryText');
+  const btn = document.getElementById('confirmBookingBtn');
+
+  if (bookingSelectedDay && bookingSelectedSlot) {
+    const dayStr = bookingSelectedDay.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    summaryText.innerHTML = dayStr + ' at ' + bookingSelectedSlot.localTime + ' <span style="color:var(--gray);font-size:11px;">(' + bookingSelectedSlot.localTz + ')</span><br><span style="color:var(--gray);font-size:11px;">Italian time: ' + bookingSelectedSlot.italyTime + ' (Europe/Rome)</span>';
+    summary.style.display = 'block';
+    btn.disabled = false;
+  } else {
+    summary.style.display = 'none';
+    btn.disabled = true;
+  }
+}
+
+async function confirmBooking() {
+  if (!bookingSelectedDay || !bookingSelectedSlot) return;
+
+  const btn = document.getElementById('confirmBookingBtn');
+  btn.disabled = true;
+  btn.textContent = 'Booking...';
+
+  try {
+    const dayStr = bookingSelectedDay.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    const session = await sb.auth.getSession();
+    const token = session.data.session?.access_token;
+
+    const res = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/book-consultation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({
+        student_email: currentUser.email,
+        full_name: fullName.value,
+        country: country.value,
+        programs: selectedPrograms,
+        consultation_date: dayStr,
+        consultation_time_local: bookingSelectedSlot.localTime,
+        consultation_time_local_tz: bookingSelectedSlot.localTz,
+        consultation_time_italy: bookingSelectedSlot.italyTime,
+        consultation_utc: bookingSelectedSlot.utcTime,
+        application_id: appRecord.id
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      // Show success view
+      document.getElementById('bookingContent').style.display = 'none';
+      const successEl = document.getElementById('bookingSuccess');
+      successEl.style.display = 'block';
+      document.getElementById('bookingSuccessText').innerHTML =
+        'Your consultation is booked for<br><strong>' + dayStr + ' at ' + bookingSelectedSlot.localTime + ' (' + bookingSelectedSlot.localTz + ')</strong><br><br>We will contact you at <strong>' + currentUser.email + '</strong> with the meeting link.';
+    } else {
+      showToast('Booking failed: ' + (data.message || 'Unknown error'));
+      btn.disabled = false;
+      btn.textContent = 'Confirm Booking';
+    }
+  } catch (err) {
+    console.error('Booking error:', err);
+    showToast('Booking failed. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'Confirm Booking';
+  }
+}
+
+function closeBooking() {
+  document.getElementById('bookingOverlay').classList.remove('active');
 }
 
 async function logout() {
