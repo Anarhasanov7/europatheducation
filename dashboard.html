@@ -1543,8 +1543,10 @@ function updateProgress() {
   let done = 0;
   steps.forEach(s => { if (document.getElementById('step_' + s)?.checked) done++; });
   const pct = Math.round((done / steps.length) * 100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressText').textContent = pct + '% completed';
+  const fill = document.getElementById('progressFill');
+  const ptext = document.getElementById('progressText');
+  if (fill) fill.style.width = pct + '%';
+  if (ptext) ptext.textContent = pct + '% completed';
 }
 
 function validateProfile() {
