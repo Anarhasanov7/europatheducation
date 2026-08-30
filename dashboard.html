@@ -82,7 +82,14 @@
 
   .toast { position:fixed; bottom:30px; right:30px; background:var(--ink); color:#fff; padding:14px 24px; border-radius:12px; font-size:14px; box-shadow:0 8px 30px rgba(0,0,0,0.2); display:none; z-index:200; }
   .toast.show { display:block; animation:slideIn .3s; }
-  @keyframes slideIn { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+  @keyframes slideIn { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1;; } }
+
+  /* Loading overlay */
+  .loading-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:var(--off); display:flex; align-items:center; justify-content:center; z-index:300; flex-direction:column; gap:16px; }
+  .loading-overlay.hidden { display:none; }
+  .spinner { width:40px; height:40px; border:4px solid #eee; border-top-color:var(--electric); border-radius:50%; animation:spin 0.8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .loading-text { font-size:14px; color:var(--gray); }
 
   @media (max-width:768px) {
     .grid-2, .doc-list { grid-template-columns:1fr; }
@@ -94,6 +101,11 @@
 </style>
 </head>
 <body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading your dashboard...</div>
+</div>
 
 <nav>
   <div class="brand">EuroPath <span>Education</span></div>
@@ -1270,6 +1282,13 @@ async function init() {
         }
       }
       updateStatusBadge(appRecord.status || 'draft');
+      // If already submitted, show "Edit Application" button
+      if (appRecord.status === 'submitted') {
+        const btn = document.getElementById('submitBtn');
+        btn.textContent = 'Edit Application';
+        btn.style.background = 'linear-gradient(135deg, #c6ff3d, #3ddfff)';
+        btn.onclick = editApp;
+      }
     } else {
       const { data: created, error } = await sb
         .from('applications')
@@ -1288,9 +1307,11 @@ async function init() {
     await loadDocuments();
     updateProgress();
     renderSummary();
+    document.getElementById('loadingOverlay').classList.add('hidden');
   } catch (err) {
     console.error('Dashboard init error:', err);
     document.getElementById('summaryList').innerHTML = '<li>Error: ' + (err.message || 'Unknown error') + '</li>';
+    document.getElementById('loadingOverlay').classList.add('hidden');
   }
 }
 
@@ -1658,7 +1679,32 @@ async function submitApp() {
     btn.style.background = 'linear-gradient(135deg, #c6ff3d, #3ddfff)';
     updateStatusBadge('submitted');
     renderSummary();
+    // Show "Edit Application" button so students can update after submitting
+    btn.textContent = 'Edit Application';
+    btn.disabled = false;
+    btn.onclick = editApp;
   }
+}
+
+async function editApp() {
+  if (!confirm('Reopen your application for editing? The status will change back to Draft.')) return;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Reopening...';
+  const { error } = await sb.from('applications').update({ status: 'draft' }).eq('id', appRecord.id);
+  if (error) {
+    showToast('Error: ' + error.message);
+    btn.textContent = 'Edit Application';
+    btn.disabled = false;
+    return;
+  }
+  appRecord.status = 'draft';
+  btn.textContent = 'Submit Application';
+  btn.style.background = '';
+  btn.onclick = submitApp;
+  updateStatusBadge('draft');
+  showToast('Application reopened for editing');
+  renderSummary();
 }
 
 function renderSummary() {
@@ -1694,7 +1740,42 @@ document.querySelectorAll('input[type="text"], select').forEach(el => el.addEven
   const hint = document.getElementById('hint-' + el.id);
   if (hint) hint.style.display = 'none';
   autoStep();
+  markDirty();
 }));
+
+// ─── Auto-save & unsaved changes warning ───
+let dirty = false;
+let autoSaveTimer = null;
+
+function markDirty() {
+  dirty = true;
+  // Auto-save after 30 seconds of inactivity
+  if (autoSaveTimer) clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(async () => {
+    if (dirty && appRecord) {
+      await saveApp();
+      dirty = false;
+    }
+  }, 30000);
+}
+
+// Warn before leaving with unsaved changes
+window.addEventListener('beforeunload', (e) => {
+  if (dirty) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+// ─── Session expiry handling ───
+// Check session every 5 minutes; redirect to login if expired
+setInterval(async () => {
+  if (!sb) return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    window.location.href = 'login.html';
+  }
+}, 300000);
 </script>
 
 </body>

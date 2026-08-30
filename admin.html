@@ -126,6 +126,7 @@
     <option value="submitted">Submitted</option>
     <option value="draft">Draft</option>
   </select>
+  <button onclick="exportCSV()" style="padding:8px 16px; border:1px solid #ddd; border-radius:8px; background:#fff; cursor:pointer; font-size:13px; font-weight:600; margin-left:auto;">Export CSV</button>
 </div>
 
 <div class="table-container" id="tableSection" style="display:none;">
@@ -305,6 +306,38 @@ function renderTable() {
 function goToPage(page) {
   currentPage = page;
   renderTable();
+}
+
+function exportCSV() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const statusF = document.getElementById('statusFilter').value;
+  let filtered = allApps;
+  if (statusF) filtered = filtered.filter(a => a.status === statusF);
+  if (search) filtered = filtered.filter(a =>
+    (a.full_name || '').toLowerCase().includes(search) ||
+    (a.university || '').toLowerCase().includes(search) ||
+    (a.country || '').toLowerCase().includes(search)
+  );
+
+  const headers = ['Full Name', 'Email', 'Country', 'University', 'Program', 'Documents', 'Status', 'Date'];
+  const rows = filtered.map(a => {
+    const userDocs = allDocs.filter(d => d.user_id === a.user_id);
+    const date = new Date(a.created_at).toLocaleDateString('en-GB');
+    return [a.full_name || '', a.user_id, a.country || '', a.university || '', a.program || '', userDocs.length + '/6', a.status, date];
+  });
+
+  let csv = headers.join(',') + '\n';
+  rows.forEach(r => {
+    csv += r.map(field => '"' + String(field).replace(/"/g, '""') + '"').join(',') + '\n';
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'applications_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 async function openModal(appId) {
