@@ -1649,7 +1649,7 @@
 
   function openConsultModal() {
     const localTz = getLocalTz().replace(/_/g, ' ');
-    document.getElementById('consultTzInfo').textContent = 'Times shown in your local timezone (' + localTz + '). We work 9:00–17:00 Italian time.';
+    document.getElementById('consultTzInfo').textContent = 'Время показано в вашем часовом поясе (' + localTz + '). Мы работаем 9:00–17:00 по итальянскому времени.';
     const days = getNextWorkdays(5);
     consultSelectedDay = null; consultSelectedSlot = null;
     const tabsEl = document.getElementById('consultDayTabs');
@@ -1657,7 +1657,7 @@
     days.forEach((day, i) => {
       const tab = document.createElement('div');
       tab.className = 'day-tab';
-      tab.textContent = day.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      tab.textContent = day.toLocaleDateString('ru-RU', { weekday: 'short', month: 'short', day: 'numeric' });
       tab.onclick = () => consultSelectDay(i, day);
       tabsEl.appendChild(tab);
     });
@@ -1698,7 +1698,7 @@
     const s = document.getElementById('consultSummary');
     const btn = document.getElementById('consultConfirmBtn');
     if (consultSelectedDay && consultSelectedSlot) {
-      const dayStr = consultSelectedDay.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      const dayStr = consultSelectedDay.toLocaleDateString('ru-RU', { weekday: 'long', month: 'long', day: 'numeric' });
       document.getElementById('consultSummaryText').innerHTML = dayStr + ' в ' + consultSelectedSlot.localTime + ' <span style="color:var(--gray);font-size:11px;">(' + consultSelectedSlot.localTz + ')</span><br><span style="color:var(--gray);font-size:11px;">Итальянское время: ' + consultSelectedSlot.italyTime + ' (Europe/Rome)</span>';
       s.style.display = 'block';
       btn.disabled = false;
@@ -1720,7 +1720,7 @@
     }
     const btn = document.getElementById('consultConfirmBtn');
     btn.disabled = true; btn.textContent = 'Запись...';
-    const dayStr = consultSelectedDay.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    const dayStr = consultSelectedDay.toLocaleDateString('ru-RU', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
     try {
       const res = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/public-consultation', {
         method: 'POST',
@@ -1870,7 +1870,7 @@
         document.getElementById('cf-telegram').value = '';
         document.getElementById('cf-message').value = '';
       } else {
-        throw new Error(data.message || 'Send failed');
+        throw new Error(data.message || 'Ошибка отправки');
       }
     } catch (err) {
       status.className = 'form-status error';
