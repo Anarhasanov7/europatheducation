@@ -641,15 +641,13 @@ async function sendTicketReply(ticketId) {
 
       renderTickets();
       closeModal();
-      alert('Reply sent successfully!');
     } else {
-      alert('Failed: ' + (data.message || 'Unknown error'));
       btn.disabled = false;
       btn.textContent = 'Send Reply';
+      console.error('Reply failed:', data.message);
     }
   } catch (err) {
     console.error('Reply error:', err);
-    alert('Network error. Please try again.');
     btn.disabled = false;
     btn.textContent = 'Send Reply';
   }
