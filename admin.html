@@ -538,6 +538,15 @@ async function openModal(appId) {
       <div class="info-item"><div class="key">Documents</div><div class="val">${userDocs.length} of 6</div></div>
     </div>
     <div class="info-grid" style="margin-top:0;">
+      <div class="info-item"><div class="key">Date of birth</div><div class="val">${app.date_of_birth ? esc(new Date(app.date_of_birth).toLocaleDateString('en-GB')) : '—'}</div></div>
+      <div class="info-item"><div class="key">Currently studying in</div><div class="val">${esc(app.current_city) || '—'}</div></div>
+      <div class="info-item"><div class="key">Current university</div><div class="val">${esc(app.current_uni) || '—'}</div></div>
+      <div class="info-item"><div class="key">Degree</div><div class="val">${esc(app.current_degree) || '—'}</div></div>
+      <div class="info-item"><div class="key">Faculty</div><div class="val">${esc(app.current_faculty) || '—'}</div></div>
+      <div class="info-item"><div class="key">Started</div><div class="val">${app.study_start ? esc(app.study_start) : '—'}</div></div>
+      <div class="info-item"><div class="key">Program length</div><div class="val">${app.study_duration ? esc(app.study_duration) + ' years' : '—'}</div></div>
+    </div>
+    <div class="info-grid" style="margin-top:0;">
       <div class="info-item" style="grid-column:1/-1;"><div class="key">Selected Programs (${modalProgs.length})</div><div class="val">${modalProgs.length > 0 ? modalProgs.map((p, i) => `<div style="margin-bottom:6px;"><strong>${i + 1}.</strong> ${esc(p.university)} — ${esc(p.program)}</div>`).join('') : 'Not selected'}</div></div>
     </div>
     ${app.motivation_text ? `<div style="margin-top:16px;"><h3 style="font-size:15px; margin-bottom:8px; color:var(--blue);">Motivation</h3><div style="padding:14px; background:#f8f9fa; border-radius:10px; font-size:13px; line-height:1.7; white-space:pre-wrap;">${esc(app.motivation_text)}</div></div>` : ''}

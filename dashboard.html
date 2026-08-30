@@ -201,6 +201,40 @@
     </div>
 
     <div class="card">
+      <h3>About You</h3>
+      <p style="font-size:13px; color:#666; margin-bottom:14px;">Tell us about yourself and your current studies.</p>
+
+      <label for="dateOfBirth">Date of birth</label>
+      <input type="date" id="dateOfBirth" oninput="markDirty()">
+
+      <label for="currentCity">Where are you studying now?</label>
+      <input type="text" id="currentCity" placeholder="e.g. Baku, Azerbaijan" oninput="markDirty()">
+
+      <label for="currentUni">Current university name</label>
+      <input type="text" id="currentUni" placeholder="e.g. Azerbaijan Cooperation University" oninput="markDirty()">
+
+      <label for="currentDegree">Degree</label>
+      <select id="currentDegree" onchange="markDirty()">
+        <option value="">Select degree</option>
+        <option value="High School">High School / Secondary</option>
+        <option value="Bachelor">Bachelor's (ongoing)</option>
+        <option value="Bachelor Completed">Bachelor's (completed)</option>
+        <option value="Master">Master's (ongoing)</option>
+        <option value="Master Completed">Master's (completed)</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label for="currentFaculty">Which faculty are you in?</label>
+      <input type="text" id="currentFaculty" placeholder="e.g. Faculty of Economics, Faculty of Engineering" oninput="markDirty()">
+
+      <label for="studyStart">When did you start?</label>
+      <input type="month" id="studyStart" oninput="markDirty()">
+
+      <label for="studyDuration">How long is your program? (years)</label>
+      <input type="number" id="studyDuration" min="1" max="8" placeholder="e.g. 4" oninput="markDirty()">
+    </div>
+
+    <div class="card">
       <h3>Required Documents (max 5 MB each, PDF or images only)</h3>
       <div class="doc-list" id="docList">
         <div class="doc-item"><div class="name">Passport</div><div class="status" id="st-passport">Not uploaded</div><input type="file" data-doc="passport" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint">PDF, PNG, or JPG · max 5 MB</div><div class="doc-actions" id="actions-passport" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('passport')">Download</button><button class="doc-btn delete" onclick="deleteDoc('passport')">Delete</button></div></div>
@@ -1478,6 +1512,14 @@ async function init() {
       country.value = appRecord.country || '';
       // Load motivation text
       document.getElementById('motivationText').value = appRecord.motivation_text || '';
+      // Load personal info
+      if (appRecord.date_of_birth) document.getElementById('dateOfBirth').value = appRecord.date_of_birth;
+      document.getElementById('currentCity').value = appRecord.current_city || '';
+      document.getElementById('currentUni').value = appRecord.current_uni || '';
+      document.getElementById('currentDegree').value = appRecord.current_degree || '';
+      document.getElementById('currentFaculty').value = appRecord.current_faculty || '';
+      if (appRecord.study_start) document.getElementById('studyStart').value = appRecord.study_start;
+      if (appRecord.study_duration) document.getElementById('studyDuration').value = appRecord.study_duration;
       // Load references
       const refs = appRecord.references_json || [];
       for (let i = 0; i < 3; i++) {
@@ -2007,6 +2049,13 @@ async function saveApp() {
       program: selectedPrograms[0]?.program || '',
       motivation_text: document.getElementById('motivationText').value.trim(),
       references_json: collectReferences(),
+      date_of_birth: document.getElementById('dateOfBirth').value || null,
+      current_city: document.getElementById('currentCity').value.trim(),
+      current_uni: document.getElementById('currentUni').value.trim(),
+      current_degree: document.getElementById('currentDegree').value,
+      current_faculty: document.getElementById('currentFaculty').value.trim(),
+      study_start: document.getElementById('studyStart').value || null,
+      study_duration: document.getElementById('studyDuration').value ? parseInt(document.getElementById('studyDuration').value) : null,
       steps: steps
     })
     .eq('id', appRecord.id);
@@ -2064,6 +2113,13 @@ async function submitApp() {
       program: selectedPrograms[0]?.program || '',
       motivation_text: document.getElementById('motivationText').value.trim(),
       references_json: collectReferences(),
+      date_of_birth: document.getElementById('dateOfBirth').value || null,
+      current_city: document.getElementById('currentCity').value.trim(),
+      current_uni: document.getElementById('currentUni').value.trim(),
+      current_degree: document.getElementById('currentDegree').value,
+      current_faculty: document.getElementById('currentFaculty').value.trim(),
+      study_start: document.getElementById('studyStart').value || null,
+      study_duration: document.getElementById('studyDuration').value ? parseInt(document.getElementById('studyDuration').value) : null,
       steps: steps,
       status: 'submitted'
     })
@@ -2092,6 +2148,13 @@ async function submitApp() {
           documents_count: uploaded2,
           motivation_text: document.getElementById('motivationText').value.trim(),
           references: collectReferences(),
+          date_of_birth: document.getElementById('dateOfBirth').value || null,
+          current_city: document.getElementById('currentCity').value.trim(),
+          current_uni: document.getElementById('currentUni').value.trim(),
+          current_degree: document.getElementById('currentDegree').value,
+          current_faculty: document.getElementById('currentFaculty').value.trim(),
+          study_start: document.getElementById('studyStart').value || null,
+          study_duration: document.getElementById('studyDuration').value || null,
           application_id: appRecord.id
         })
       });
@@ -2145,6 +2208,13 @@ function renderSummary() {
   const items = [
     ['Email', currentUser?.email || '—'],
     ['Full name', fullName.value || '—'],
+    ['Date of birth', document.getElementById('dateOfBirth').value || '—'],
+    ['Currently studying in', document.getElementById('currentCity').value || '—'],
+    ['Current university', document.getElementById('currentUni').value || '—'],
+    ['Degree', document.getElementById('currentDegree').value || '—'],
+    ['Faculty', document.getElementById('currentFaculty').value || '—'],
+    ['Started', document.getElementById('studyStart').value || '—'],
+    ['Program length', document.getElementById('studyDuration').value ? document.getElementById('studyDuration').value + ' years' : '—'],
     ['Country', country.value || '—'],
     ['Programs selected', selectedPrograms.length > 0
       ? selectedPrograms.map((p, i) => `${i + 1}. ${p.university} — ${p.program}`).join('<br>')
