@@ -622,6 +622,93 @@
   }
   footer .brand span { color: var(--electric); }
 
+  /* ─── Reviews / Testimonials ─── */
+  .reviews-section {
+    background: linear-gradient(180deg, var(--off-white) 0%, #eef1f6 100%);
+  }
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .review-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .review-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  }
+  .review-card .quote-mark {
+    font-size: 48px;
+    color: var(--electric);
+    line-height: 1;
+    margin-bottom: 12px;
+    font-family: Georgia, serif;
+    opacity: 0.4;
+  }
+  .review-card .review-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--slate);
+    margin-bottom: 20px;
+    flex: 1;
+  }
+  .review-card .review-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+  }
+  .review-card .review-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: var(--ink);
+    flex-shrink: 0;
+  }
+  .review-card .review-name {
+    font-size: 14px; font-weight: 700; color: var(--ink);
+  }
+  .review-card .review-from {
+    font-size: 11px; color: var(--gray); margin-top: 2px;
+  }
+  .review-card .review-result {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(61,223,255,0.08), rgba(198,255,61,0.08));
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .review-card .review-result strong {
+    color: var(--ink);
+    display: block;
+    margin-bottom: 2px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .review-card .review-result .result-icon {
+    color: var(--lime-d);
+    font-weight: 800;
+  }
+  @media (max-width: 900px) {
+    .reviews-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .reviews-grid { grid-template-columns: 1fr; }
+  }
+
   /* ─── Animations ─── */
   .fade-in {
     opacity: 0; transform: translateY(30px);
@@ -656,6 +743,7 @@
     <li><a href="#process">Процесс</a></li>
     <li><a href="#payment">Оплата</a></li>
     <li><a href="#location">Локация</a></li>
+    <li><a href="#reviews">Отзывы</a></li>
     <li><a href="#contact-form">Контакты</a></li>
     <li><a href="login.html">Student Portal</a></li>
   </ul>
@@ -1105,6 +1193,143 @@
         <div class="value">Русский, итальянский, английский</div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ─── Reviews / Отзывы ─── -->
+<section id="reviews" class="fade-in reviews-section">
+  <div class="section-tag">Отзывы</div>
+  <div class="section-title">Истории наших студентов</div>
+  <div class="section-sub">Студенты из стран Центральной Азии, которые поступили через Edupath и теперь строят карьеру в Европе.</div>
+
+  <div class="reviews-grid">
+
+    <div class="review-card">
+      <div class="quote-mark">&ldquo;</div>
+      <div class="review-text">Edupath помогли мне с поступлением в Sapienza, когда я даже не знала, с чего начать. Полностью сопровождали — от мотивационного письма до визы. Я получила стипендию DSU, которая покрывает жильё и питание. Сейчас работаю в Риме.</div>
+      <div class="review-author">
+        <div class="review-avatar">A</div>
+        <div>
+          <div class="review-name">Aysel H.</div>
+          <div class="review-from">Баку, Азербайджан → Рим, Италия</div>
+        </div>
+      </div>
+      <div class="review-result">
+        <strong><span class="result-icon">✓</span> Университет</strong>
+        Sapienza Università di Roma, Economics
+        <br><strong><span class="result-icon">✓</span> Карьера</strong>
+        Финансовый аналитик, Banca Intesa (Рим)
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="quote-mark">&ldquo;</div>
+      <div class="review-text">Я думал, что учёба в Италии — это невозможно без связей. Edupath доказали обратное. Меня зачислили в Politecnico di Milano на Computer Science. Стипендия полностью покрывает обучение. Сейчас работаю в Милане в IT-компании.</div>
+      <div class="review-author">
+        <div class="review-avatar">R</div>
+        <div>
+          <div class="review-name">Rustam K.</div>
+          <div class="review-from">Алматы, Казахстан → Милан, Италия</div>
+        </div>
+      </div>
+      <div class="review-result">
+        <strong><span class="result-icon">✓</span> Университет</strong>
+        Politecnico di Milano, Computer Science MSc
+        <br><strong><span class="result-icon">✓</span> Карьера</strong>
+        Software Engineer, PwC Italy (Милан)
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="quote-mark">&ldquo;</div>
+      <div class="review-text">Команда Edupath помогла мне выбрать программу на английском в Università di Bologna и подготовить все документы. Получила региональную стипендию ERDISU. После окончания магистратуры осталась работать в Болонье.</div>
+      <div class="review-author">
+        <div class="review-avatar">D</div>
+        <div>
+          <div class="review-name">Dilnaz A.</div>
+          <div class="review-from">Астана, Казахстан → Болонья, Италия</div>
+        </div>
+      </div>
+      <div class="review-result">
+        <strong><span class="result-icon">✓</span> Университет</strong>
+        Università di Bologna, International Management
+        <br><strong><span class="result-icon">✓</span> Карьера</strong>
+        Marketing Manager, L'Oréal Italy (Болонья)
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="quote-mark">&ldquo;</div>
+      <div class="review-text">Поступил в Politecnico di Torino на Aerospace Engineering. Edupath взяли на себя всё — от перевода документов до подачи на визу. Стипендия покрывает жильё. Сейчас работаю инженером в Турине — город авиационной промышленности Италии.</div>
+      <div class="review-author">
+        <div class="review-avatar">E</div>
+        <div>
+          <div class="review-name">Eldar M.</div>
+          <div class="review-from">Баку, Азербайджан → Турин, Италия</div>
+        </div>
+      </div>
+      <div class="review-result">
+        <strong><span class="result-icon">✓</span> Университет</strong>
+        Politecnico di Torino, Aerospace Engineering MSc
+        <br><strong><span class="result-icon">✓</span> Карьера</strong>
+        Aerospace Engineer, Leonardo S.p.A. (Турин)
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="quote-mark">&ldquo;</div>
+      <div class="review-text">Я хотела изучать дизайн в Италии, но не знала, какие вузы предлагают программы на английском. Edupath нашли идеальный вариант — Politecnico di Milano, Digital and Interaction Design. Сейчас работаю UX-дизайнером в международной компании.</div>
+      <div class="review-author">
+        <div class="review-avatar">M</div>
+        <div>
+          <div class="review-name">Madina S.</div>
+          <div class="review-from">Шымкент, Казахстан → Милан, Италия</div>
+        </div>
+      </div>
+      <div class="review-result">
+        <strong><span class="result-icon">✓</span> Университет</strong>
+        Politecnico di Milano, Digital & Interaction Design
+        <br><strong><span class="result-icon">✓</span> Карьера</strong>
+        UX Designer, Accenture Digital (Милан)
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="quote-mark">&ldquo;</div>
+      <div class="review-text">Edupath помогли мне поступить в University of Bologna на программу Business and Management. Всё было чётко — дедлайны, документы, мотивационное письмо. Получил стипендию DSU. После выпуска основал свой стартап в Италии.</div>
+      <div class="review-author">
+        <div class="review-avatar">T</div>
+        <div>
+          <div class="review-name">Togrul N.</div>
+          <div class="review-from">Гянджа, Азербайджан → Болонья, Италия</div>
+        </div>
+      </div>
+      <div class="review-result">
+        <strong><span class="result-icon">✓</span> Университет</strong>
+        Università di Bologna, Business & Management MSc
+        <br><strong><span class="result-icon">✓</span> Карьера</strong>
+        Co-founder & CEO, FinTech startup (Болонья)
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="quote-mark">&ldquo;</div>
+      <div class="review-text">Поступила в Università di Padova на Medicine and Surgery — программа полностью на английском. Edupath подготовили меня к вступительному тесту IMAT. Сейчас работаю врачом-ординатором в больнице Падуи. Без Edupath я бы не справилась с системой.</div>
+      <div class="review-author">
+        <div class="review-avatar">L</div>
+        <div>
+          <div class="review-name">Leyla J.</div>
+          <div class="review-from">Баку, Азербайджан → Падуя, Италия</div>
+        </div>
+      </div>
+      <div class="review-result">
+        <strong><span class="result-icon">✓</span> Университет</strong>
+        Università di Padova, Medicine & Surgery (English)
+        <br><strong><span class="result-icon">✓</span> Карьера</strong>
+        Medical Resident, Azienda Ospedaliera di Padova
+      </div>
+    </div>
+
   </div>
 </section>
 
