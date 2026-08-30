@@ -164,6 +164,17 @@ let currentUser = null;
 let currentPage = 1;
 const PAGE_SIZE = 25;
 
+// Escape user-provided data to prevent XSS
+function esc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 (function loadSB() {
   if (window.supabase) { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); checkSession(); }
   else { setTimeout(loadSB, 100); }
@@ -258,15 +269,15 @@ function renderTable() {
   tbody.innerHTML = pageItems.map(a => {
     const userDocs = allDocs.filter(d => d.user_id === a.user_id);
     const date = new Date(a.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-    return `<tr onclick="openModal('${a.id}')">
-      <td><strong>${a.full_name || '<span style="color:#ccc">Not provided</span>'}</strong></td>
-      <td style="font-size:13px;">${a.user_id.slice(0,8)}...</td>
-      <td class="hide-mobile">${a.country || '—'}</td>
-      <td class="hide-mobile">${a.university || '—'}</td>
-      <td class="hide-mobile">${a.program || '—'}</td>
+    return `<tr onclick="openModal('${esc(a.id)}')">
+      <td><strong>${a.full_name ? esc(a.full_name) : '<span style="color:#ccc">Not provided</span>'}</strong></td>
+      <td style="font-size:13px;">${esc(a.user_id.slice(0,8))}...</td>
+      <td class="hide-mobile">${esc(a.country) || '—'}</td>
+      <td class="hide-mobile">${esc(a.university) || '—'}</td>
+      <td class="hide-mobile">${esc(a.program) || '—'}</td>
       <td>${userDocs.length}/6</td>
-      <td><span class="badge ${a.status}">${a.status}</span></td>
-      <td class="hide-mobile" style="font-size:12px;color:#666;">${date}</td>
+      <td><span class="badge ${esc(a.status)}">${esc(a.status)}</span></td>
+      <td class="hide-mobile" style="font-size:12px;color:#666;">${esc(date)}</td>
     </tr>`;
   }).join('');
 
@@ -322,8 +333,8 @@ async function openModal(appId) {
       const { data } = await sb.storage.from('student-documents').createSignedUrl(doc.storage_path, 604800);
       const url = data?.signedUrl || '';
       docRows += `<div class="doc-item">
-        <div><span class="doc-type">${docLabels[docType]}</span><span class="doc-file">${doc.file_name} · ${formatSize(doc.file_size)}</span></div>
-        <a href="${url}" target="_blank" download>Download</a>
+        <div><span class="doc-type">${docLabels[docType]}</span><span class="doc-file">${esc(doc.file_name)} · ${formatSize(doc.file_size)}</span></div>
+        <a href="${esc(url)}" target="_blank" download>Download</a>
       </div>`;
     } else {
       docRows += `<div class="doc-item"><div><span class="doc-type" style="color:#ccc;">${docLabels[docType]}</span></div><span class="doc-missing">Not uploaded</span></div>`;
@@ -349,14 +360,14 @@ async function openModal(appId) {
 
   document.getElementById('modalContent').innerHTML = `
     <button class="modal-close" onclick="closeModal()">&times;</button>
-    <h2>${app.full_name || 'Unknown Student'}</h2>
-    <p class="sub">Application ID: ${app.id}</p>
+    <h2>${app.full_name ? esc(app.full_name) : 'Unknown Student'}</h2>
+    <p class="sub">Application ID: ${esc(app.id)}</p>
     <div class="info-grid">
-      <div class="info-item"><div class="key">Status</div><div class="val"><span class="badge ${app.status}">${app.status}</span></div></div>
-      <div class="info-item"><div class="key">Submitted</div><div class="val">${date}</div></div>
-      <div class="info-item"><div class="key">Country</div><div class="val">${app.country || 'Not selected'}</div></div>
-      <div class="info-item"><div class="key">University</div><div class="val">${app.university || 'Not selected'}</div></div>
-      <div class="info-item"><div class="key">Program</div><div class="val">${app.program || 'Not selected'}</div></div>
+      <div class="info-item"><div class="key">Status</div><div class="val"><span class="badge ${esc(app.status)}">${esc(app.status)}</span></div></div>
+      <div class="info-item"><div class="key">Submitted</div><div class="val">${esc(date)}</div></div>
+      <div class="info-item"><div class="key">Country</div><div class="val">${esc(app.country) || 'Not selected'}</div></div>
+      <div class="info-item"><div class="key">University</div><div class="val">${esc(app.university) || 'Not selected'}</div></div>
+      <div class="info-item"><div class="key">Program</div><div class="val">${esc(app.program) || 'Not selected'}</div></div>
       <div class="info-item"><div class="key">Documents</div><div class="val">${userDocs.length} of 6</div></div>
     </div>
     <div class="docs-list">
