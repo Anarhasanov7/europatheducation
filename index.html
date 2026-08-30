@@ -602,6 +602,74 @@
     transform: scale(1.05);
     box-shadow: 0 8px 32px rgba(61,223,255,0.3);
   }
+  .cta-buttons {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: 28px;
+    font-size: 15px; font-weight: 800; text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border: none;
+    font-family: 'Inter', sans-serif;
+  }
+  .cta-btn:hover { transform: scale(1.05); }
+  .cta-btn.apply {
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    color: var(--ink);
+  }
+  .cta-btn.apply:hover { box-shadow: 0 8px 32px rgba(61,223,255,0.3); }
+  .cta-btn.consult {
+    background: linear-gradient(135deg, var(--lime), var(--lime-d));
+    color: var(--ink);
+  }
+  .cta-btn.consult:hover { box-shadow: 0 8px 32px rgba(198,255,61,0.3); }
+  .cta-btn.ticket {
+    background: transparent; color: #fff;
+    border: 2px solid rgba(255,255,255,0.25);
+  }
+  .cta-btn.ticket:hover { border-color: var(--electric); box-shadow: 0 8px 32px rgba(61,223,255,0.15); }
+
+  /* ─── Public booking & ticket modals ─── */
+  .pub-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(8,10,20,0.7); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:500; padding:20px; }
+  .pub-overlay.active { display:flex; }
+  .pub-modal { background:#fff; border-radius:20px; padding:36px; max-width:560px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:pubIn .4s; }
+  @keyframes pubIn { from { transform:scale(0.9); opacity:0; } to { transform:scale(1); opacity:1; } }
+  .pub-modal h2 { font-size:24px; font-weight:800; margin-bottom:8px; text-align:center; }
+  .pub-modal .pub-sub { text-align:center; color:var(--gray); font-size:14px; margin-bottom:24px; line-height:1.6; }
+  .pub-modal .pub-close { position:absolute; top:16px; right:20px; font-size:24px; color:var(--gray); cursor:pointer; border:none; background:none; }
+  .pub-modal .pub-field { margin-bottom:16px; text-align:left; }
+  .pub-modal .pub-field label { display:block; font-size:12px; font-weight:700; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
+  .pub-modal .pub-field input, .pub-modal .pub-field select, .pub-modal .pub-field textarea {
+    width:100%; padding:12px 14px; border:1px solid #ddd; border-radius:10px; font-size:14px; outline:none; font-family:'Inter',sans-serif; transition:border-color .2s;
+  }
+  .pub-modal .pub-field input:focus, .pub-modal .pub-field select:focus, .pub-modal .pub-field textarea:focus { border-color:var(--electric); }
+  .pub-modal .pub-field textarea { resize:vertical; min-height:80px; }
+  .pub-modal .pub-section-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin:20px 0 10px; }
+  .pub-modal .tz-info { font-size:11px; color:var(--electric); margin-bottom:12px; }
+  .pub-modal .day-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .pub-modal .day-tab { padding:8px 14px; border:1px solid #ddd; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; background:#fff; transition:all .2s; }
+  .pub-modal .day-tab:hover { border-color:var(--electric); }
+  .pub-modal .day-tab.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .pub-modal .slot-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:20px; }
+  .pub-modal .slot { padding:10px 8px; border:1px solid #ddd; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; text-align:center; background:#fff; transition:all .2s; }
+  .pub-modal .slot:hover { border-color:var(--electric); background:#f0fdff; }
+  .pub-modal .slot.active { background:linear-gradient(135deg, var(--electric), var(--lime)); color:var(--ink); border-color:transparent; font-weight:700; }
+  .pub-modal .slot.disabled { opacity:0.35; cursor:not-allowed; text-decoration:line-through; }
+  .pub-modal .pub-summary { background:#f4f5f7; border-radius:12px; padding:16px; margin-bottom:20px; font-size:13px; line-height:1.7; display:none; }
+  .pub-modal .pub-summary strong { color:var(--ink); }
+  .pub-modal .pub-btn { width:100%; padding:14px; border:none; border-radius:12px; background:linear-gradient(135deg, var(--electric), var(--lime)); color:var(--ink); font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
+  .pub-modal .pub-btn:hover { transform:scale(1.02); }
+  .pub-modal .pub-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+  .pub-modal .pub-status { margin-top:14px; padding:12px; border-radius:10px; font-size:13px; display:none; }
+  .pub-modal .pub-status.success { background:#e6f9ec; color:#1a7d3c; display:block; }
+  .pub-modal .pub-status.error { background:#fff0f0; color:#c41e3a; display:block; }
+  .pub-modal .pub-success-view { text-align:center; padding:20px 0; }
+  .pub-modal .pub-success-view .check-icon { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, var(--lime), #22c55e); display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px; }
+  @media (max-width:600px) {
+    .pub-modal .slot-grid { grid-template-columns:repeat(3, 1fr); }
+    .pub-modal { padding:24px; }
+    .cta-buttons { flex-direction:column; align-items:center; }
+  }
   .cta-contacts {
     margin-top: 28px; display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
   }
@@ -1337,14 +1405,113 @@
 <section id="contact" class="fade-in">
   <div class="cta-section">
     <h2>Готовы начать путь к европейскому образованию?</h2>
-    <p>Создайте аккаунт, выберите университет и загрузите документы — мы свяжемся с вами в течение 24 часов.</p>
-    <a href="login.html" class="cta-button">Создать аккаунт</a>
+    <p>Подайте заявку, забронируйте бесплатную консультацию или задайте вопрос — мы ответим в течение 24 часов.</p>
+    <div class="cta-buttons">
+      <a href="login.html" class="cta-btn apply">📋 Apply</a>
+      <button class="cta-btn consult" onclick="openConsultModal()">📅 Free Consultation</button>
+      <button class="cta-btn ticket" onclick="openTicketModal()">🎫 Open a Ticket</button>
+    </div>
     <div class="cta-contacts">
       <div class="cta-contact"><strong>Anar Hasanov</strong></div>
       <div class="cta-contact"><strong>+39 3280810631</strong></div>
     </div>
   </div>
 </section>
+
+<!-- ─── Free Consultation Modal (public, no login needed) ─── -->
+<div class="pub-overlay" id="consultOverlay">
+  <div class="pub-modal" style="position:relative;">
+    <button class="pub-close" onclick="closeConsult()">&times;</button>
+    <div id="consultFormView">
+      <h2>📅 Free Consultation</h2>
+      <p class="pub-sub">Book a free 30-minute call with our advisor. No registration needed — just pick a time that works for you.</p>
+
+      <div class="pub-field">
+        <label>Your name *</label>
+        <input type="text" id="consult-name" placeholder="John Doe">
+      </div>
+      <div class="pub-field">
+        <label>Email *</label>
+        <input type="email" id="consult-email" placeholder="you@example.com">
+      </div>
+      <div class="pub-field">
+        <label>Phone / WhatsApp</label>
+        <input type="text" id="consult-phone" placeholder="+994 50 123 45 67">
+      </div>
+
+      <div class="pub-section-title">Select a day</div>
+      <div class="day-tabs" id="consultDayTabs"></div>
+
+      <div class="pub-section-title">Available time slots</div>
+      <div class="tz-info" id="consultTzInfo"></div>
+      <div class="slot-grid" id="consultSlotGrid"></div>
+
+      <div class="pub-summary" id="consultSummary">
+        <strong>Your consultation:</strong><br>
+        <span id="consultSummaryText"></span>
+      </div>
+
+      <button class="pub-btn" id="consultConfirmBtn" disabled onclick="submitConsult()">Confirm Booking</button>
+      <div class="pub-status" id="consultStatus"></div>
+    </div>
+    <div id="consultSuccessView" style="display:none;">
+      <div class="pub-success-view">
+        <div class="check-icon">✓</div>
+        <h2>Booking Confirmed!</h2>
+        <p class="pub-sub" id="consultSuccessText"></p>
+        <button class="pub-btn" onclick="closeConsult()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Ticket Modal (public, no login needed) ─── -->
+<div class="pub-overlay" id="ticketOverlay">
+  <div class="pub-modal" style="position:relative;">
+    <button class="pub-close" onclick="closeTicket()">&times;</button>
+    <div id="ticketFormView">
+      <h2>🎫 Open a Ticket</h2>
+      <p class="pub-sub">Have a question or need support? Submit a ticket and we'll get back to you by email.</p>
+
+      <div class="pub-field">
+        <label>Your name *</label>
+        <input type="text" id="ticket-name" placeholder="John Doe">
+      </div>
+      <div class="pub-field">
+        <label>Email *</label>
+        <input type="email" id="ticket-email" placeholder="you@example.com">
+      </div>
+      <div class="pub-field">
+        <label>Subject *</label>
+        <select id="ticket-subject">
+          <option value="">Select a topic</option>
+          <option value="Application question">Application question</option>
+          <option value="Document upload issue">Document upload issue</option>
+          <option value="Visa & residence permit">Visa & residence permit</option>
+          <option value="Scholarship & funding">Scholarship & funding</option>
+          <option value="University & program info">University & program info</option>
+          <option value="Technical support">Technical support</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="pub-field">
+        <label>Message *</label>
+        <textarea id="ticket-message" placeholder="Describe your question or issue..." style="min-height:120px;"></textarea>
+      </div>
+
+      <button class="pub-btn" id="ticketSubmitBtn" onclick="submitTicket()">Submit Ticket</button>
+      <div class="pub-status" id="ticketStatus"></div>
+    </div>
+    <div id="ticketSuccessView" style="display:none;">
+      <div class="pub-success-view">
+        <div class="check-icon">✓</div>
+        <h2>Ticket Submitted!</h2>
+        <p class="pub-sub" id="ticketSuccessText"></p>
+        <button class="pub-btn" onclick="closeTicket()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ─── Contact Form ─── -->
 <section id="contact-form" class="fade-in">
@@ -1423,6 +1590,227 @@
   });
 
   // ─── Contact Form ───
+  async function sendContactForm() {
+
+  // ─── Public Free Consultation Booking ───
+  const ITALY_TZ = 'Europe/Rome';
+  const WORK_START = 9, WORK_END = 17;
+  let consultSelectedDay = null, consultSelectedSlot = null;
+
+  function getLocalTz() {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; }
+    catch { return 'UTC'; }
+  }
+
+  function getTzOffset(timeZone, date) {
+    try {
+      const dtf = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'shortOffset' });
+      const parts = dtf.formatToParts(date);
+      const tzPart = parts.find(p => p.type === 'timeZoneName');
+      if (tzPart) {
+        const m = tzPart.value.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);
+        if (m) return (m[1] === '+' ? 1 : -1) * (parseInt(m[2]) * 60 + (m[3] ? parseInt(m[3]) : 0));
+      }
+    } catch {}
+    try {
+      const dtf = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'longOffset' });
+      const parts = dtf.formatToParts(date);
+      const tzPart = parts.find(p => p.type === 'timeZoneName');
+      if (tzPart) {
+        const m = tzPart.value.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);
+        if (m) return (m[1] === '+' ? 1 : -1) * (parseInt(m[2]) * 60 + (m[3] ? parseInt(m[3]) : 0));
+      }
+    } catch {}
+    return 0;
+  }
+
+  function getNextWorkdays(count) {
+    const days = [];
+    let start = new Date();
+    start.setDate(start.getDate() + 1);
+    while (days.length < count) {
+      const d = new Date(start);
+      if (d.getDay() !== 0 && d.getDay() !== 6) days.push(new Date(d));
+      start.setDate(start.getDate() + 1);
+    }
+    return days;
+  }
+
+  function genSlots(dateObj) {
+    const slots = [];
+    for (let h = WORK_START; h < WORK_END; h++) {
+      for (const m of [0, 30]) {
+        if (h === WORK_END - 1 && m === 30) continue;
+        const italyTime = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+        const italyDate = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), h, m));
+        const italyOffset = getTzOffset(ITALY_TZ, italyDate);
+        const utcTime = new Date(italyDate.getTime() - italyOffset * 60000);
+        const localOffset = getTzOffset(getLocalTz(), utcTime);
+        const localTime = new Date(utcTime.getTime() + localOffset * 60000);
+        const localTimeStr = String(localTime.getHours()).padStart(2,'0') + ':' + String(localTime.getMinutes()).padStart(2,'0');
+        const offH = Math.floor(Math.abs(localOffset) / 60);
+        const offM = Math.abs(localOffset) % 60;
+        const localTzStr = 'UTC' + (localOffset >= 0 ? '+' : '-') + offH + (offM ? ':' + String(offM).padStart(2,'0') : '');
+        slots.push({ italyTime, localTime: localTimeStr, localTz: localTzStr, utc: utcTime.toISOString() });
+      }
+    }
+    return slots;
+  }
+
+  function openConsultModal() {
+    const localTz = getLocalTz().replace(/_/g, ' ');
+    document.getElementById('consultTzInfo').textContent = 'Times shown in your local timezone (' + localTz + '). We work 9:00–17:00 Italian time.';
+    const days = getNextWorkdays(5);
+    consultSelectedDay = null; consultSelectedSlot = null;
+    const tabsEl = document.getElementById('consultDayTabs');
+    tabsEl.innerHTML = '';
+    days.forEach((day, i) => {
+      const tab = document.createElement('div');
+      tab.className = 'day-tab';
+      tab.textContent = day.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      tab.onclick = () => consultSelectDay(i, day);
+      tabsEl.appendChild(tab);
+    });
+    consultSelectDay(0, days[0]);
+    document.getElementById('consultFormView').style.display = 'block';
+    document.getElementById('consultSuccessView').style.display = 'none';
+    document.getElementById('consultStatus').className = 'pub-status';
+    document.getElementById('consultStatus').style.display = 'none';
+    document.getElementById('consultOverlay').classList.add('active');
+  }
+
+  function consultSelectDay(idx, day) {
+    consultSelectedDay = day;
+    consultSelectedSlot = null;
+    document.querySelectorAll('#consultDayTabs .day-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+    const slots = genSlots(day);
+    const grid = document.getElementById('consultSlotGrid');
+    grid.innerHTML = '';
+    const now = new Date();
+    const isToday = day.toDateString() === now.toDateString();
+    slots.forEach((slot, i) => {
+      const el = document.createElement('div');
+      el.className = 'slot';
+      if (isToday && new Date(slot.utc) < now) {
+        el.classList.add('disabled');
+        el.textContent = slot.localTime;
+        grid.appendChild(el);
+        return;
+      }
+      el.textContent = slot.localTime;
+      el.onclick = () => { consultSelectedSlot = slot; document.querySelectorAll('#consultSlotGrid .slot').forEach(s => s.classList.remove('active')); el.classList.add('active'); updateConsultSummary(); };
+      grid.appendChild(el);
+    });
+    updateConsultSummary();
+  }
+
+  function updateConsultSummary() {
+    const s = document.getElementById('consultSummary');
+    const btn = document.getElementById('consultConfirmBtn');
+    if (consultSelectedDay && consultSelectedSlot) {
+      const dayStr = consultSelectedDay.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      document.getElementById('consultSummaryText').innerHTML = dayStr + ' at ' + consultSelectedSlot.localTime + ' <span style="color:var(--gray);font-size:11px;">(' + consultSelectedSlot.localTz + ')</span><br><span style="color:var(--gray);font-size:11px;">Italian time: ' + consultSelectedSlot.italyTime + ' (Europe/Rome)</span>';
+      s.style.display = 'block';
+      btn.disabled = false;
+    } else {
+      s.style.display = 'none';
+      btn.disabled = true;
+    }
+  }
+
+  async function submitConsult() {
+    const name = document.getElementById('consult-name').value.trim();
+    const email = document.getElementById('consult-email').value.trim();
+    const phone = document.getElementById('consult-phone').value.trim();
+    if (!name || !email || !consultSelectedDay || !consultSelectedSlot) {
+      const st = document.getElementById('consultStatus');
+      st.className = 'pub-status error';
+      st.textContent = 'Please fill in your name, email, and select a time slot.';
+      return;
+    }
+    const btn = document.getElementById('consultConfirmBtn');
+    btn.disabled = true; btn.textContent = 'Booking...';
+    const dayStr = consultSelectedDay.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    try {
+      const res = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/public-consultation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone, consultation_date: dayStr, consultation_time_local: consultSelectedSlot.localTime, consultation_time_local_tz: consultSelectedSlot.localTz, consultation_time_italy: consultSelectedSlot.italyTime, consultation_utc: consultSelectedSlot.utc })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('consultFormView').style.display = 'none';
+        document.getElementById('consultSuccessView').style.display = 'block';
+        document.getElementById('consultSuccessText').innerHTML = 'Your consultation is booked for<br><strong>' + dayStr + ' at ' + consultSelectedSlot.localTime + ' (' + consultSelectedSlot.localTz + ')</strong><br><br>We will contact you at <strong>' + email + '</strong> with the meeting link.';
+      } else {
+        const st = document.getElementById('consultStatus');
+        st.className = 'pub-status error';
+        st.textContent = data.message || 'Booking failed. Please try again.';
+        btn.disabled = false; btn.textContent = 'Confirm Booking';
+      }
+    } catch (err) {
+      const st = document.getElementById('consultStatus');
+      st.className = 'pub-status error';
+      st.textContent = 'Network error. Please try again.';
+      btn.disabled = false; btn.textContent = 'Confirm Booking';
+    }
+  }
+
+  function closeConsult() { document.getElementById('consultOverlay').classList.remove('active'); }
+
+  // ─── Public Ticket System ───
+  function openTicketModal() {
+    document.getElementById('ticketFormView').style.display = 'block';
+    document.getElementById('ticketSuccessView').style.display = 'none';
+    document.getElementById('ticketStatus').className = 'pub-status';
+    document.getElementById('ticketStatus').style.display = 'none';
+    document.getElementById('ticketOverlay').classList.add('active');
+  }
+
+  function closeTicket() { document.getElementById('ticketOverlay').classList.remove('active'); }
+
+  async function submitTicket() {
+    const name = document.getElementById('ticket-name').value.trim();
+    const email = document.getElementById('ticket-email').value.trim();
+    const subject = document.getElementById('ticket-subject').value;
+    const message = document.getElementById('ticket-message').value.trim();
+    const st = document.getElementById('ticketStatus');
+    st.className = 'pub-status'; st.style.display = 'none';
+
+    if (!name || !email || !subject || !message) {
+      st.className = 'pub-status error';
+      st.textContent = 'Please fill in all fields.';
+      return;
+    }
+    const btn = document.getElementById('ticketSubmitBtn');
+    btn.disabled = true; btn.textContent = 'Submitting...';
+    try {
+      const res = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/submit-ticket', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, subject, message })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('ticketFormView').style.display = 'none';
+        document.getElementById('ticketSuccessView').style.display = 'block';
+        document.getElementById('ticketSuccessText').innerHTML = 'Your ticket has been submitted.<br><br>Ticket ID: <strong>#' + (data.ticket_id || 'EP-' + Date.now().toString().slice(-6)) + '</strong><br><br>We will reply to <strong>' + email + '</strong> within 24 hours.';
+      } else {
+        st.className = 'pub-status error';
+        st.textContent = data.message || 'Submission failed. Please try again.';
+        btn.disabled = false; btn.textContent = 'Submit Ticket';
+      }
+    } catch (err) {
+      st.className = 'pub-status error';
+      st.textContent = 'Network error. Please try again.';
+      btn.disabled = false; btn.textContent = 'Submit Ticket';
+    }
+  }
+
+  // Close modals on overlay click
+  document.getElementById('consultOverlay').addEventListener('click', (e) => { if (e.target.id === 'consultOverlay') closeConsult(); });
+  document.getElementById('ticketOverlay').addEventListener('click', (e) => { if (e.target.id === 'ticketOverlay') closeTicket(); });
+
   async function sendContactForm() {
     const name = document.getElementById('cf-name').value.trim();
     const email = document.getElementById('cf-email').value.trim();
