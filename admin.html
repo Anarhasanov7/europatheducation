@@ -257,6 +257,14 @@ async function openModal(appId) {
   if (!app) return;
   const userDocs = allDocs.filter(d => d.user_id === app.user_id);
 
+  // Mark documents as retrieved (starts 30-day deletion countdown)
+  if (userDocs.length > 0) {
+    const now = new Date().toISOString();
+    await sb.from('documents').update({ retrieved_at: now, retrieved_by: currentUser.email }).in('id', userDocs.map(d => d.id));
+    // Update local cache
+    userDocs.forEach(d => { d.retrieved_at = now; });
+  }
+
   const docLabels = {
     passport: 'Passport', diploma: 'High School Diploma', transcript: 'Transcript',
     motivation: 'Motivation Letter', cv: 'CV / Resume', english: 'English Certificate'
@@ -280,6 +288,21 @@ async function openModal(appId) {
 
   const date = new Date(app.created_at).toLocaleString('en-GB');
 
+  // Calculate deletion date
+  let deletionInfo = '';
+  if (userDocs.length > 0 && userDocs[0].retrieved_at) {
+    const retrievedDate = new Date(userDocs[0].retrieved_at);
+    const deleteDate = new Date(retrievedDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const daysLeft = Math.ceil((deleteDate - new Date()) / (1000 * 60 * 60 * 24));
+    deletionInfo = `<div style="margin-top:12px; padding:10px 14px; background:#fff3cd; border-radius:8px; font-size:12px; color:#856404;">
+      <strong>Auto-delete scheduled:</strong> Documents will be permanently deleted in ${daysLeft} day${daysLeft !== 1 ? 's' : ''} (${deleteDate.toLocaleDateString('en-GB')}). Download before then if needed.
+    </div>`;
+  } else if (userDocs.length > 0) {
+    deletionInfo = `<div style="margin-top:12px; padding:10px 14px; background:#d1ecf1; border-radius:8px; font-size:12px; color:#0c5460;">
+      <strong>Note:</strong> Opening this application starts a 30-day countdown. Documents will be auto-deleted 30 days from now.
+    </div>`;
+  }
+
   document.getElementById('modalContent').innerHTML = `
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <h2>${app.full_name || 'Unknown Student'}</h2>
@@ -296,6 +319,7 @@ async function openModal(appId) {
       <h3>Uploaded Documents</h3>
       ${docRows}
     </div>
+    ${deletionInfo}
   `;
   document.getElementById('modalOverlay').classList.add('active');
 }
