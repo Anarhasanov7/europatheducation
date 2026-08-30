@@ -214,6 +214,32 @@
   </div>
 
   <div class="card" style="margin-top:24px;">
+    <h3>Motivation</h3>
+    <p style="font-size:13px; color:#666; margin-bottom:10px;">Write a short text explaining why you want to study in Italy. Just two sentences or a few lines — be yourself.</p>
+    <textarea id="motivationText" placeholder="e.g. I want to study in Italy because of its strong engineering programs and research opportunities. Studying in an international environment will help me build a global network for my future career." style="width:100%; min-height:100px; padding:12px; border:1px solid #ddd; border-radius:10px; font-size:14px; font-family:inherit; resize:vertical; outline:none;" oninput="markDirty()"></textarea>
+    <div class="field-hint" id="hint-motivation" style="display:none;">Please write a short motivation</div>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <h3>References</h3>
+    <p style="font-size:13px; color:#666; margin-bottom:10px;">List <strong>three professors</strong> you got the highest grades from and who can give you a recommendation. Write their names and the subjects they taught.</p>
+    <div id="referencesContainer">
+      <div class="ref-row" style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
+        <input type="text" id="ref1-name" placeholder="Professor name" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+        <input type="text" id="ref1-subject" placeholder="Subject" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+      </div>
+      <div class="ref-row" style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
+        <input type="text" id="ref2-name" placeholder="Professor name" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+        <input type="text" id="ref2-subject" placeholder="Subject" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+      </div>
+      <div class="ref-row" style="display:flex; gap:10px; margin-bottom:0; align-items:center;">
+        <input type="text" id="ref3-name" placeholder="Professor name" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+        <input type="text" id="ref3-subject" placeholder="Subject" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
     <h3>Application Steps</h3>
     <div class="steps">
       <div class="step"><input type="checkbox" id="step_account" checked disabled><label for="step_account">Create account</label></div>
@@ -1450,6 +1476,18 @@ async function init() {
       appRecord = existing;
       fullName.value = appRecord.full_name || '';
       country.value = appRecord.country || '';
+      // Load motivation text
+      document.getElementById('motivationText').value = appRecord.motivation_text || '';
+      // Load references
+      const refs = appRecord.references_json || [];
+      for (let i = 0; i < 3; i++) {
+        const nameEl = document.getElementById(`ref${i+1}-name`);
+        const subjEl = document.getElementById(`ref${i+1}-subject`);
+        if (refs[i]) {
+          nameEl.value = refs[i].name || '';
+          subjEl.value = refs[i].subject || '';
+        }
+      }
       // Load programs array (fallback to old single program for backward compat)
       if (appRecord.programs && Array.isArray(appRecord.programs) && appRecord.programs.length > 0) {
         selectedPrograms = appRecord.programs;
@@ -1937,6 +1975,16 @@ function validateProfile() {
   return valid;
 }
 
+function collectReferences() {
+  const refs = [];
+  for (let i = 1; i <= 3; i++) {
+    const name = document.getElementById(`ref${i}-name`)?.value.trim() || '';
+    const subject = document.getElementById(`ref${i}-subject`)?.value.trim() || '';
+    if (name || subject) refs.push({ name, subject });
+  }
+  return refs;
+}
+
 async function saveApp() {
   const btn = document.getElementById('saveBtn');
   btn.disabled = true;
@@ -1957,6 +2005,8 @@ async function saveApp() {
       programs: selectedPrograms,
       university: selectedPrograms[0]?.university || '',
       program: selectedPrograms[0]?.program || '',
+      motivation_text: document.getElementById('motivationText').value.trim(),
+      references_json: collectReferences(),
       steps: steps
     })
     .eq('id', appRecord.id);
@@ -2012,6 +2062,8 @@ async function submitApp() {
       programs: selectedPrograms,
       university: selectedPrograms[0]?.university || '',
       program: selectedPrograms[0]?.program || '',
+      motivation_text: document.getElementById('motivationText').value.trim(),
+      references_json: collectReferences(),
       steps: steps,
       status: 'submitted'
     })
@@ -2038,6 +2090,8 @@ async function submitApp() {
           country: country.value,
           programs: selectedPrograms,
           documents_count: uploaded2,
+          motivation_text: document.getElementById('motivationText').value.trim(),
+          references: collectReferences(),
           application_id: appRecord.id
         })
       });
@@ -2094,6 +2148,10 @@ function renderSummary() {
     ['Country', country.value || '—'],
     ['Programs selected', selectedPrograms.length > 0
       ? selectedPrograms.map((p, i) => `${i + 1}. ${p.university} — ${p.program}`).join('<br>')
+      : '—'],
+    ['Motivation', document.getElementById('motivationText').value.trim() || '—'],
+    ['References', collectReferences().length > 0
+      ? collectReferences().map(r => `${r.name} (${r.subject})`).join('<br>')
       : '—'],
     ['Documents uploaded', uploaded.length + ' of 6'],
     ['Steps completed', stepsDone.length + ' of 5'],
