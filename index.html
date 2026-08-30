@@ -1141,6 +1141,14 @@
       <input type="tel" id="cf-phone" placeholder="+994 50 123 45 67" required>
     </div>
     <div class="form-group">
+      <label for="cf-whatsapp">WhatsApp <span style="text-transform:none; font-weight:400; color:var(--gray);">(необязательно)</span></label>
+      <input type="text" id="cf-whatsapp" placeholder="+994 50 123 45 67">
+    </div>
+    <div class="form-group">
+      <label for="cf-telegram">Telegram <span style="text-transform:none; font-weight:400; color:var(--gray);">(необязательно)</span></label>
+      <input type="text" id="cf-telegram" placeholder="@username">
+    </div>
+    <div class="form-group">
       <label for="cf-message">Сообщение</label>
       <textarea id="cf-message" placeholder="Расскажите о вашем студенте или вопросе..." required></textarea>
     </div>
@@ -1193,6 +1201,8 @@
     const name = document.getElementById('cf-name').value.trim();
     const email = document.getElementById('cf-email').value.trim();
     const phone = document.getElementById('cf-phone').value.trim();
+    const whatsapp = document.getElementById('cf-whatsapp').value.trim();
+    const telegram = document.getElementById('cf-telegram').value.trim();
     const message = document.getElementById('cf-message').value.trim();
     const btn = document.getElementById('cf-submit');
     const status = document.getElementById('cf-status');
@@ -1202,7 +1212,7 @@
 
     if (!name || !email || !phone || !message) {
       status.className = 'form-status error';
-      status.textContent = 'Пожалуйста, заполните все поля.';
+      status.textContent = 'Пожалуйста, заполните обязательные поля.';
       return;
     }
 
@@ -1213,15 +1223,17 @@
       const resp = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/send-contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, message })
+        body: JSON.stringify({ name, email, phone, whatsapp, telegram, message })
       });
       const data = await resp.json();
       if (data.success) {
         status.className = 'form-status success';
-        status.textContent = 'Сообщение отправлено! Мы свяжемся с вами в течение 24 часов.';
+        status.innerHTML = '🎉 Поздравляем! Ваше сообщение успешно отправлено. Мы свяжемся с вами в ближайшее время.';
         document.getElementById('cf-name').value = '';
         document.getElementById('cf-email').value = '';
         document.getElementById('cf-phone').value = '';
+        document.getElementById('cf-whatsapp').value = '';
+        document.getElementById('cf-telegram').value = '';
         document.getElementById('cf-message').value = '';
       } else {
         throw new Error(data.message || 'Send failed');
