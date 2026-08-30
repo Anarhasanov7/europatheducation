@@ -1482,9 +1482,11 @@
         <input type="email" id="ticket-email" placeholder="you@example.com">
       </div>
       <div class="pub-field">
-        <label>Subject *</label>
-        <select id="ticket-subject">
-          <option value="">Select a topic</option>
+        <label>Category *</label>
+        <select id="ticket-category">
+          <option value="">Select a category</option>
+          <option value="University scholarship document">University scholarship document</option>
+          <option value="General information">General information</option>
           <option value="Application question">Application question</option>
           <option value="Document upload issue">Document upload issue</option>
           <option value="Visa & residence permit">Visa & residence permit</option>
@@ -1493,6 +1495,10 @@
           <option value="Technical support">Technical support</option>
           <option value="Other">Other</option>
         </select>
+      </div>
+      <div class="pub-field">
+        <label>Subject *</label>
+        <input type="text" id="ticket-subject" placeholder="Brief subject of your question">
       </div>
       <div class="pub-field">
         <label>Message *</label>
@@ -1774,12 +1780,13 @@
   async function submitTicket() {
     const name = document.getElementById('ticket-name').value.trim();
     const email = document.getElementById('ticket-email').value.trim();
-    const subject = document.getElementById('ticket-subject').value;
+    const category = document.getElementById('ticket-category').value;
+    const subject = document.getElementById('ticket-subject').value.trim();
     const message = document.getElementById('ticket-message').value.trim();
     const st = document.getElementById('ticketStatus');
     st.className = 'pub-status'; st.style.display = 'none';
 
-    if (!name || !email || !subject || !message) {
+    if (!name || !email || !category || !subject || !message) {
       st.className = 'pub-status error';
       st.textContent = 'Please fill in all fields.';
       return;
@@ -1819,7 +1826,7 @@
       const res = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/submit-ticket', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, subject, message, attachment_base64, attachment_name })
+        body: JSON.stringify({ name, email, category, subject, message, attachment_base64, attachment_name })
       });
       const data = await res.json();
       if (data.success) {

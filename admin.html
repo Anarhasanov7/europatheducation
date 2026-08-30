@@ -213,7 +213,7 @@
         <tr>
           <th>Ticket ID</th>
           <th>Name</th>
-          <th class="hide-mobile">Email</th>
+          <th class="hide-mobile">Category</th>
           <th class="hide-mobile">Subject</th>
           <th>Status</th>
           <th class="hide-mobile">Date</th>
@@ -594,7 +594,7 @@ function renderTickets() {
     return `<tr onclick="openTicketModal('${esc(t.ticket_id)}')">
       <td><strong style="font-family:monospace; font-size:13px;">${esc(t.ticket_id)}</strong></td>
       <td><strong>${esc(t.name)}</strong></td>
-      <td class="hide-mobile" style="font-size:13px;">${esc(t.email)}</td>
+      <td class="hide-mobile"><span style="font-size:11px; padding:2px 8px; border-radius:10px; background:#e8ecf1; color:#0b1e3f; font-weight:600;">${esc(t.category || '—')}</span></td>
       <td class="hide-mobile">${esc(t.subject)}</td>
       <td><span class="badge ${esc(t.status)}">${esc(t.status)}</span></td>
       <td class="hide-mobile" style="font-size:12px;color:#666;">${esc(date)}</td>
@@ -639,6 +639,7 @@ async function openTicketModal(ticketId) {
     <p class="sub">${esc(ticket.subject)}</p>
     <div class="info-grid">
       <div class="info-item"><div class="key">Status</div><div class="val"><span class="badge ${esc(ticket.status)}">${esc(ticket.status)}</span></div></div>
+      <div class="info-item"><div class="key">Category</div><div class="val"><span style="font-size:12px; padding:3px 10px; border-radius:10px; background:#e8ecf1; color:#0b1e3f; font-weight:600;">${esc(ticket.category || '—')}</span></div></div>
       <div class="info-item"><div class="key">Date</div><div class="val">${esc(date)}</div></div>
       <div class="info-item"><div class="key">From</div><div class="val">${esc(ticket.name)}</div></div>
       <div class="info-item"><div class="key">Email</div><div class="val" style="font-size:13px;">${esc(ticket.email)}</div></div>

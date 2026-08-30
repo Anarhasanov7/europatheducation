@@ -63,6 +63,7 @@
         <div>
           <h1 id="ticketSubject"></h1>
           <div class="ticket-id" id="ticketId"></div>
+          <div id="ticketCategory" style="margin-top:6px;"></div>
         </div>
         <span class="badge" id="ticketBadge"></span>
       </div>
@@ -114,6 +115,9 @@ async function loadTicket() {
     const t = data.ticket;
     document.getElementById('ticketSubject').textContent = t.subject;
     document.getElementById('ticketId').textContent = t.ticket_id;
+    if (t.category) {
+      document.getElementById('ticketCategory').innerHTML = `<span style="font-size:11px; padding:3px 10px; border-radius:10px; background:#e8ecf1; color:#0b1e3f; font-weight:600;">${esc(t.category)}</span>`;
+    }
     const badge = document.getElementById('ticketBadge');
     badge.className = 'badge ' + t.status;
     badge.textContent = t.status === 'open' ? 'Awaiting reply' : t.status === 'answered' ? 'Replied — you can respond' : t.status;
