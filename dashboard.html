@@ -1640,7 +1640,7 @@ async function submitApp() {
       }).length;
       await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/notify-submission', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (await sb.auth.getSession()).data.session.access_token },
         body: JSON.stringify({
           student_email: currentUser.email,
           full_name: fullName.value,
