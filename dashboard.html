@@ -1749,10 +1749,9 @@ let autoSaveTimer = null;
 
 function markDirty() {
   dirty = true;
-  // Auto-save after 30 seconds of inactivity
   if (autoSaveTimer) clearTimeout(autoSaveTimer);
   autoSaveTimer = setTimeout(async () => {
-    if (dirty && appRecord) {
+    if (dirty && appRecord && document.getElementById('saveBtn')) {
       await saveApp();
       dirty = false;
     }
