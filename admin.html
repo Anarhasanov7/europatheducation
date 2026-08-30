@@ -89,6 +89,27 @@
     th, td { padding:8px; }
     .hide-mobile { display:none; }
   }
+
+  /* ─── Tab navigation ─── */
+  .tab-bar { display:flex; gap:0; max-width:1400px; margin:0 auto; padding:0 24px; border-bottom:2px solid #e0e0e0; }
+  .tab-btn { padding:12px 24px; border:none; background:none; font-size:14px; font-weight:600; cursor:pointer; color:#666; border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .2s; font-family:'Inter',sans-serif; }
+  .tab-btn:hover { color:var(--blue); }
+  .tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+  .tab-btn .tab-badge { display:inline-block; margin-left:6px; padding:1px 8px; border-radius:10px; font-size:11px; font-weight:700; background:#ef4444; color:#fff; }
+  .tab-btn .tab-badge.zero { background:#ccc; }
+
+  /* ─── Ticket styles ─── */
+  .badge.open { background:#fee2e2; color:#991b1b; }
+  .badge.answered { background:#d4edda; color:#155724; }
+  .ticket-reply-area { margin-top:20px; padding-top:20px; border-top:1px solid #eee; }
+  .ticket-reply-area h3 { font-size:16px; margin-bottom:12px; color:var(--blue); }
+  .ticket-reply-area textarea { width:100%; min-height:120px; padding:14px; border:1px solid #ddd; border-radius:10px; font-size:14px; font-family:'Inter',sans-serif; resize:vertical; outline:none; transition:border-color .2s; }
+  .ticket-reply-area textarea:focus { border-color:var(--blue); }
+  .ticket-reply-area .reply-btn { margin-top:12px; padding:12px 28px; background:var(--blue); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
+  .ticket-reply-area .reply-btn:hover { background:#1a6ba8; }
+  .ticket-reply-area .reply-btn:disabled { opacity:.5; cursor:wait; }
+  .ticket-original-msg { padding:14px; background:#f8f9fa; border-radius:10px; font-size:13px; line-height:1.7; white-space:pre-wrap; color:#444; margin:12px 0; }
+  .ticket-admin-reply { padding:14px; background:#e8f5e9; border-radius:10px; font-size:13px; line-height:1.7; white-space:pre-wrap; color:#1b5e20; margin:12px 0; border-left:3px solid var(--green); }
 </style>
 </head>
 <body>
@@ -117,6 +138,12 @@
   <div class="stat-card"><div class="label">Submitted</div><div class="value green" id="statSubmitted">0</div></div>
   <div class="stat-card"><div class="label">Drafts</div><div class="value orange" id="statDraft">0</div></div>
   <div class="stat-card"><div class="label">Documents</div><div class="value" id="statDocs">0</div></div>
+  <div class="stat-card"><div class="label">Open Tickets</div><div class="value red" id="statTickets" style="color:var(--red);">0</div></div>
+</div>
+
+<div class="tab-bar" id="tabBar" style="display:none;">
+  <button class="tab-btn active" id="tabApps" onclick="switchTab('apps')">📋 Applications</button>
+  <button class="tab-btn" id="tabTickets" onclick="switchTab('tickets')">🎫 Tickets <span class="tab-badge zero" id="ticketBadge">0</span></button>
 </div>
 
 <div class="filter-bar" id="filterBar" style="display:none;">
@@ -149,6 +176,26 @@
   <div class="pagination" id="paginationControls"></div>
 </div>
 
+<!-- ─── Tickets section ─── -->
+<div class="table-container" id="ticketsSection" style="display:none;">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket ID</th>
+          <th>Name</th>
+          <th class="hide-mobile">Email</th>
+          <th class="hide-mobile">Subject</th>
+          <th>Status</th>
+          <th class="hide-mobile">Date</th>
+        </tr>
+      </thead>
+      <tbody id="ticketsTableBody"></tbody>
+    </table>
+  </div>
+  <div class="pagination" id="ticketPaginationControls"></div>
+</div>
+
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
   <div class="modal" id="modalContent"></div>
 </div>
@@ -160,8 +207,11 @@ const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 let sb;
 let allApps = [];
 let allDocs = [];
+let allTickets = [];
 let currentUser = null;
 let currentPage = 1;
+let ticketCurrentPage = 1;
+let currentTab = 'apps';
 const PAGE_SIZE = 25;
 
 // Escape user-provided data to prevent XSS
@@ -217,8 +267,10 @@ async function showAdmin() {
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('mainHeader').style.display = 'flex';
   document.getElementById('statsSection').style.display = 'grid';
+  document.getElementById('tabBar').style.display = 'flex';
   document.getElementById('filterBar').style.display = 'flex';
   document.getElementById('tableSection').style.display = 'block';
+  document.getElementById('ticketsSection').style.display = 'none';
   document.getElementById('adminInfo').textContent = currentUser.email;
 
   // Load all applications
@@ -230,13 +282,23 @@ async function showAdmin() {
   const { data: docs } = await sb.from('documents').select('*').order('created_at', { ascending: false });
   allDocs = docs || [];
 
+  // Load all tickets
+  const { data: tickets } = await sb.from('tickets').select('*').order('created_at', { ascending: false });
+  allTickets = tickets || [];
+
   // Stats
   document.getElementById('statTotal').textContent = allApps.length;
   document.getElementById('statSubmitted').textContent = allApps.filter(a => a.status === 'submitted').length;
   document.getElementById('statDraft').textContent = allApps.filter(a => a.status === 'draft').length;
   document.getElementById('statDocs').textContent = allDocs.length;
+  const openTickets = allTickets.filter(t => t.status === 'open').length;
+  document.getElementById('statTickets').textContent = openTickets;
+  const badge = document.getElementById('ticketBadge');
+  badge.textContent = openTickets;
+  badge.classList.toggle('zero', openTickets === 0);
 
   renderTable();
+  renderTickets();
 }
 
 function renderTable() {
@@ -439,6 +501,159 @@ async function openModal(appId) {
 }
 
 function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+// ─── Tab switching ───
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tabApps').classList.toggle('active', tab === 'apps');
+  document.getElementById('tabTickets').classList.toggle('active', tab === 'tickets');
+  document.getElementById('tableSection').style.display = tab === 'apps' ? 'block' : 'none';
+  document.getElementById('ticketsSection').style.display = tab === 'tickets' ? 'block' : 'none';
+  document.getElementById('filterBar').style.display = tab === 'apps' ? 'flex' : 'none';
+}
+
+// ─── Tickets ───
+function renderTickets() {
+  const tbody = document.getElementById('ticketsTableBody');
+  const paginationEl = document.getElementById('ticketPaginationControls');
+
+  if (allTickets.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty"><h3>No tickets yet</h3><p>Tickets submitted from the landing page will appear here.</p></td></tr>';
+    paginationEl.innerHTML = '';
+    return;
+  }
+
+  // Pagination
+  const totalPages = Math.ceil(allTickets.length / PAGE_SIZE);
+  if (ticketCurrentPage > totalPages) ticketCurrentPage = 1;
+  const startIdx = (ticketCurrentPage - 1) * PAGE_SIZE;
+  const pageItems = allTickets.slice(startIdx, startIdx + PAGE_SIZE);
+
+  tbody.innerHTML = pageItems.map(t => {
+    const date = new Date(t.created_at).toLocaleString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    return `<tr onclick="openTicketModal('${esc(t.ticket_id)}')">
+      <td><strong style="font-family:monospace; font-size:13px;">${esc(t.ticket_id)}</strong></td>
+      <td><strong>${esc(t.name)}</strong></td>
+      <td class="hide-mobile" style="font-size:13px;">${esc(t.email)}</td>
+      <td class="hide-mobile">${esc(t.subject)}</td>
+      <td><span class="badge ${esc(t.status)}">${esc(t.status)}</span></td>
+      <td class="hide-mobile" style="font-size:12px;color:#666;">${esc(date)}</td>
+    </tr>`;
+  }).join('');
+
+  if (totalPages <= 1) {
+    paginationEl.innerHTML = `<span class="page-info">${allTickets.length} ticket${allTickets.length !== 1 ? 's' : ''}</span>`;
+  } else {
+    let html = '';
+    html += `<button onclick="ticketGoToPage(1)" ${ticketCurrentPage === 1 ? 'disabled' : ''}>«</button>`;
+    html += `<button onclick="ticketGoToPage(${ticketCurrentPage - 1})" ${ticketCurrentPage === 1 ? 'disabled' : ''}>‹</button>`;
+    const maxButtons = 5;
+    let startPage = Math.max(1, ticketCurrentPage - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+    if (endPage - startPage < maxButtons - 1) startPage = Math.max(1, endPage - maxButtons + 1);
+    for (let p = startPage; p <= endPage; p++) {
+      html += `<button onclick="ticketGoToPage(${p})" class="${p === ticketCurrentPage ? 'active' : ''}">${p}</button>`;
+    }
+    html += `<button onclick="ticketGoToPage(${ticketCurrentPage + 1})" ${ticketCurrentPage === totalPages ? 'disabled' : ''}>›</button>`;
+    html += `<button onclick="ticketGoToPage(${totalPages})" ${ticketCurrentPage === totalPages ? 'disabled' : ''}>»</button>`;
+    html += `<span class="page-info">${allTickets.length} total · Page ${ticketCurrentPage}/${totalPages}</span>`;
+    paginationEl.innerHTML = html;
+  }
+}
+
+function ticketGoToPage(page) {
+  ticketCurrentPage = page;
+  renderTickets();
+}
+
+async function openTicketModal(ticketId) {
+  const ticket = allTickets.find(t => t.ticket_id === ticketId);
+  if (!ticket) return;
+
+  const date = new Date(ticket.created_at).toLocaleString('en-GB');
+  const repliedDate = ticket.replied_at ? new Date(ticket.replied_at).toLocaleString('en-GB') : '';
+
+  let replySection = '';
+  if (ticket.status === 'answered' && ticket.admin_reply) {
+    replySection = `
+      <div class="ticket-admin-reply">
+        <strong>Your reply (${esc(repliedDate)}):</strong><br><br>
+        ${esc(ticket.admin_reply)}
+      </div>`;
+  } else {
+    replySection = `
+      <div class="ticket-reply-area">
+        <h3>Reply to this ticket</h3>
+        <textarea id="replyText" placeholder="Type your reply here..."></textarea>
+        <button class="reply-btn" id="replyBtn" onclick="sendTicketReply('${esc(ticket.ticket_id)}')">Send Reply</button>
+      </div>`;
+  }
+
+  document.getElementById('modalContent').innerHTML = `
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <h2>🎫 ${esc(ticket.ticket_id)}</h2>
+    <p class="sub">${esc(ticket.subject)}</p>
+    <div class="info-grid">
+      <div class="info-item"><div class="key">Status</div><div class="val"><span class="badge ${esc(ticket.status)}">${esc(ticket.status)}</span></div></div>
+      <div class="info-item"><div class="key">Date</div><div class="val">${esc(date)}</div></div>
+      <div class="info-item"><div class="key">From</div><div class="val">${esc(ticket.name)}</div></div>
+      <div class="info-item"><div class="key">Email</div><div class="val" style="font-size:13px;">${esc(ticket.email)}</div></div>
+    </div>
+    <h3 style="font-size:16px; margin-bottom:8px; color:var(--blue);">Original Message</h3>
+    <div class="ticket-original-msg">${esc(ticket.message)}</div>
+    ${replySection}
+  `;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+async function sendTicketReply(ticketId) {
+  const reply = document.getElementById('replyText').value.trim();
+  const btn = document.getElementById('replyBtn');
+  if (!reply) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const session = await sb.auth.getSession();
+    const token = session.data.session?.access_token;
+    const res = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/reply-ticket', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ ticket_id: ticketId, reply_message: reply })
+    });
+    const data = await res.json();
+    if (data.success) {
+      // Update local cache
+      const t = allTickets.find(t => t.ticket_id === ticketId);
+      if (t) {
+        t.status = 'answered';
+        t.admin_reply = reply;
+        t.replied_at = new Date().toISOString();
+        t.replied_by = currentUser.email;
+      }
+      // Update stats
+      const openTickets = allTickets.filter(t => t.status === 'open').length;
+      document.getElementById('statTickets').textContent = openTickets;
+      const badge = document.getElementById('ticketBadge');
+      badge.textContent = openTickets;
+      badge.classList.toggle('zero', openTickets === 0);
+
+      renderTickets();
+      closeModal();
+      alert('Reply sent successfully!');
+    } else {
+      alert('Failed: ' + (data.message || 'Unknown error'));
+      btn.disabled = false;
+      btn.textContent = 'Send Reply';
+    }
+  } catch (err) {
+    console.error('Reply error:', err);
+    alert('Network error. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'Send Reply';
+  }
+}
 
 function formatSize(bytes) {
   if (bytes < 1024) return bytes + ' B';
