@@ -544,6 +544,41 @@
     border-radius: 24px; padding: 60px 48px;
     text-align: center; position: relative; overflow: hidden;
   }
+
+  /* ─── Contact Form ─── */
+  .contact-form {
+    background: #fff; border-radius: 16px; padding: 36px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    max-width: 560px; margin: 32px auto 0;
+  }
+  .contact-form .form-group { margin-bottom: 18px; text-align: left; }
+  .contact-form label {
+    display: block; font-size: 12px; font-weight: 700; color: var(--ink);
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .contact-form input, .contact-form textarea {
+    width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 10px;
+    font-size: 14px; font-family: 'Inter', sans-serif; outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .contact-form input:focus, .contact-form textarea:focus {
+    border-color: var(--electric); box-shadow: 0 0 0 3px rgba(61,223,255,0.1);
+  }
+  .contact-form textarea { resize: vertical; min-height: 100px; }
+  .contact-form .submit-btn {
+    width: 100%; padding: 14px; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    color: var(--ink); font-size: 15px; font-weight: 800; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .contact-form .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(61,223,255,0.3); }
+  .contact-form .submit-btn:disabled { opacity: 0.6; cursor: wait; }
+  .contact-form .form-status {
+    margin-top: 14px; font-size: 13px; text-align: center; display: none;
+    padding: 10px 16px; border-radius: 8px;
+  }
+  .contact-form .form-status.success { display: block; background: #e6f9ec; color: #155724; }
+  .contact-form .form-status.error { display: block; background: #fff0f0; color: #721c24; }
   .cta-section::before {
     content: ''; position: absolute;
     top: -60px; left: -60px; width: 250px; height: 250px;
@@ -621,6 +656,7 @@
     <li><a href="#process">Процесс</a></li>
     <li><a href="#payment">Оплата</a></li>
     <li><a href="#location">Локация</a></li>
+    <li><a href="#contact-form">Контакты</a></li>
     <li><a href="login.html">Student Portal</a></li>
   </ul>
   <a href="login.html" class="cta">Student Portal</a>
@@ -1081,9 +1117,35 @@
     <div class="cta-contacts">
       <div class="cta-contact"><strong>Anar Hasanov</strong></div>
       <div class="cta-contact"><strong>+39 3280810631</strong></div>
-      <div class="cta-contact"><strong>hasanov.anar.2023@gmail.com</strong></div>
-
     </div>
+  </div>
+</section>
+
+<!-- ─── Contact Form ─── -->
+<section id="contact-form" class="fade-in">
+  <div class="section-tag">Связаться с нами</div>
+  <div class="section-title">Отправьте нам сообщение</div>
+  <div class="section-sub">Заполните форму — мы ответим в течение 24 часов.</div>
+
+  <div class="contact-form">
+    <div class="form-group">
+      <label for="cf-name">Ваше имя</label>
+      <input type="text" id="cf-name" placeholder="Иван Иванов" required>
+    </div>
+    <div class="form-group">
+      <label for="cf-email">Email</label>
+      <input type="email" id="cf-email" placeholder="ivan@example.com" required>
+    </div>
+    <div class="form-group">
+      <label for="cf-phone">Телефон</label>
+      <input type="tel" id="cf-phone" placeholder="+994 50 123 45 67" required>
+    </div>
+    <div class="form-group">
+      <label for="cf-message">Сообщение</label>
+      <textarea id="cf-message" placeholder="Расскажите о вашем студенте или вопросе..." required></textarea>
+    </div>
+    <button class="submit-btn" id="cf-submit" onclick="sendContactForm()">Отправить сообщение</button>
+    <div class="form-status" id="cf-status"></div>
   </div>
 </section>
 
@@ -1125,6 +1187,53 @@
       }
     });
   });
+
+  // ─── Contact Form ───
+  async function sendContactForm() {
+    const name = document.getElementById('cf-name').value.trim();
+    const email = document.getElementById('cf-email').value.trim();
+    const phone = document.getElementById('cf-phone').value.trim();
+    const message = document.getElementById('cf-message').value.trim();
+    const btn = document.getElementById('cf-submit');
+    const status = document.getElementById('cf-status');
+
+    status.className = 'form-status';
+    status.style.display = 'none';
+
+    if (!name || !email || !phone || !message) {
+      status.className = 'form-status error';
+      status.textContent = 'Пожалуйста, заполните все поля.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Отправка...';
+
+    try {
+      const resp = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/send-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone, message })
+      });
+      const data = await resp.json();
+      if (data.success) {
+        status.className = 'form-status success';
+        status.textContent = 'Сообщение отправлено! Мы свяжемся с вами в течение 24 часов.';
+        document.getElementById('cf-name').value = '';
+        document.getElementById('cf-email').value = '';
+        document.getElementById('cf-phone').value = '';
+        document.getElementById('cf-message').value = '';
+      } else {
+        throw new Error(data.message || 'Send failed');
+      }
+    } catch (err) {
+      status.className = 'form-status error';
+      status.textContent = 'Ошибка отправки. Попробуйте снова или напишите на hasanov.anar.2023@gmail.com';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Отправить сообщение';
+    }
+  }
 </script>
 
 </body>
