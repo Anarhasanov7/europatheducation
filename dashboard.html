@@ -48,6 +48,19 @@
   .uni-info { font-size:11px; color:var(--electric); margin-top:-8px; margin-bottom:10px; display:none; }
   .uni-info.show { display:block; }
 
+  /* Multi-program selection */
+  .add-program-btn { width:100%; padding:10px; border:1px dashed var(--electric); border-radius:10px; background:#f0fdff; color:var(--ink); font-size:13px; font-weight:600; cursor:pointer; margin-bottom:14px; transition:all .2s; }
+  .add-program-btn:hover:not(:disabled) { background:#d8f9ff; border-style:solid; }
+  .add-program-btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .selected-programs { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
+  .selected-program-item { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border:1px solid #d4f5d4; border-radius:10px; background:#f0fbf0; font-size:13px; }
+  .selected-program-item .sp-info { flex:1; }
+  .selected-program-item .sp-uni { font-weight:700; color:var(--ink); }
+  .selected-program-item .sp-prog { color:var(--gray); margin-top:2px; }
+  .selected-program-item .sp-num { width:22px; height:22px; border-radius:50%; background:var(--electric); color:var(--ink); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-right:10px; flex-shrink:0; }
+  .selected-program-item .sp-remove { background:none; border:none; color:var(--coral); cursor:pointer; font-size:16px; padding:0 4px; margin-left:8px; }
+  .sp-left { display:flex; align-items:center; }
+
   .doc-list { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   .doc-item { border:1px solid #eee; border-radius:12px; padding:14px; position:relative; }
   .doc-item .name { font-size:13px; font-weight:700; }
@@ -131,7 +144,7 @@
       <input type="text" id="fullName" placeholder="Your full name">
       <div class="field-hint" id="hint-fullName">Please enter your full name</div>
       <label for="country">Preferred country</label>
-      <select id="country"><option value="">Select country</option><option value="Italy">Italy</option><option value="France">France</option><option value="Germany">Germany</option><option value="Spain">Spain</option><option value="Netherlands">Netherlands</option><option value="Ireland">Ireland</option><option value="Poland">Poland</option><option value="Hungary">Hungary</option><option value="Czech Republic">Czech Republic</option></select>
+      <select id="country"><option value="">Select country</option><option value="Italy">Italy</option><option value="France">France</option></select>
       <div class="field-hint" id="hint-country">Please select a country</div>
 
       <div class="filter-row">
@@ -144,11 +157,13 @@
       <label for="university">University</label>
       <select id="university" disabled><option value="">Select country first</option></select>
       <div class="uni-info" id="uniInfo"></div>
-      <div class="field-hint" id="hint-university">Please select a university</div>
       <label for="program">Program</label>
       <select id="program" disabled><option value="">Select university first</option></select>
       <div class="program-count" id="programCount"></div>
-      <div class="field-hint" id="hint-program">Please select a program</div>
+      <button type="button" id="addProgramBtn" class="add-program-btn" disabled>+ Add this program (0/3 selected)</button>
+      <div class="field-hint" id="hint-programs">Please add at least one program</div>
+
+      <div class="selected-programs" id="selectedPrograms"></div>
     </div>
 
     <div class="card">
@@ -198,6 +213,7 @@ let sb = null;
 let currentUser = null;
 let appRecord = null;
 let docPaths = {};
+let selectedPrograms = []; // Array of {university, program}
 
 const sbScript = document.createElement('script');
 sbScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
@@ -1271,10 +1287,17 @@ async function init() {
       appRecord = existing;
       fullName.value = appRecord.full_name || '';
       country.value = appRecord.country || '';
-      updateUnis(appRecord.country, appRecord.university);
-      if (appRecord.university && appRecord.program) {
-        updatePrograms(appRecord.university, appRecord.program);
+      // Load programs array (fallback to old single program for backward compat)
+      if (appRecord.programs && Array.isArray(appRecord.programs) && appRecord.programs.length > 0) {
+        selectedPrograms = appRecord.programs;
+      } else if (appRecord.university && appRecord.program) {
+        selectedPrograms = [{ university: appRecord.university, program: appRecord.program }];
+      } else {
+        selectedPrograms = [];
       }
+      renderSelectedPrograms();
+      updateAddBtn();
+      updateUnis(appRecord.country, '');
       if (appRecord.steps) {
         for (const [k, v] of Object.entries(appRecord.steps)) {
           const el = document.getElementById('step_' + k);
@@ -1342,6 +1365,70 @@ async function loadDocuments() {
     });
   }
   autoStep();
+}
+
+// ─── Multi-program selection logic ───
+function addSelectedProgram() {
+  if (!university.value || !program.value) return;
+  if (selectedPrograms.length >= 3) {
+    showToast('You can select up to 3 programs');
+    return;
+  }
+  // Prevent duplicates
+  const dup = selectedPrograms.find(p => p.university === university.value && p.program === program.value);
+  if (dup) {
+    showToast('This program is already in your list');
+    return;
+  }
+  selectedPrograms.push({ university: university.value, program: program.value });
+  renderSelectedPrograms();
+  // Reset dropdowns for next selection
+  university.value = '';
+  program.innerHTML = '<option value="">Select university first</option>';
+  program.disabled = true;
+  programCount.textContent = '';
+  uniInfo.classList.remove('show');
+  updateAddBtn();
+  autoStep();
+  markDirty();
+}
+
+function removeSelectedProgram(idx) {
+  selectedPrograms.splice(idx, 1);
+  renderSelectedPrograms();
+  updateAddBtn();
+  autoStep();
+  markDirty();
+}
+
+function renderSelectedPrograms() {
+  const container = document.getElementById('selectedPrograms');
+  container.innerHTML = '';
+  selectedPrograms.forEach((p, i) => {
+    const item = document.createElement('div');
+    item.className = 'selected-program-item';
+    item.innerHTML = `
+      <div class="sp-left">
+        <div class="sp-num">${i + 1}</div>
+        <div class="sp-info">
+          <div class="sp-uni">${p.university}</div>
+          <div class="sp-prog">${p.program}</div>
+        </div>
+      </div>
+      <button class="sp-remove" onclick="removeSelectedProgram(${i})" title="Remove">&times;</button>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function updateAddBtn() {
+  const btn = document.getElementById('addProgramBtn');
+  const count = selectedPrograms.length;
+  btn.textContent = `+ Add this program (${count}/3 selected)`;
+  btn.disabled = !university.value || !program.value || count >= 3;
+  // Hide hint if at least one program selected
+  const hint = document.getElementById('hint-programs');
+  if (hint) hint.style.display = count > 0 ? 'none' : 'none';
 }
 
 function updateUnis(selectedCountry, selectedUni) {
@@ -1419,7 +1506,9 @@ function updatePrograms(uniName, selectedProg) {
 country.addEventListener('change', () => { updateUnis(country.value, ''); });
 englishOnly.addEventListener('change', () => { updateUnis(country.value, university.value); });
 fieldFilter.addEventListener('change', () => { updateUnis(country.value, university.value); });
-university.addEventListener('change', () => { updatePrograms(university.value, ''); });
+university.addEventListener('change', () => { updatePrograms(university.value, ''); updateAddBtn(); });
+program.addEventListener('change', () => { updateAddBtn(); });
+document.getElementById('addProgramBtn').addEventListener('click', addSelectedProgram);
 
 const ALLOWED_TYPES = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
 const ALLOWED_EXTS = ['.pdf', '.png', '.jpg', '.jpeg'];
@@ -1531,7 +1620,7 @@ function autoStep() {
   });
   document.getElementById('step_documents').checked = uploaded.length >= 4;
 
-  if (fullName.value && country.value && university.value && program.value) {
+  if (fullName.value && country.value && selectedPrograms.length > 0) {
     document.getElementById('step_profile').checked = true;
   }
 
@@ -1553,9 +1642,7 @@ function validateProfile() {
   let valid = true;
   const fields = [
     { el: fullName, hint: 'hint-fullName', check: () => !fullName.value.trim() },
-    { el: country, hint: 'hint-country', check: () => !country.value },
-    { el: university, hint: 'hint-university', check: () => !university.value },
-    { el: program, hint: 'hint-program', check: () => !program.value }
+    { el: country, hint: 'hint-country', check: () => !country.value }
   ];
   fields.forEach(f => {
     const hint = document.getElementById(f.hint);
@@ -1568,6 +1655,14 @@ function validateProfile() {
       hint.style.display = 'none';
     }
   });
+  // Validate at least one program selected
+  const progHint = document.getElementById('hint-programs');
+  if (selectedPrograms.length === 0) {
+    progHint.style.display = 'block';
+    valid = false;
+  } else {
+    progHint.style.display = 'none';
+  }
   return valid;
 }
 
@@ -1588,8 +1683,9 @@ async function saveApp() {
     .update({
       full_name: fullName.value,
       country: country.value,
-      university: university.value,
-      program: program.value,
+      programs: selectedPrograms,
+      university: selectedPrograms[0]?.university || '',
+      program: selectedPrograms[0]?.program || '',
       steps: steps
     })
     .eq('id', appRecord.id);
@@ -1642,8 +1738,9 @@ async function submitApp() {
     .update({
       full_name: fullName.value,
       country: country.value,
-      university: university.value,
-      program: program.value,
+      programs: selectedPrograms,
+      university: selectedPrograms[0]?.university || '',
+      program: selectedPrograms[0]?.program || '',
       steps: steps,
       status: 'submitted'
     })
@@ -1668,8 +1765,7 @@ async function submitApp() {
           student_email: currentUser.email,
           full_name: fullName.value,
           country: country.value,
-          university: university.value,
-          program: program.value,
+          programs: selectedPrograms,
           documents_count: uploaded2,
           application_id: appRecord.id
         })
@@ -1723,8 +1819,9 @@ function renderSummary() {
     ['Email', currentUser?.email || '—'],
     ['Full name', fullName.value || '—'],
     ['Country', country.value || '—'],
-    ['University', university.value || '—'],
-    ['Program', program.value || '—'],
+    ['Programs selected', selectedPrograms.length > 0
+      ? selectedPrograms.map((p, i) => `${i + 1}. ${p.university} — ${p.program}`).join('<br>')
+      : '—'],
     ['Documents uploaded', uploaded.length + ' of 6'],
     ['Steps completed', stepsDone.length + ' of 5'],
     ['Status', status.charAt(0).toUpperCase() + status.slice(1)]

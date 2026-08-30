@@ -137,8 +137,7 @@
           <th>Student</th>
           <th>Email</th>
           <th class="hide-mobile">Country</th>
-          <th class="hide-mobile">University</th>
-          <th class="hide-mobile">Program</th>
+          <th class="hide-mobile">Programs</th>
           <th>Docs</th>
           <th>Status</th>
           <th class="hide-mobile">Date</th>
@@ -270,12 +269,21 @@ function renderTable() {
   tbody.innerHTML = pageItems.map(a => {
     const userDocs = allDocs.filter(d => d.user_id === a.user_id);
     const date = new Date(a.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    // Build programs display from programs array (fallback to old single field)
+    let progs = [];
+    if (a.programs && Array.isArray(a.programs) && a.programs.length > 0) {
+      progs = a.programs;
+    } else if (a.university && a.program) {
+      progs = [{ university: a.university, program: a.program }];
+    }
+    const progsHtml = progs.length > 0
+      ? progs.map((p, i) => `<div style="margin-bottom:2px;"><strong>${i + 1}.</strong> ${esc(p.university)}<br><span style="color:#666;font-size:11px;">${esc(p.program)}</span></div>`).join('')
+      : '—';
     return `<tr onclick="openModal('${esc(a.id)}')">
       <td><strong>${a.full_name ? esc(a.full_name) : '<span style="color:#ccc">Not provided</span>'}</strong></td>
       <td style="font-size:13px;">${esc(a.user_id.slice(0,8))}...</td>
       <td class="hide-mobile">${esc(a.country) || '—'}</td>
-      <td class="hide-mobile">${esc(a.university) || '—'}</td>
-      <td class="hide-mobile">${esc(a.program) || '—'}</td>
+      <td class="hide-mobile" style="font-size:12px;">${progsHtml}</td>
       <td>${userDocs.length}/6</td>
       <td><span class="badge ${esc(a.status)}">${esc(a.status)}</span></td>
       <td class="hide-mobile" style="font-size:12px;color:#666;">${esc(date)}</td>
@@ -319,11 +327,20 @@ function exportCSV() {
     (a.country || '').toLowerCase().includes(search)
   );
 
-  const headers = ['Full Name', 'Email', 'Country', 'University', 'Program', 'Documents', 'Status', 'Date'];
+  const headers = ['Full Name', 'Email', 'Country', 'Program 1', 'Program 2', 'Program 3', 'Documents', 'Status', 'Date'];
   const rows = filtered.map(a => {
     const userDocs = allDocs.filter(d => d.user_id === a.user_id);
     const date = new Date(a.created_at).toLocaleDateString('en-GB');
-    return [a.full_name || '', a.user_id, a.country || '', a.university || '', a.program || '', userDocs.length + '/6', a.status, date];
+    let progs = [];
+    if (a.programs && Array.isArray(a.programs) && a.programs.length > 0) {
+      progs = a.programs;
+    } else if (a.university && a.program) {
+      progs = [{ university: a.university, program: a.program }];
+    }
+    const p1 = progs[0] ? progs[0].university + ' — ' + progs[0].program : '';
+    const p2 = progs[1] ? progs[1].university + ' — ' + progs[1].program : '';
+    const p3 = progs[2] ? progs[2].university + ' — ' + progs[2].program : '';
+    return [a.full_name || '', a.user_id, a.country || '', p1, p2, p3, userDocs.length + '/6', a.status, date];
   });
 
   let csv = headers.join(',') + '\n';
@@ -344,6 +361,14 @@ async function openModal(appId) {
   const app = allApps.find(a => a.id === appId);
   if (!app) return;
   const userDocs = allDocs.filter(d => d.user_id === app.user_id);
+
+  // Build programs array (fallback to old single field for backward compat)
+  let modalProgs = [];
+  if (app.programs && Array.isArray(app.programs) && app.programs.length > 0) {
+    modalProgs = app.programs;
+  } else if (app.university && app.program) {
+    modalProgs = [{ university: app.university, program: app.program }];
+  }
 
   // Mark documents as retrieved (starts 30-day deletion countdown)
   if (userDocs.length > 0) {
@@ -399,9 +424,10 @@ async function openModal(appId) {
       <div class="info-item"><div class="key">Status</div><div class="val"><span class="badge ${esc(app.status)}">${esc(app.status)}</span></div></div>
       <div class="info-item"><div class="key">Submitted</div><div class="val">${esc(date)}</div></div>
       <div class="info-item"><div class="key">Country</div><div class="val">${esc(app.country) || 'Not selected'}</div></div>
-      <div class="info-item"><div class="key">University</div><div class="val">${esc(app.university) || 'Not selected'}</div></div>
-      <div class="info-item"><div class="key">Program</div><div class="val">${esc(app.program) || 'Not selected'}</div></div>
       <div class="info-item"><div class="key">Documents</div><div class="val">${userDocs.length} of 6</div></div>
+    </div>
+    <div class="info-grid" style="margin-top:0;">
+      <div class="info-item" style="grid-column:1/-1;"><div class="key">Selected Programs (${modalProgs.length})</div><div class="val">${modalProgs.length > 0 ? modalProgs.map((p, i) => `<div style="margin-bottom:6px;"><strong>${i + 1}.</strong> ${esc(p.university)} — ${esc(p.program)}</div>`).join('') : 'Not selected'}</div></div>
     </div>
     <div class="docs-list">
       <h3>Uploaded Documents</h3>
