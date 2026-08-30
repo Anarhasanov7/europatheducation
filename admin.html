@@ -117,6 +117,23 @@
   .ticket-reply-area .reply-btn:disabled { opacity:.5; cursor:wait; }
   .ticket-original-msg { padding:14px; background:#f8f9fa; border-radius:10px; font-size:13px; line-height:1.7; white-space:pre-wrap; color:#444; margin:12px 0; }
   .ticket-admin-reply { padding:14px; background:#e8f5e9; border-radius:10px; font-size:13px; line-height:1.7; white-space:pre-wrap; color:#1b5e20; margin:12px 0; border-left:3px solid var(--green); }
+  .conv-msg { margin-bottom:12px; padding:14px; border-radius:10px; }
+  .conv-msg.student { background:#f0f4ff; border-left:3px solid var(--electric); }
+  .conv-msg.admin { background:#e8f5e9; border-left:3px solid var(--green); }
+  .conv-msg .sender { font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:6px; }
+  .conv-msg.student .sender { color:#1a4a6a; }
+  .conv-msg.admin .sender { color:#1b5e20; }
+  .conv-msg .text { font-size:13px; line-height:1.6; white-space:pre-wrap; color:#333; }
+  .conv-msg .time { font-size:11px; color:#999; margin-top:6px; }
+  .conv-msg .att { margin-top:8px; padding:8px 12px; background:#fff; border:1px solid #ddd; border-radius:6px; font-size:12px; }
+  .conv-msg .att a { color:var(--blue); font-weight:600; text-decoration:none; }
+  .conv-msg .file-req { margin-top:8px; padding:10px 12px; background:#fff3cd; border-radius:6px; border-left:3px solid #ffc107; font-size:12px; }
+  .conv-msg .file-req strong { color:#856404; }
+  .file-request-field { margin-top:12px; }
+  .file-request-field label { font-size:13px; font-weight:600; color:var(--ink); display:block; margin-bottom:4px; }
+  .file-request-field input { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:13px; outline:none; }
+  .file-request-field input:focus { border-color:var(--blue); }
+  .file-request-field .hint { font-size:11px; color:#888; margin-top:4px; }
 </style>
 </head>
 <body>
@@ -603,24 +620,8 @@ async function openTicketModal(ticketId) {
   if (!ticket) return;
 
   const date = new Date(ticket.created_at).toLocaleString('en-GB');
-  const repliedDate = ticket.replied_at ? new Date(ticket.replied_at).toLocaleString('en-GB') : '';
 
-  let replySection = '';
-  if (ticket.status === 'answered' && ticket.admin_reply) {
-    replySection = `
-      <div class="ticket-admin-reply">
-        <strong>Your reply (${esc(repliedDate)}):</strong><br><br>
-        ${esc(ticket.admin_reply)}
-      </div>`;
-  } else {
-    replySection = `
-      <div class="ticket-reply-area">
-        <h3>Reply to this ticket</h3>
-        <textarea id="replyText" placeholder="Type your reply here..."></textarea>
-        <button class="reply-btn" id="replyBtn" onclick="sendTicketReply('${esc(ticket.ticket_id)}')">Send Reply</button>
-      </div>`;
-  }
-
+  // Show loading state
   document.getElementById('modalContent').innerHTML = `
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <h2>🎫 ${esc(ticket.ticket_id)}</h2>
@@ -631,15 +632,100 @@ async function openTicketModal(ticketId) {
       <div class="info-item"><div class="key">From</div><div class="val">${esc(ticket.name)}</div></div>
       <div class="info-item"><div class="key">Email</div><div class="val" style="font-size:13px;">${esc(ticket.email)}</div></div>
     </div>
-    <h3 style="font-size:16px; margin-bottom:8px; color:var(--blue);">Original Message</h3>
-    <div class="ticket-original-msg">${esc(ticket.message)}</div>
-    ${replySection}
+    <div id="convLoading" style="padding:20px; text-align:center; color:#888;">Loading conversation...</div>
   `;
   document.getElementById('modalOverlay').classList.add('active');
+
+  // Fetch full conversation via Edge Function
+  try {
+    const session = await sb.auth.getSession();
+    const token = session.data.session?.access_token;
+    const res = await fetch(`https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/get-ticket?id=${encodeURIComponent(ticketId)}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+      document.getElementById('convLoading').innerHTML = '<p style="color:var(--red);">Failed to load conversation.</p>';
+      return;
+    }
+
+    // Render conversation
+    let convHtml = '<h3 style="font-size:16px; margin-bottom:12px; color:var(--blue);">Conversation</h3>';
+    data.messages.forEach(m => {
+      const time = new Date(m.created_at).toLocaleString('en-GB');
+      convHtml += `<div class="conv-msg ${m.sender}">
+        <div class="sender">${m.sender === 'student' ? 'Student' : 'Admin'}</div>
+        <div class="text">${esc(m.message)}</div>`;
+      if (m.attachment_name) {
+        // Generate signed URL for admin
+        convHtml += `<div class="att">📎 <a href="#" onclick="downloadAttachment('${esc(ticketId)}','${esc(m.attachment_name)}','${esc(m.sender)}');return false;">${esc(m.attachment_name)}</a></div>`;
+      }
+      if (m.file_request) {
+        convHtml += `<div class="file-req"><strong>📎 File requested:</strong> ${esc(m.file_request)}</div>`;
+      }
+      convHtml += `<div class="time">${esc(time)}</div>`;
+      convHtml += '</div>';
+    });
+
+    // Reply form (always show, admin can reply anytime)
+    convHtml += `
+      <div class="ticket-reply-area">
+        <h3>Reply to this ticket</h3>
+        <textarea id="replyText" placeholder="Type your reply here..."></textarea>
+        <div class="file-request-field">
+          <label>Request a file from student? (optional)</label>
+          <input type="text" id="fileRequest" placeholder="e.g. Please upload your passport PDF">
+          <div class="hint">If you ask the student to upload a file, they'll see this request and can attach a PDF in their reply.</div>
+        </div>
+        <button class="reply-btn" id="replyBtn" onclick="sendTicketReply('${esc(ticket.ticket_id)}')">Send Reply</button>
+      </div>
+    `;
+
+    document.getElementById('convLoading').innerHTML = convHtml;
+  } catch (err) {
+    console.error('Conversation load error:', err);
+    document.getElementById('convLoading').innerHTML = '<p style="color:var(--red);">Failed to load conversation.</p>';
+  }
+}
+
+async function downloadAttachment(ticketId, fileName, sender) {
+  try {
+    const session = await sb.auth.getSession();
+    const token = session.data.session?.access_token;
+    // Query the message to get the path
+    const { data, error } = await sb
+      .from('ticket_messages')
+      .select('attachment_path')
+      .eq('ticket_id', ticketId)
+      .eq('sender', sender)
+      .eq('attachment_name', fileName)
+      .single();
+
+    if (error || !data?.attachment_path) {
+      alert('Attachment not found');
+      return;
+    }
+
+    const { data: urlData, error: urlErr } = await sb.storage
+      .from('ticket-attachments')
+      .createSignedUrl(data.attachment_path, 3600);
+
+    if (urlErr || !urlData?.signedUrl) {
+      alert('Failed to generate download link');
+      return;
+    }
+
+    window.open(urlData.signedUrl, '_blank');
+  } catch (err) {
+    console.error('Download error:', err);
+    alert('Failed to download attachment');
+  }
 }
 
 async function sendTicketReply(ticketId) {
   const reply = document.getElementById('replyText').value.trim();
+  const fileReq = document.getElementById('fileRequest')?.value.trim() || '';
   const btn = document.getElementById('replyBtn');
   if (!reply) return;
 
@@ -652,7 +738,7 @@ async function sendTicketReply(ticketId) {
     const res = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/reply-ticket', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ ticket_id: ticketId, reply_message: reply })
+      body: JSON.stringify({ ticket_id: ticketId, reply_message: reply, file_request: fileReq || null })
     });
     const data = await res.json();
     if (data.success) {

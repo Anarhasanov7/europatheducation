@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Ticket — EuroPath Education</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --lime:#c6ff3d; --coral:#ff5c3d; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', -apple-system, sans-serif; background:linear-gradient(160deg, var(--navy) 0%, var(--ink) 100%); min-height:100vh; padding:40px 20px; }
+  .container { max-width:700px; margin:0 auto; }
+  .card { background:#fff; border-radius:16px; padding:32px; box-shadow:0 20px 60px rgba(0,0,0,0.3); margin-bottom:20px; }
+  h1 { font-size:24px; font-weight:800; color:var(--ink); margin-bottom:4px; }
+  h2 { font-size:18px; font-weight:700; color:var(--ink); margin-bottom:12px; }
+  .sub { color:var(--gray); font-size:14px; margin-bottom:24px; }
+  .ticket-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #eee; }
+  .ticket-id { font-family:monospace; font-size:16px; font-weight:700; color:var(--navy); }
+  .badge { display:inline-block; padding:4px 12px; border-radius:12px; font-size:11px; font-weight:600; text-transform:uppercase; }
+  .badge.open { background:#fee2e2; color:#991b1b; }
+  .badge.answered { background:#d4edda; color:#155724; }
+  .badge.closed { background:#e0e0e0; color:#666; }
+
+  /* Conversation */
+  .msg { margin-bottom:16px; padding:16px; border-radius:12px; }
+  .msg.student { background:#f0f4ff; border-left:3px solid var(--electric); }
+  .msg.admin { background:#e8f5e9; border-left:3px solid #22c55e; }
+  .msg-sender { font-size:12px; font-weight:700; text-transform:uppercase; margin-bottom:6px; }
+  .msg.student .msg-sender { color:#1a4a6a; }
+  .msg.admin .msg-sender { color:#1b5e20; }
+  .msg-text { font-size:14px; line-height:1.6; white-space:pre-wrap; color:#333; }
+  .msg-time { font-size:11px; color:#999; margin-top:8px; }
+  .msg-attachment { margin-top:10px; padding:10px 14px; background:#fff; border:1px solid #ddd; border-radius:8px; font-size:13px; }
+  .msg-attachment a { color:var(--navy); font-weight:600; text-decoration:none; }
+  .msg-attachment a:hover { text-decoration:underline; }
+  .msg-file-request { margin-top:10px; padding:12px 14px; background:#fff3cd; border-radius:8px; border-left:3px solid #ffc107; font-size:13px; }
+  .msg-file-request strong { color:#856404; }
+
+  /* Reply form */
+  .reply-form { margin-top:20px; }
+  .reply-form textarea { width:100%; min-height:120px; padding:14px; border:1px solid #ddd; border-radius:10px; font-size:14px; font-family:'Inter',sans-serif; resize:vertical; outline:none; transition:border-color .2s; }
+  .reply-form textarea:focus { border-color:var(--electric); }
+  .reply-form input[type=file] { padding:8px; border:1px solid #ddd; border-radius:8px; font-size:13px; margin-top:12px; width:100%; }
+  .reply-form button { margin-top:12px; padding:14px 28px; background:linear-gradient(135deg, var(--electric), var(--lime)); color:var(--ink); border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
+  .reply-form button:hover { transform:scale(1.02); }
+  .reply-form button:disabled { opacity:0.5; cursor:wait; }
+  .wait-notice { padding:16px; background:#fff3cd; border-radius:10px; font-size:14px; color:#856404; text-align:center; margin-top:20px; }
+  .back-link { text-align:center; margin-top:20px; }
+  .back-link a { color:var(--gray); font-size:13px; text-decoration:none; }
+  .back-link a:hover { color:#fff; }
+  .error { color:var(--coral); font-size:13px; margin-top:8px; display:none; background:#fff0f0; padding:10px; border-radius:8px; }
+  .loading { text-align:center; padding:40px; color:var(--gray); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card" id="ticketCard">
+    <div class="loading" id="loadingEl">Loading your ticket...</div>
+    <div id="ticketContent" style="display:none;">
+      <div class="ticket-header">
+        <div>
+          <h1 id="ticketSubject"></h1>
+          <div class="ticket-id" id="ticketId"></div>
+        </div>
+        <span class="badge" id="ticketBadge"></span>
+      </div>
+      <div id="conversation"></div>
+      <div id="replyArea"></div>
+    </div>
+    <div id="notFound" style="display:none; text-align:center; padding:40px;">
+      <h2>Ticket not found</h2>
+      <p class="sub">Please check your ticket ID and try again.</p>
+    </div>
+  </div>
+  <div class="back-link"><a href="index.html">← Back to homepage</a></div>
+</div>
+
+<script>
+const FN_BASE = 'https://glfizcgayqecnvtfihgy.supabase.co/functions/v1';
+
+function esc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function formatTime(iso) {
+  return new Date(iso).toLocaleString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+async function loadTicket() {
+  const params = new URLSearchParams(window.location.search);
+  const ticketId = params.get('id');
+  if (!ticketId) {
+    document.getElementById('loadingEl').style.display = 'none';
+    document.getElementById('notFound').style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${FN_BASE}/get-ticket?id=${encodeURIComponent(ticketId)}`);
+    const data = await res.json();
+
+    if (!data.success) {
+      document.getElementById('loadingEl').style.display = 'none';
+      document.getElementById('notFound').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('loadingEl').style.display = 'none';
+    document.getElementById('ticketContent').style.display = 'block';
+
+    const t = data.ticket;
+    document.getElementById('ticketSubject').textContent = t.subject;
+    document.getElementById('ticketId').textContent = t.ticket_id;
+    const badge = document.getElementById('ticketBadge');
+    badge.className = 'badge ' + t.status;
+    badge.textContent = t.status === 'open' ? 'Awaiting reply' : t.status === 'answered' ? 'Replied — you can respond' : t.status;
+
+    // Render conversation
+    const conv = document.getElementById('conversation');
+    conv.innerHTML = '';
+    data.messages.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'msg ' + m.sender;
+      let html = `<div class="msg-sender">${m.sender === 'student' ? 'You' : 'EuroPath Education'}</div>`;
+      html += `<div class="msg-text">${esc(m.message)}</div>`;
+      if (m.attachment_name) {
+        html += `<div class="msg-attachment">📎 <a href="${esc(m.attachment_url || '#')}" target="_blank" download>${esc(m.attachment_name)}</a></div>`;
+      }
+      if (m.file_request) {
+        html += `<div class="msg-file-request"><strong>📎 File requested:</strong> ${esc(m.file_request)}<br>Upload your PDF using the reply form below.</div>`;
+      }
+      html += `<div class="msg-time">${formatTime(m.created_at)}</div>`;
+      div.innerHTML = html;
+      conv.appendChild(div);
+    });
+
+    // Render reply area
+    const replyArea = document.getElementById('replyArea');
+    if (data.can_reply) {
+      replyArea.innerHTML = `
+        <div class="reply-form">
+          <h2>Reply</h2>
+          <textarea id="replyText" placeholder="Type your reply..."></textarea>
+          <input type="file" id="replyAttachment" accept=".pdf">
+          <div style="font-size:11px; color:#888; margin-top:4px;">Only PDF files. Max 5 MB.</div>
+          <button id="replyBtn" onclick="sendReply('${esc(t.ticket_id)}')">Send Reply</button>
+          <div class="error" id="replyError"></div>
+        </div>
+      `;
+    } else {
+      replyArea.innerHTML = `
+        <div class="wait-notice">
+          ⏳ <strong>You have already sent a message.</strong><br>
+          Please wait for our response before sending another.<br>
+          If your matter is urgent, you can <a href="index.html" style="color:#856404; font-weight:600;">open a new ticket</a>.
+        </div>
+      `;
+    }
+
+    // Scroll to bottom
+    window.scrollTo(0, document.body.scrollHeight);
+  } catch (err) {
+    document.getElementById('loadingEl').textContent = 'Failed to load ticket. Please try again.';
+  }
+}
+
+async function sendReply(ticketId) {
+  const text = document.getElementById('replyText').value.trim();
+  const errEl = document.getElementById('replyError');
+  const btn = document.getElementById('replyBtn');
+
+  if (!text) {
+    errEl.textContent = 'Please enter a message.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // Handle attachment
+  const fileInput = document.getElementById('replyAttachment');
+  const file = fileInput.files[0];
+  let attachment_base64 = null;
+  let attachment_name = null;
+
+  if (file) {
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      errEl.textContent = 'Only PDF files are allowed.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      errEl.textContent = 'File too large. Maximum 5 MB.';
+      errEl.style.display = 'block';
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'Uploading...';
+    const arrayBuffer = await file.arrayBuffer();
+    const bytes = new Uint8Array(arrayBuffer);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    attachment_base64 = btoa(binary);
+    attachment_name = file.name;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  errEl.style.display = 'none';
+
+  try {
+    const res = await fetch(`${FN_BASE}/student-reply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticket_id: ticketId, message: text, attachment_base64, attachment_name })
+    });
+    const data = await res.json();
+    if (data.success) {
+      // Reload ticket to show updated conversation
+      loadTicket();
+    } else {
+      errEl.textContent = data.message || 'Failed to send reply.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Send Reply';
+    }
+  } catch (err) {
+    errEl.textContent = 'Network error. Please try again.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Send Reply';
+  }
+}
+
+loadTicket();
+</script>
+</body>
+</html>

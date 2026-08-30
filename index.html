@@ -1498,6 +1498,11 @@
         <label>Message *</label>
         <textarea id="ticket-message" placeholder="Describe your question or issue..." style="min-height:120px;"></textarea>
       </div>
+      <div class="pub-field">
+        <label>Attach a PDF (optional, max 5 MB)</label>
+        <input type="file" id="ticket-attachment" accept=".pdf" style="padding:8px; border:1px solid #ddd; border-radius:8px; font-size:13px;">
+        <div style="font-size:11px; color:#888; margin-top:4px;">Only PDF files. Max 5 MB.</div>
+      </div>
 
       <button class="pub-btn" id="ticketSubmitBtn" onclick="submitTicket()">Submit Ticket</button>
       <div class="pub-status" id="ticketStatus"></div>
@@ -1781,11 +1786,40 @@
     }
     const btn = document.getElementById('ticketSubmitBtn');
     btn.disabled = true; btn.textContent = 'Submitting...';
+
+    // Handle PDF attachment
+    const fileInput = document.getElementById('ticket-attachment');
+    const file = fileInput.files[0];
+    let attachment_base64 = null;
+    let attachment_name = null;
+
+    if (file) {
+      if (!file.name.toLowerCase().endsWith('.pdf')) {
+        st.className = 'pub-status error';
+        st.textContent = 'Only PDF files are allowed.';
+        btn.disabled = false; btn.textContent = 'Submit Ticket';
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        st.className = 'pub-status error';
+        st.textContent = 'File too large. Maximum 5 MB.';
+        btn.disabled = false; btn.textContent = 'Submit Ticket';
+        return;
+      }
+      // Convert to base64
+      const arrayBuffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      attachment_base64 = btoa(binary);
+      attachment_name = file.name;
+    }
+
     try {
       const res = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/submit-ticket', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, subject, message })
+        body: JSON.stringify({ name, email, subject, message, attachment_base64, attachment_name })
       });
       const data = await res.json();
       if (data.success) {
