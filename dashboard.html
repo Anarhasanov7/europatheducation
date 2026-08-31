@@ -144,30 +144,41 @@
     .btn-row { flex-direction:column; }
     .btn-row button { width:100%; }
   }
+
+  .lang-toggle { display: flex; align-items: center; gap: 4px; position: fixed; top: 16px; right: 20px; z-index: 999; }
+  .lang-btn { font-size: 18px; line-height: 1; cursor: pointer; border: 2px solid transparent; border-radius: 6px; padding: 4px 6px; background: transparent; transition: all 0.2s; opacity: 0.5; }
+  .lang-btn:hover { opacity: 0.8; }
+  .lang-btn.active { opacity: 1; border-color: #1a73e8; background: rgba(26,115,232,0.1); }
 </style>
 </head>
 <body>
 
+<div class="lang-toggle">
+  <button class="lang-btn" id="lang-ru" onclick="edupathI18n.setLang('ru')" title="Русский">🇷🇺</button>
+  <button class="lang-btn" id="lang-en" onclick="edupathI18n.setLang('en')" title="English">🇬🇧</button>
+</div>
+<script src="i18n.js"></script>
+
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <div class="loading-text">Loading your dashboard...</div>
+  <div class="loading-text" data-en="Loading your dashboard...">Загрузка личного кабинета...</div>
 </div>
 
 <nav>
   <div class="brand">EuroPath <span>Education</span></div>
   <div class="user">
-    <span id="userName">Student</span>
-    <button onclick="logout()">Logout</button>
+    <span id="userName">Студент</span>
+    <button onclick="logout()" data-en="Logout">Выход</button>
   </div>
 </nav>
 
 <div class="container">
-  <h1>Application Dashboard <span class="status-badge draft" id="statusBadge">Draft</span></h1>
-  <p class="sub">Complete your profile, choose a university, and upload the required documents.</p>
+  <h1>Личный кабинет <span class="status-badge draft" id="statusBadge" data-en="Draft">Черновик</span></h1>
+  <p class="sub" data-en="Complete your profile, choose a university, and upload the required documents.">Заполните профиль, выберите университет и загрузите необходимые документы.</p>
 
   <div class="progress-wrap">
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-text" id="progressText">0% completed</div>
+    <div class="progress-text" id="progressText" data-en="0% completed">0% выполнено</div>
   </div>
 
   <div class="grid-2">

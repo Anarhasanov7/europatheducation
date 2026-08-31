@@ -75,6 +75,20 @@
   }
   nav .cta:hover { transform: scale(1.05); }
 
+  /* ─── Language toggle ─── */
+  .lang-toggle {
+    display: flex; align-items: center; gap: 4px;
+    margin-left: 12px;
+  }
+  .lang-btn {
+    font-size: 18px; line-height: 1; cursor: pointer;
+    border: 2px solid transparent; border-radius: 6px;
+    padding: 4px 6px; background: transparent; transition: all 0.2s;
+    opacity: 0.5;
+  }
+  .lang-btn:hover { opacity: 0.8; }
+  .lang-btn.active { opacity: 1; border-color: var(--electric); background: rgba(61,223,255,0.1); }
+
   /* ─── Hero ─── */
   .hero {
     min-height: 100vh;
@@ -835,107 +849,114 @@
 <nav>
   <div class="brand">Edupath <span>Education</span></div>
   <ul>
-    <li><a href="#mission">Миссия</a></li>
-    <li><a href="#why-italy">Почему Италия</a></li>
-    <li><a href="#journey">Карьерный путь</a></li>
-    <li><a href="#packages">Пакеты</a></li>
-    <li><a href="#process">Процесс</a></li>
-    <li><a href="#location">Локация</a></li>
-    <li><a href="#reviews">Отзывы</a></li>
-    <li><a href="#contact-form">Контакты</a></li>
-    <li><a href="login.html">Личный кабинет</a></li>
+    <li><a href="#mission" data-en="Mission">Миссия</a></li>
+    <li><a href="#why-italy" data-en="Why Italy">Почему Италия</a></li>
+    <li><a href="#journey" data-en="Career Path">Карьерный путь</a></li>
+    <li><a href="#packages" data-en="Packages">Пакеты</a></li>
+    <li><a href="#process" data-en="Process">Процесс</a></li>
+    <li><a href="#location" data-en="Location">Локация</a></li>
+    <li><a href="#reviews" data-en="Reviews">Отзывы</a></li>
+    <li><a href="#contact-form" data-en="Contact">Контакты</a></li>
+    <li><a href="login.html" data-en="Account">Личный кабинет</a></li>
   </ul>
-  <a href="login.html" class="cta">Личный кабинет</a>
+  <div style="display:flex; align-items:center; gap:12px;">
+    <div class="lang-toggle">
+      <button class="lang-btn" id="lang-ru" onclick="edupathI18n.setLang('ru')" title="Русский">🇷🇺</button>
+      <button class="lang-btn" id="lang-en" onclick="edupathI18n.setLang('en')" title="English">🇬🇧</button>
+    </div>
+    <a href="login.html" class="cta" data-en="Account">Личный кабинет</a>
+  </div>
 </nav>
+<script src="i18n.js"></script>
 
 <!-- ─── Hero ─── -->
 <div class="hero">
   <div class="hero-content">
-    <h1>Ваши студенты —<br>в <span class="grad">университеты Италии</span></h1>
-    <p>Edupath Education — консалтинговая компания в Италии. Мы сопровождаем студентов от подачи документов до получения диплома: поступление, стипендия, жильё и адаптация.</p>
+    <h1 data-en="Your students —<br>into <span class='grad'>Italian universities</span>">Ваши студенты —<br>в <span class="grad">университеты Италии</span></h1>
+    <p data-en="Edupath Education is a consulting company in Italy. We guide students from document submission to graduation: admission, scholarship, housing, and adaptation.">Edupath Education — консалтинговая компания в Италии. Мы сопровождаем студентов от подачи документов до получения диплома: поступление, стипендия, жильё и адаптация.</p>
     <div class="hero-stats">
       <div class="hero-stat">
         <span class="num">30</span>
-        <div class="label">студентов в год</div>
+        <div class="label" data-en="students per year">студентов в год</div>
       </div>
       <div class="hero-stat">
         <span class="num">95%</span>
-        <div class="label">уровень зачисления</div>
+        <div class="label" data-en="admission rate">уровень зачисления</div>
       </div>
       <div class="hero-stat">
         <span class="num">90%</span>
-        <div class="label">получили стипендию</div>
+        <div class="label" data-en="received scholarship">получили стипендию</div>
       </div>
     </div>
   </div>
-  <div class="scroll-hint">↓ Листайте вниз</div>
+  <div class="scroll-hint" data-en="↓ Scroll down">↓ Листайте вниз</div>
 </div>
 
 <!-- ─── Mission ─── -->
 <section id="mission" class="fade-in">
-  <div class="section-tag">Наша миссия</div>
-  <div class="section-title">Что мы делаем</div>
-  <div class="section-sub">Мы находимся в Италии и работаем с университетами и госорганами лично — не удалённо.</div>
+  <div class="section-tag" data-en="Our Mission">Наша миссия</div>
+  <div class="section-title" data-en="What We Do">Что мы делаем</div>
+  <div class="section-sub" data-en="We are based in Italy and work with universities and government agencies in person — not remotely.">Мы находимся в Италии и работаем с университетами и госорганами лично — не удалённо.</div>
 
   <div class="mission-card">
-    <h3>Миссия Edupath Education</h3>
-    <p>Мы помогаем международным выпускникам получить доступ к <strong>итальянскому высшему образованию</strong> — от подачи документов до получения диплома. Специализируемся на <strong>региональных стипендиях DSU/EDISU</strong>, которые покрывают обучение, стипендию до €7 000/год, общежитие и питание. Сопровождаем студента <strong>весь срок обучения</strong>, а не только на этапе поступления.</p>
+    <h3 data-en="Edupath Education Mission">Миссия Edupath Education</h3>
+    <p data-en="We help international graduates gain access to <strong>Italian higher education</strong> — from document submission to graduation. We specialize in <strong>regional DSU/EDISU scholarships</strong> that cover tuition, a stipend up to €7,000/year, housing, and meals. We support the student <strong>throughout their entire studies</strong>, not just at the admission stage.">Мы помогаем международным выпускникам получить доступ к <strong>итальянскому высшему образованию</strong> — от подачи документов до получения диплома. Специализируемся на <strong>региональных стипендиях DSU/EDISU</strong>, которые покрывают обучение, стипендию до €7 000/год, общежитие и питание. Сопровождаем студента <strong>весь срок обучения</strong>, а не только на этапе поступления.</p>
   </div>
 </section>
 
 <!-- ─── Why Italy / Best Cases ─── -->
 <section id="why-italy" class="fade-in">
-  <div class="section-tag">Почему Италия</div>
-  <div class="section-title">Что получает студент — после поступления</div>
-  <div class="section-sub">Это не просто учёба за рубежом. Это карьерный капитал, который работает всю жизнь.</div>
+  <div class="section-tag" data-en="Why Italy">Почему Италия</div>
+  <div class="section-title" data-en="What the student gains — after enrollment">Что получает студент — после поступления</div>
+  <div class="section-sub" data-en="This isn't just studying abroad. It's career capital that lasts a lifetime.">Это не просто учёба за рубежом. Это карьерный капитал, который работает всю жизнь.</div>
 
   <div class="why-grid">
     <div class="why-card">
       <span class="why-icon">🇮🇹</span>
-      <h4>Изучает итальянский язык</h4>
-      <p>Итальянский — 4-й по изучению язык в мире, родной для 85 млн человек. Студент учит язык в естественной среде: магазины, лекции, друзья. Свободный итальянский открывает рынок Италии (8-я экономика мира), Швейцарии (банкинг, фарма) и южной Европы. Многие университеты предлагают бесплатные языковые курсы для своих студентов. Второй язык в резюме — преимущество при найме в международные компании.</p>
+      <h4 data-en="Learns Italian">Изучает итальянский язык</h4>
+      <p data-en="Italian is the 4th most studied language in the world, native to 85 million people. The student learns the language in a natural environment: shops, lectures, friends. Fluent Italian opens the market of Italy (8th largest economy), Switzerland (banking, pharma), and southern Europe. Many universities offer free language courses for their students. A second language on a CV is an advantage when applying to international companies.">Итальянский — 4-й по изучению язык в мире, родной для 85 млн человек. Студент учит язык в естественной среде: магазины, лекции, друзья. Свободный итальянский открывает рынок Италии (8-я экономика мира), Швейцарии (банкинг, фарма) и южной Европы. Многие университеты предлагают бесплатные языковые курсы для своих студентов. Второй язык в резюме — преимущество при найме в международные компании.</p>
     </div>
     <div class="why-card">
       <span class="why-icon">📚</span>
-      <h4>Публикации в топовых журналах</h4>
-      <p>Итальянские университеты — партнёры Q1/Q2 журналов Scopus и Web of Science: Nature, Elsevier, Springer, Taylor &amp; Francis. Студент публикуется под руководством европейских профессоров, получает ORCID и DOI. Публикации в Scopus — требование для PhD-позиций и научных грантов в ЕС. Университеты покрывают статьи в open-access журналах (APC до €2 000). Для магистров — возможность соавторства в исследовательских проектах факультета.</p>
+      <h4 data-en="Publications in top journals">Публикации в топовых журналах</h4>
+      <p data-en="Italian universities partner with Q1/Q2 Scopus and Web of Science journals: Nature, Elsevier, Springer, Taylor &amp; Francis. Students publish under the guidance of European professors, receive ORCID and DOI. Scopus publications are required for PhD positions and research grants in the EU. Universities cover open-access article processing charges (APC up to €2,000). For master's students — co-authorship opportunities in faculty research projects.">Итальянские университеты — партнёры Q1/Q2 журналов Scopus и Web of Science: Nature, Elsevier, Springer, Taylor &amp; Francis. Студент публикуется под руководством европейских профессоров, получает ORCID и DOI. Публикации в Scopus — требование для PhD-позиций и научных грантов в ЕС. Университеты покрывают статьи в open-access журналах (APC до €2 000). Для магистров — возможность соавторства в исследовательских проектах факультета.</p>
     </div>
     <div class="why-card">
       <span class="why-icon">🎓</span>
-      <h4>Работа с профессорами мирового уровня</h4>
-      <p>Преподаватели из Bologna (старейший университет мира, 1088 г.), Sapienza, PoliMi, Padova — авторы учебников, участники международных конференций. Профессора имеют партнёрства с MIT, Oxford, ETH Zurich, Sorbonne. Прямой доступ: офис-часы, менторство, рекомендательные письма для PhD и грантов. Маленькие группы — профессор знает студента по имени. Рекомендация от итальянского профессора открывает двери в топовые программы ЕС и США.</p>
+      <h4 data-en="Work with world-class professors">Работа с профессорами мирового уровня</h4>
+      <p data-en="Faculty from Bologna (the world's oldest university, founded 1088), Sapienza, PoliMi, Padova — textbook authors, international conference participants. Professors have partnerships with MIT, Oxford, ETH Zurich, Sorbonne. Direct access: office hours, mentoring, recommendation letters for PhD and grants. Small groups — the professor knows students by name. A recommendation from an Italian professor opens doors to top EU and US programs.">Преподаватели из Bologna (старейший университет мира, 1088 г.), Sapienza, PoliMi, Padova — авторы учебников, участники международных конференций. Профессора имеют партнёрства с MIT, Oxford, ETH Zurich, Sorbonne. Прямой доступ: офис-часы, менторство, рекомендательные письма для PhD и грантов. Маленькие группы — профессор знает студента по имени. Рекомендация от итальянского профессора открывает двери в топовые программы ЕС и США.</p>
     </div>
     <div class="why-card">
       <span class="why-icon">🌍</span>
-      <h4>Обмен в США, Канаду и другие страны</h4>
-      <p>Через программы обмена (IAU, Dual Degree, Bilateral Agreements) студент может поехать на семестр или год в США, Канаду, Великобританию, Австралию. Италия имеет двусторонние соглашения с 200+ университетами мира. Студент платит итальянскую стоимость обучения (€0–3 000), а учится в университетах, где год стоит €30 000–50 000. Италия — мост к глобальным возможностям: учёба в 2–3 странах за один диплом.</p>
+      <h4 data-en="Exchange to USA, Canada and other countries">Обмен в США, Канаду и другие страны</h4>
+      <p data-en="Through exchange programs (IAU, Dual Degree, Bilateral Agreements) students can spend a semester or year in the USA, Canada, UK, or Australia. Italy has bilateral agreements with 200+ universities worldwide. The student pays Italian tuition (€0–3,000) but studies at universities where a year costs €30,000–50,000. Italy is a bridge to global opportunities: study in 2–3 countries for one diploma.">Через программы обмена (IAU, Dual Degree, Bilateral Agreements) студент может поехать на семестр или год в США, Канаду, Великобританию, Австралию. Италия имеет двусторонние соглашения с 200+ университетами мира. Студент платит итальянскую стоимость обучения (€0–3 000), а учится в университетах, где год стоит €30 000–50 000. Италия — мост к глобальным возможностям: учёба в 2–3 странах за один диплом.</p>
     </div>
     <div class="why-card">
       <span class="why-icon">🔄</span>
-      <h4>Erasmus+ обменные программы</h4>
-      <p>Erasmus+ — программа Еврокомиссии: 1–2 семестра в другой стране ЕС бесплатно. Стипендия €400–500/мес покрывает жильё и жизнь. 33 страны-участницы: Германия, Франция, Нидерланды, Испания, Скандинавия. Зачёсы переносятся автоматически (ECTS). Студент получает сертификат Erasmus к диплому — знак международной мобильности. Отдельный поток Erasmus Mundus: совместные степени 2–4 университетов, стипендия €1 400/мес + покрытие relocation.</p>
+      <h4 data-en="Erasmus+ exchange programs">Erasmus+ обменные программы</h4>
+      <p data-en="Erasmus+ is an European Commission program: 1–2 semesters in another EU country for free. The scholarship of €400–500/month covers housing and living. 33 participating countries: Germany, France, Netherlands, Spain, Scandinavia. Credits transfer automatically (ECTS). Students receive an Erasmus certificate with their diploma — a mark of international mobility. Separate stream Erasmus Mundus: joint degrees from 2–4 universities, scholarship €1,400/month plus relocation coverage.">Erasmus+ — программа Еврокомиссии: 1–2 семестра в другой стране ЕС бесплатно. Стипендия €400–500/мес покрывает жильё и жизнь. 33 страны-участницы: Германия, Франция, Нидерланды, Испания, Скандинавия. Зачёсы переносятся автоматически (ECTS). Студент получает сертификат Erasmus к диплому — знак международной мобильности. Отдельный поток Erasmus Mundus: совместные степени 2–4 университетов, стипендия €1 400/мес + покрытие relocation.</p>
     </div>
     <div class="why-card">
       <span class="why-icon">🤝</span>
-      <h4>Международная сеть контактов</h4>
-      <p>Однокурсники из 50+ стран: Европа, США, Китай, Индия, Латинская Америка, Африка. Нетворкинг, который остаётся на всю жизнь — будущие коллеги, работодатели, сооснователи стартапов. Университетские alumni-сети: Bologna Alumni (900K+), Sapienza Alumni (500K+). Доступ к карьерным ярмаркам, industry events, конференциям. Студент строит международную сеть бесплатно — в бизнесе такие связи стоят десятилетиями.</p>
+      <h4 data-en="International network of contacts">Международная сеть контактов</h4>
+      <p data-en="Classmates from 50+ countries: Europe, USA, China, India, Latin America, Africa. Networking that lasts a lifetime — future colleagues, employers, startup co-founders. University alumni networks: Bologna Alumni (900K+), Sapienza Alumni (500K+). Access to career fairs, industry events, and conferences. Students build an international network for free — in business, such connections are valuable for decades.">Однокурсники из 50+ стран: Европа, США, Китай, Индия, Латинская Америка, Африка. Нетворкинг, который остаётся на всю жизнь — будущие коллеги, работодатели, сооснователи стартапов. Университетские alumni-сети: Bologna Alumni (900K+), Sapienza Alumni (500K+). Доступ к карьерным ярмаркам, industry events, конференциям. Студент строит международную сеть бесплатно — в бизнесе такие связи стоят десятилетиями.</p>
     </div>
     <div class="why-card">
       <span class="why-icon">📜</span>
-      <h4>Европейский диплом</h4>
-      <p>Диплом признаётся во всех 27 странах ЕС и за его пределами (Гаагская конвенция, apostille). Болонский процесс: единые стандарты — бакалавр (180 ECTS, 3 года), магистр (120 ECTS, 2 года). Diploma Supplement на английском — приложение к диплому, понятное работодателям всего мира. Итальянские вузы в мировых рейтингах: Bologna, Sapienza, PoliMi в топ-200 QS и THE. Диплом открывает постдок-позиции и работу в ЕС без дополнительного признания.</p>
+      <h4 data-en="European diploma">Европейский диплом</h4>
+      <p data-en="The diploma is recognized in all 27 EU countries and beyond (Hague Convention, apostille). Bologna Process: unified standards — bachelor's (180 ECTS, 3 years), master's (120 ECTS, 2 years). Diploma Supplement in English — an appendix to the diploma, understandable to employers worldwide. Italian universities in global rankings: Bologna, Sapienza, PoliMi in the QS and THE top-200. The diploma opens postdoc positions and employment in the EU without additional recognition.">Диплом признаётся во всех 27 странах ЕС и за его пределами (Гаагская конвенция, apostille). Болонский процесс: единые стандарты — бакалавр (180 ECTS, 3 года), магистр (120 ECTS, 2 года). Diploma Supplement на английском — приложение к диплому, понятное работодателям всего мира. Итальянские вузы в мировых рейтингах: Bologna, Sapienza, PoliMi в топ-200 QS и THE. Диплом открывает постдок-позиции и работу в ЕС без дополнительного признания.</p>
     </div>
     <div class="why-card">
       <span class="why-icon">💼</span>
-      <h4>Опыт работы во время учёбы</h4>
-      <p>Студенческая виза позволяет работать 20 часов/неделю. Стажировки (tirocinio) в итальянских и международных компаниях: Ferrero, Eni, Luxottica, Armani, Pirelli, UniCredit, Amazon Italy, Google Milan. Многие университеты включают обязательную стажировку в программу (6–12 мес). Оплата стажировки: €500–1 200/мес. European work experience в резюме — мощный сигнал для работодателей в любой стране. После выпуска — возможность остаться в Италии на 12 мес (permesso di soggiorno per ricerca lavoro).</p>
+      <h4 data-en="Work experience during studies">Опыт работы во время учёбы</h4>
+      <p data-en="A student visa allows working 20 hours/week. Internships (tirocinio) at Italian and international companies: Ferrero, Eni, Luxottica, Armani, Pirelli, UniCredit, Amazon Italy, Google Milan. Many universities include a mandatory internship in the program (6–12 months). Internship pay: €500–1,200/month. European work experience on a CV is a powerful signal to employers in any country. After graduation — the option to stay in Italy for 12 months (permesso di soggiorno per ricerca lavoro).">Студенческая виза позволяет работать 20 часов/неделю. Стажировки (tirocinio) в итальянских и международных компаниях: Ferrero, Eni, Luxottica, Armani, Pirelli, UniCredit, Amazon Italy, Google Milan. Многие университеты включают обязательную стажировку в программу (6–12 мес). Оплата стажировки: €500–1 200/мес. European work experience в резюме — мощный сигнал для работодателей в любой стране. После выпуска — возможность остаться в Италии на 12 мес (permesso di soggiorno per ricerca lavoro).</p>
     </div>
   </div>
 
   <div class="why-banner">
     <div class="why-banner-content">
-      <h4>Итог: студент получает не просто диплом — он получает карьерный капитал</h4>
-      <p>Второй язык · Европейский диплом · Международная сеть · Опыт работы в ЕС · Возможность обмена в США/Канаду · Публикации · Менторство от топовых профессоров</p>
+      <h4 data-en="Bottom line: the student gets not just a diploma — they get career capital">Итог: студент получает не просто диплом — он получает карьерный капитал</h4>
+      <p data-en="Second language · European diploma · International network · EU work experience · Exchange to USA/Canada · Publications · Mentorship from top professors">Второй язык · Европейский диплом · Международная сеть · Опыт работы в ЕС · Возможность обмена в США/Канаду · Публикации · Менторство от топовых профессоров</p>
     </div>
   </div>
 </section>
@@ -943,54 +964,54 @@
 <!-- ─── Journey: From Student to International Specialist ─── -->
 <section id="journey" class="fade-in">
   <div class="journey-section">
-    <div class="section-tag">Карьерный путь</div>
-    <div class="section-title">От студента — к международному специалисту</div>
-    <div class="section-sub">Учёба в Италии — это не конечная точка, а запускатель карьеры. Вот путь, по которому проходят наши студенты.</div>
+    <div class="section-tag" data-en="Career Path">Карьерный путь</div>
+    <div class="section-title" data-en="From student — to international specialist">От студента — к международному специалисту</div>
+    <div class="section-sub" data-en="Studying in Italy is not an endpoint, but a career launcher. Here's the path our students take.">Учёба в Италии — это не конечная точка, а запускатель карьеры. Вот путь, по которому проходят наши студенты.</div>
 
     <div class="journey-path">
       <div class="journey-step">
         <div class="journey-circle">🎓</div>
-        <span class="step-num">Шаг 1</span>
-        <h4>Поступление в Италию</h4>
-        <p>Подача документов, зачисление в университет, получение визы и стипендии DSU/EDISU. Студент начинает учёбу в Италии.</p>
+        <span class="step-num" data-en="Step 1">Шаг 1</span>
+        <h4 data-en="Admission to Italy">Поступление в Италию</h4>
+        <p data-en="Document submission, university enrollment, visa and DSU/EDISU scholarship. The student begins studying in Italy.">Подача документов, зачисление в университет, получение визы и стипендии DSU/EDISU. Студент начинает учёбу в Италии.</p>
       </div>
       <div class="journey-step">
         <div class="journey-circle">📖</div>
-        <span class="step-num">Шаг 2</span>
-        <h4>Учёба + язык + стажировка</h4>
-        <p>Изучает итальянский, проходит стажировку в компании, участвует в исследовательских проектах. Накапливает европейский опыт.</p>
+        <span class="step-num" data-en="Step 2">Шаг 2</span>
+        <h4 data-en="Study + language + internship">Учёба + язык + стажировка</h4>
+        <p data-en="Learns Italian, completes a company internship, participates in research projects. Accumulates European experience.">Изучает итальянский, проходит стажировку в компании, участвует в исследовательских проектах. Накапливает европейский опыт.</p>
       </div>
       <div class="journey-step">
         <div class="journey-circle">🌍</div>
-        <span class="step-num">Шаг 3</span>
-        <h4>Erasmus+ или обмен</h4>
-        <p>Семестр в другой стране ЕС — Германия, Франция, Нидерланды. Расширяет географию, язык и профессиональную сеть.</p>
+        <span class="step-num" data-en="Step 3">Шаг 3</span>
+        <h4 data-en="Erasmus+ or exchange">Erasmus+ или обмен</h4>
+        <p data-en="A semester in another EU country — Germany, France, Netherlands. Expands geography, language, and professional network.">Семестр в другой стране ЕС — Германия, Франция, Нидерланды. Расширяет географию, язык и профессиональную сеть.</p>
       </div>
       <div class="journey-step">
         <div class="journey-circle">📜</div>
-        <span class="step-num">Шаг 4</span>
-        <h4>Европейский диплом</h4>
-        <p>Выпуск с дипломом, признанным в 27 странах ЕС. Публикации в Scopus, рекомендательные письма, alumni-сеть 500K+.</p>
+        <span class="step-num" data-en="Step 4">Шаг 4</span>
+        <h4 data-en="European diploma">Европейский диплом</h4>
+        <p data-en="Graduation with a diploma recognized in 27 EU countries. Scopus publications, recommendation letters, alumni network of 500K+.">Выпуск с дипломом, признанным в 27 странах ЕС. Публикации в Scopus, рекомендательные письма, alumni-сеть 500K+.</p>
       </div>
       <div class="journey-step">
         <div class="journey-circle">🏆</div>
-        <span class="step-num">Шаг 5</span>
-        <h4>Международный специалист</h4>
-        <p>2+ языка, европейский диплом, опыт работы в ЕС, международная сеть. Работает в любой стране мира.</p>
+        <span class="step-num" data-en="Step 5">Шаг 5</span>
+        <h4 data-en="International specialist">Международный специалист</h4>
+        <p data-en="2+ languages, European diploma, EU work experience, international network. Works in any country in the world.">2+ языка, европейский диплом, опыт работы в ЕС, международная сеть. Работает в любой стране мира.</p>
       </div>
     </div>
 
     <div class="journey-final">
-      <h3>Результат: <span class="highlight">работа мечты</span> в международной компании</h3>
-      <p>Выпускник, прошедший этот путь, — не просто специалист с дипломом. Это профессионал с международным опытом, двумя языками, европейской сетью контактов и подтверждёнными навыками. Такой профиль открывает двери в топовые компании по всему миру.</p>
+      <h3 data-en="Result: <span class='highlight'>dream job</span> at an international company">Результат: <span class="highlight">работа мечты</span> в международной компании</h3>
+      <p data-en="A graduate who has taken this path is not just a specialist with a diploma. They are a professional with international experience, two languages, a European network of contacts, and proven skills. This profile opens doors to top companies worldwide.">Выпускник, прошедший этот путь, — не просто специалист с дипломом. Это профессионал с международным опытом, двумя языками, европейской сетью контактов и подтверждёнными навыками. Такой профиль открывает двери в топовые компании по всему миру.</p>
       <div class="tags">
-        <span class="tag">2+ языка</span>
-        <span class="tag">Европейский диплом</span>
-        <span class="tag">Опыт работы в ЕС</span>
-        <span class="tag">Сеть в 50+ странах</span>
-        <span class="tag">Публикации в Scopus</span>
-        <span class="tag">Erasmus+ сертификат</span>
-        <span class="tag">Stay permit 12 мес</span>
+        <span class="tag" data-en="2+ languages">2+ языка</span>
+        <span class="tag" data-en="European diploma">Европейский диплом</span>
+        <span class="tag" data-en="EU work experience">Опыт работы в ЕС</span>
+        <span class="tag" data-en="Network in 50+ countries">Сеть в 50+ странах</span>
+        <span class="tag" data-en="Scopus publications">Публикации в Scopus</span>
+        <span class="tag" data-en="Erasmus+ certificate">Erasmus+ сертификат</span>
+        <span class="tag" data-en="12-month stay permit">Stay permit 12 мес</span>
       </div>
     </div>
   </div>
@@ -998,43 +1019,43 @@
 
 <!-- ─── Packages ─── -->
 <section id="packages" class="fade-in">
-  <div class="section-tag">Пакеты услуг</div>
-  <div class="section-title">Два пакета — выбирайте под потребности</div>
-  <div class="section-sub">От базового поступления до полного сопровождения на весь срок обучения.</div>
+  <div class="section-tag" data-en="Service Packages">Пакеты услуг</div>
+  <div class="section-title" data-en="Two packages — choose what fits your needs">Два пакета — выбирайте под потребности</div>
+  <div class="section-sub" data-en="From basic admission to full support throughout the entire study period.">От базового поступления до полного сопровождения на весь срок обучения.</div>
 
   <div class="pkg-grid">
     <div class="pkg-card p1">
       <div class="pkg-head">
-        <div class="pkg-tag">Пакет 1</div>
-        <div class="pkg-name">Консьерж поступления</div>
+        <div class="pkg-tag" data-en="Package 1">Пакет 1</div>
+        <div class="pkg-name" data-en="Admission Concierge">Консьерж поступления</div>
         <div class="pkg-price">€1 950</div>
-        <div class="pkg-duration">Срок ведения: 2–4 месяца</div>
+        <div class="pkg-duration" data-en="Duration: 2–4 months">Срок ведения: 2–4 месяца</div>
       </div>
       <div class="pkg-body">
         <ul>
-          <li>Подбор программ (до 5 университетов)</li>
-          <li>Аудит и проверка документов</li>
-          <li>Подача через платформы университетов</li>
-          <li>Отслеживание статуса и зачисление</li>
-          <li>Экстренная поддержка 24 часа, 7 дней в неделю</li>
+          <li data-en="Program selection (up to 5 universities)">Подбор программ (до 5 университетов)</li>
+          <li data-en="Document audit and verification">Аудит и проверка документов</li>
+          <li data-en="Submission through university platforms">Подача через платформы университетов</li>
+          <li data-en="Status tracking and enrollment">Отслеживание статуса и зачисление</li>
+          <li data-en="Emergency support 24 hours, 7 days a week">Экстренная поддержка 24 часа, 7 дней в неделю</li>
         </ul>
       </div>
     </div>
 
     <div class="pkg-card p2">
       <div class="pkg-head">
-        <div class="pkg-tag">Пакет 2</div>
-        <div class="pkg-name">Полный пакет</div>
+        <div class="pkg-tag" data-en="Package 2">Пакет 2</div>
+        <div class="pkg-name" data-en="Full Package">Полный пакет</div>
         <div class="pkg-price">€2 340</div>
-        <div class="pkg-duration">Срок ведения: 2 года</div>
+        <div class="pkg-duration" data-en="Duration: 2 years">Срок ведения: 2 года</div>
       </div>
       <div class="pkg-body">
         <ul>
-          <li>Всё из Пакета 1, а также:</li>
-          <li>Стипендия DSU/EDISU и расчёт ISEE</li>
-          <li>Codice Fiscale и открытие банковского счёта</li>
-          <li>Сопровождение на весь срок обучения</li>
-          <li>Стипендия: €7 000 в год, общежитие и питание</li>
+          <li data-en="Everything in Package 1, plus:">Всё из Пакета 1, а также:</li>
+          <li data-en="DSU/EDISU scholarship and ISEE calculation">Стипендия DSU/EDISU и расчёт ISEE</li>
+          <li data-en="Codice Fiscale and bank account setup">Codice Fiscale и открытие банковского счёта</li>
+          <li data-en="Support throughout the entire study period">Сопровождение на весь срок обучения</li>
+          <li data-en="Scholarship: €7,000 per year, housing and meals">Стипендия: €7 000 в год, общежитие и питание</li>
         </ul>
       </div>
     </div>
@@ -1043,55 +1064,55 @@
 
 <!-- ─── What We Provide ─── -->
 <section id="provide" class="fade-in">
-  <div class="section-tag">Что мы делаем</div>
-  <div class="section-title">Полный спектр услуг</div>
-  <div class="section-sub">От первого контакта до диплома — мы ведём студента на каждом этапе.</div>
+  <div class="section-tag" data-en="What We Do">Что мы делаем</div>
+  <div class="section-title" data-en="Full range of services">Полный спектр услуг</div>
+  <div class="section-sub" data-en="From first contact to diploma — we guide the student at every stage.">От первого контакта до диплома — мы ведём студента на каждом этапе.</div>
 
   <div class="provide-grid">
     <div class="provide-card">
       <span class="icon">📋</span>
-      <h4>Подбор программ</h4>
-      <p>3–5 университетов под профиль, бюджет и языковой уровень студента.</p>
+      <h4 data-en="Program selection">Подбор программ</h4>
+      <p data-en="3–5 universities matched to the student's profile, budget, and language level.">3–5 университетов под профиль, бюджет и языковой уровень студента.</p>
     </div>
     <div class="provide-card">
       <span class="icon">📝</span>
-      <h4>Аудит документов</h4>
-      <p>Диплом, транскрипт, апостилирование, перевод — проверяем и координируем.</p>
+      <h4 data-en="Document audit">Аудит документов</h4>
+      <p data-en="Diploma, transcript, apostille, translation — we verify and coordinate.">Диплом, транскрипт, апостилирование, перевод — проверяем и координируем.</p>
     </div>
     <div class="provide-card">
       <span class="icon">🎓</span>
-      <h4>Подача в вузы</h4>
-      <p>Регистрация на Universitaly, подача через платформы университетов, отслеживание.</p>
+      <h4 data-en="University applications">Подача в вузы</h4>
+      <p data-en="Universitaly registration, submission through university platforms, tracking.">Регистрация на Universitaly, подача через платформы университетов, отслеживание.</p>
     </div>
     <div class="provide-card">
       <span class="icon">💰</span>
-      <h4>Стипендия DSU/EDISU</h4>
-      <p>Подготовка ISEE, заявка на стипендию и общежитие, апелляции при отказе, продление.</p>
+      <h4 data-en="DSU/EDISU Scholarship">Стипендия DSU/EDISU</h4>
+      <p data-en="ISEE preparation, scholarship and housing application, appeals if rejected, renewal.">Подготовка ISEE, заявка на стипендию и общежитие, апелляции при отказе, продление.</p>
     </div>
     <div class="provide-card">
       <span class="icon">🆔</span>
-      <h4>Codice Fiscale + банк</h4>
-      <p>Помощь в получении налогового номера и открытии итальянского банковского счёта.</p>
+      <h4 data-en="Codice Fiscale + bank">Codice Fiscale + банк</h4>
+      <p data-en="Assistance with obtaining a tax number and opening an Italian bank account.">Помощь в получении налогового номера и открытии итальянского банковского счёта.</p>
     </div>
     <div class="provide-card">
       <span class="icon">🏠</span>
-      <h4>Поиск жилья</h4>
-      <p>Комната, квартира, договор аренды — ищем жильё до прилёта студента.</p>
+      <h4 data-en="Housing search">Поиск жилья</h4>
+      <p data-en="Room, apartment, lease agreement — we find housing before the student arrives.">Комната, квартира, договор аренды — ищем жильё до прилёта студента.</p>
     </div>
     <div class="provide-card">
       <span class="icon">✈️</span>
-      <h4>Аэропорт-встреча</h4>
-      <p>Встреча в аэропорту Рима/Милана, трансфер до места проживания.</p>
+      <h4 data-en="Airport pickup">Аэропорт-встреча</h4>
+      <p data-en="Pickup at Rome/Milan airport, transfer to the place of residence.">Встреча в аэропорту Рима/Милана, трансфер до места проживания.</p>
     </div>
     <div class="provide-card">
       <span class="icon">📱</span>
-      <h4>Адаптация</h4>
-      <p>SIM-карта, знакомство с городом, магазинами, транспортом — первый месяц.</p>
+      <h4 data-en="Adaptation">Адаптация</h4>
+      <p data-en="SIM card, introduction to the city, shops, transport — first month.">SIM-карта, знакомство с городом, магазинами, транспортом — первый месяц.</p>
     </div>
     <div class="provide-card">
       <span class="icon">🚨</span>
-      <h4>Экстренная поддержка 24/7</h4>
-      <p>Горячая линия для студентов и родителей. Локальный контакт в каждом городе.</p>
+      <h4 data-en="Emergency support 24/7">Экстренная поддержка 24/7</h4>
+      <p data-en="Hotline for students and parents. Local contact in every city.">Горячая линия для студентов и родителей. Локальный контакт в каждом городе.</p>
     </div>
   </div>
 </section>
@@ -1099,33 +1120,33 @@
 <!-- ─── Process Timeline ─── -->
 <section id="process" class="fade-in">
   <div class="process-section">
-    <div class="section-tag">Процесс</div>
-    <div class="section-title">Как это работает</div>
-    <div class="section-sub">От первого контакта до прилёта в Италию — четыре этапа.</div>
+    <div class="section-tag" data-en="Process">Процесс</div>
+    <div class="section-title" data-en="How it works">Как это работает</div>
+    <div class="section-sub" data-en="From first contact to arrival in Italy — four stages.">От первого контакта до прилёта в Италию — четыре этапа.</div>
 
     <div class="timeline">
       <div class="step">
         <div class="step-circle">1</div>
-        <h4>Консультация и подбор</h4>
-        <p>Оценка профиля студента, подбор 3–5 программ, аудит документов</p>
+        <h4 data-en="Consultation and selection">Консультация и подбор</h4>
+        <p data-en="Student profile assessment, selection of 3–5 programs, document audit">Оценка профиля студента, подбор 3–5 программ, аудит документов</p>
         <span class="pct">30%</span>
       </div>
       <div class="step">
         <div class="step-circle">2</div>
-        <h4>Подача и зачисление</h4>
-        <p>Регистрация на Universitaly, подача в вузы, получение подтверждения</p>
+        <h4 data-en="Application and enrollment">Подача и зачисление</h4>
+        <p data-en="Universitaly registration, university applications, receiving confirmation">Регистрация на Universitaly, подача в вузы, получение подтверждения</p>
         <span class="pct">30%</span>
       </div>
       <div class="step">
         <div class="step-circle">3</div>
-        <h4>Стипендия и виза</h4>
-        <p>Заявка DSU/EDISU, подготовка ISEE, подача на визу, Codice Fiscale</p>
+        <h4 data-en="Scholarship and visa">Стипендия и виза</h4>
+        <p data-en="DSU/EDISU application, ISEE preparation, visa submission, Codice Fiscale">Заявка DSU/EDISU, подготовка ISEE, подача на визу, Codice Fiscale</p>
         <span class="pct">40%</span>
       </div>
       <div class="step">
         <div class="step-circle">4</div>
-        <h4>Прилёт и адаптация</h4>
-        <p>Аэропорт-встреча, жильё, SIM, знакомство с городом — старт обучения</p>
+        <h4 data-en="Arrival and adaptation">Прилёт и адаптация</h4>
+        <p data-en="Airport pickup, housing, SIM, city introduction — studies begin">Аэропорт-встреча, жильё, SIM, знакомство с городом — старт обучения</p>
         <span class="pct">✓</span>
       </div>
     </div>
@@ -1134,32 +1155,32 @@
 
 <!-- ─── Additional Services ─── -->
 <section id="addons" class="fade-in">
-  <div class="section-tag">Дополнительно</div>
-  <div class="section-title">База данных и дополнительные услуги</div>
+  <div class="section-tag" data-en="Additional">Дополнительно</div>
+  <div class="section-title" data-en="Database and additional services">База данных и дополнительные услуги</div>
 
   <div class="addon-banner">
     <div class="addon-icon">🗄️</div>
     <div class="addon-content">
-      <h4>База данных университетов и программ</h4>
-      <p>У нас есть собственная база данных итальянских университетов, программ, требований к поступлению, сроков и стипендий. Доступ к базе доступен как дополнительная услуга.</p>
-      <span class="addon-badge">Опционально · По запросу</span>
+      <h4 data-en="University and program database">База данных университетов и программ</h4>
+      <p data-en="We have our own database of Italian universities, programs, admission requirements, deadlines, and scholarships. Access to the database is available as an additional service.">У нас есть собственная база данных итальянских университетов, программ, требований к поступлению, сроков и стипендий. Доступ к базе доступен как дополнительная услуга.</p>
+      <span class="addon-badge" data-en="Optional · On request">Опционально · По запросу</span>
     </div>
   </div>
 
   <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
     <div class="provide-card" style="text-align: center; padding: 20px 16px;">
       <span class="icon">🏠</span>
-      <h4>Поиск жилья</h4>
+      <h4 data-en="Housing search">Поиск жилья</h4>
       <p style="color: var(--electric); font-weight: 700; font-size: 16px;">€455</p>
     </div>
     <div class="provide-card" style="text-align: center; padding: 20px 16px;">
       <span class="icon">✈️</span>
-      <h4>Аэропорт-встреча</h4>
+      <h4 data-en="Airport pickup">Аэропорт-встреча</h4>
       <p style="color: var(--lime-d); font-weight: 700; font-size: 16px;">€130</p>
     </div>
     <div class="provide-card" style="text-align: center; padding: 20px 16px;">
       <span class="icon">📱</span>
-      <h4>Адаптация (1 мес.)</h4>
+      <h4 data-en="Adaptation (1 month)">Адаптация (1 мес.)</h4>
       <p style="color: var(--amber); font-weight: 700; font-size: 16px;">€520</p>
     </div>
     <div class="provide-card" style="text-align: center; padding: 20px 16px;">
@@ -1172,80 +1193,80 @@
 
 <!-- ─── Location ─── -->
 <section id="location" class="fade-in">
-  <div class="section-tag">Локация</div>
-  <div class="section-title">Где мы находимся</div>
-  <div class="section-sub">Мы в Италии — работаем с университетами и госорганами лично.</div>
+  <div class="section-tag" data-en="Location">Локация</div>
+  <div class="section-title" data-en="Where we are">Где мы находимся</div>
+  <div class="section-sub" data-en="We are in Italy — working with universities and government agencies in person.">Мы в Италии — работаем с университетами и госорганами лично.</div>
 
   <div class="location-grid">
     <div class="location-info">
-      <h3>Edupath Education — Италия, Lazio</h3>
-      <p>Мы базируемся в регионе Лацио (под Римом) и работаем с университетами по всей Италии лично. Это значит, что мы можем решать бюрократические вопросы оперативно — от Codice Fiscale до апелляции по стипендии.</p>
+      <h3 data-en="Edupath Education — Italy, Lazio">Edupath Education — Италия, Lazio</h3>
+      <p data-en="We are based in the Lazio region (near Rome) and work with universities across Italy in person. This means we can resolve bureaucratic issues quickly — from Codice Fiscale to scholarship appeals.">Мы базируемся в регионе Лацио (под Римом) и работаем с университетами по всей Италии лично. Это значит, что мы можем решать бюрократические вопросы оперативно — от Codice Fiscale до апелляции по стипендии.</p>
       <div class="location-meta">
         <div class="location-meta-item">
           <div class="dot" style="background: var(--electric);"></div>
-          <span><strong>Юридический адрес:</strong> Via Roma 37, Италия</span>
+          <span data-en="<strong>Legal address:</strong> Via Roma 37, Italy"><strong>Юридический адрес:</strong> Via Roma 37, Италия</span>
         </div>
         <div class="location-meta-item">
           <div class="dot" style="background: var(--coral);"></div>
-          <span><strong>Локальные контакты:</strong> Представители в каждом университетском городе</span>
+          <span data-en="<strong>Local contacts:</strong> Representatives in every university city"><strong>Локальные контакты:</strong> Представители в каждом университетском городе</span>
         </div>
         <div class="location-meta-item">
           <div class="dot" style="background: var(--lime);"></div>
-          <span><strong>Языки работы:</strong> Русский, итальянский, английский</span>
+          <span data-en="<strong>Working languages:</strong> Russian, Italian, English"><strong>Языки работы:</strong> Русский, итальянский, английский</span>
         </div>
         <div class="location-meta-item">
           <div class="dot" style="background: var(--amber);"></div>
-          <span><strong>Часовой пояс:</strong> CET (UTC+1) — работаем в рабочие часы Италии</span>
+          <span data-en="<strong>Time zone:</strong> CET (UTC+1) — we work during Italian business hours"><strong>Часовой пояс:</strong> CET (UTC+1) — работаем в рабочие часы Италии</span>
         </div>
       </div>
     </div>
     <div class="location-map">
       <div class="pin">📍</div>
       <div class="city">Lazio</div>
-      <div class="country">Италия · Под Римом</div>
+      <div class="country" data-en="Italy · Near Rome">Италия · Под Римом</div>
     </div>
   </div>
 </section>
 
 <!-- ─── Corporation ─── -->
 <section id="corp" class="fade-in">
-  <div class="section-tag">О компании</div>
+  <div class="section-tag" data-en="About the company">О компании</div>
   <div class="section-title">Edupath Education</div>
-  <div class="section-sub">Консалтинговая компания, базирующаяся в Италии. B2B университетский канал.</div>
+  <div class="section-sub" data-en="A consulting company based in Italy. B2B university channel.">Консалтинговая компания, базирующаяся в Италии. B2B университетский канал.</div>
 
   <div class="corp-card">
     <div class="corp-grid">
       <div class="corp-item">
-        <div class="label">Руководитель</div>
+        <div class="label" data-en="Director">Руководитель</div>
         <div class="value">Anar Hasanov</div>
       </div>
       <div class="corp-item">
-        <div class="label">Локация</div>
-        <div class="value">Италия, Lazio (под Римом)</div>
+        <div class="label" data-en="Location">Локация</div>
+        <div class="value" data-en="Italy, Lazio (near Rome)">Италия, Lazio (под Римом)</div>
       </div>
       <div class="corp-item">
-        <div class="label">Юридический адрес</div>
-        <div class="value">Via Roma 37, Италия</div>
+        <div class="label" data-en="Legal address">Юридический адрес</div>
+        <div class="value" data-en="Via Roma 37, Italy">Via Roma 37, Италия</div>
       </div>
       <div class="corp-item">
-        <div class="label">Модель работы</div>
-        <div class="value">B2B университетский канал (до 30 студентов/год)</div>
+        <div class="label" data-en="Business model">Модель работы</div>
+        <div class="value" data-en="B2B university channel (up to 30 students/year)">B2B университетский канал (до 30 студентов/год)</div>
       </div>
       <div class="corp-item">
-        <div class="label">Специализация</div>
-        <div class="value">Стипендии DSU/EDISU, поступление, сопровождение</div>
+        <div class="label" data-en="Specialization">Специализация</div>
+        <div class="value" data-en="DSU/EDISU scholarships, admission, ongoing support">Стипендии DSU/EDISU, поступление, сопровождение</div>
       </div>
       <div class="corp-item">
-        <div class="label">Итальянские университеты</div>
+        <div class="label" data-en="Italian universities">Итальянские университеты</div>
         <div class="value">Bologna, Padova, Sapienza, PoliMi, PoliTo, Iuav и др.</div>
       </div>
       <div class="corp-item">
-        <div class="label">Страны-источники</div>
-        <div class="value">Азербайджан, Казахстан, страны СНГ</div>
+        <div class="label" data-en="Source countries">Страны-источники</div>
+        <div class="value" data-en="Azerbaijan, Kazakhstan, CIS countries">Азербайджан, Казахстан, страны СНГ</div>
       </div>
       <div class="corp-item">
-        <div class="label">Языки</div>
-        <div class="value">Русский, итальянский, английский</div>
+        <div class="label" data-en="Languages">Языки</div>
+        <div class="value" data-en="Russian, Italian, English">Русский, итальянский, английский</div>
       </div>
     </div>
   </div>
@@ -1253,23 +1274,23 @@
 
 <!-- ─── Reviews / Отзывы ─── -->
 <section id="reviews" class="fade-in reviews-section">
-  <div class="section-tag">Отзывы</div>
-  <div class="section-title">Истории наших студентов</div>
-  <div class="section-sub">Студенты из стран Центральной Азии, которые поступили через Edupath и теперь строят карьеру в Европе.</div>
+  <div class="section-tag" data-en="Reviews">Отзывы</div>
+  <div class="section-title" data-en="Our students' stories">Истории наших студентов</div>
+  <div class="section-sub" data-en="Students from Central Asia who enrolled through Edupath and are now building careers in Europe.">Студенты из стран Центральной Азии, которые поступили через Edupath и теперь строят карьеру в Европе.</div>
 
   <div class="reviews-grid">
 
     <div class="review-card">
       <div class="quote-mark">&ldquo;</div>
-      <div class="review-text">Edupath помогли мне с поступлением в Sapienza, когда я даже не знала, с чего начать. Полностью сопровождали — от мотивационного письма до визы. Я получила стипендию DSU, которая покрывает жильё и питание. Сейчас работаю в Риме.</div>
+      <div class="review-text" data-en="Edupath helped me get into Sapienza when I didn't even know where to start. They guided me through everything — from the motivation letter to the visa. I received a DSU scholarship that covers housing and meals. Now I work in Rome.">Edupath помогли мне с поступлением в Sapienza, когда я даже не знала, с чего начать. Полностью сопровождали — от мотивационного письма до визы. Я получила стипендию DSU, которая покрывает жильё и питание. Сейчас работаю в Риме.</div>
       <div class="review-author">
         <div class="review-avatar">A</div>
         <div>
           <div class="review-name">Aysel H.</div>
-          <div class="review-from">Баку, Азербайджан → Рим, Италия</div>
+          <div class="review-from" data-en="Baku, Azerbaijan → Rome, Italy">Баку, Азербайджан → Рим, Италия</div>
         </div>
       </div>
-      <div class="review-result">
+      <div class="review-result" data-en="<strong>University</strong> Sapienza Università di Roma, Economics<br><strong>Career</strong> Financial Analyst, Banca Intesa (Rome)">
         <strong>Университет</strong>
         Sapienza Università di Roma, Economics
         <br><strong>Карьера</strong>
@@ -1279,15 +1300,15 @@
 
     <div class="review-card">
       <div class="quote-mark">&ldquo;</div>
-      <div class="review-text">Я думал, что учёба в Италии — это невозможно без связей. Edupath доказали обратное. Меня зачислили в Politecnico di Milano на информатику. Стипендия полностью покрывает обучение. Сейчас работаю в Милане в IT-компании.</div>
+      <div class="review-text" data-en="I thought studying in Italy was impossible without connections. Edupath proved otherwise. I was admitted to Politecnico di Milano for computer science. The scholarship fully covers tuition. Now I work at an IT company in Milan.">Я думал, что учёба в Италии — это невозможно без связей. Edupath доказали обратное. Меня зачислили в Politecnico di Milano на информатику. Стипендия полностью покрывает обучение. Сейчас работаю в Милане в IT-компании.</div>
       <div class="review-author">
         <div class="review-avatar">R</div>
         <div>
           <div class="review-name">Rustam K.</div>
-          <div class="review-from">Алматы, Казахстан → Милан, Италия</div>
+          <div class="review-from" data-en="Almaty, Kazakhstan → Milan, Italy">Алматы, Казахстан → Милан, Италия</div>
         </div>
       </div>
-      <div class="review-result">
+      <div class="review-result" data-en="<strong>University</strong> Politecnico di Milano, Master's in Computer Science<br><strong>Career</strong> Software Engineer, PwC Italy (Milan)">
         <strong>Университет</strong>
         Politecnico di Milano, магистратура «Информатика»
         <br><strong>Карьера</strong>
@@ -1297,15 +1318,15 @@
 
     <div class="review-card">
       <div class="quote-mark">&ldquo;</div>
-      <div class="review-text">Команда Edupath помогла мне выбрать программу на английском в Università di Bologna и подготовить все документы. Получила региональную стипендию ERDISU. После окончания магистратуры осталась работать в Болонье.</div>
+      <div class="review-text" data-en="The Edupath team helped me choose an English-taught program at Università di Bologna and prepare all documents. I received the regional ERDISU scholarship. After completing my master's, I stayed to work in Bologna.">Команда Edupath помогла мне выбрать программу на английском в Università di Bologna и подготовить все документы. Получила региональную стипендию ERDISU. После окончания магистратуры осталась работать в Болонье.</div>
       <div class="review-author">
         <div class="review-avatar">D</div>
         <div>
           <div class="review-name">Dilnaz A.</div>
-          <div class="review-from">Астана, Казахстан → Болонья, Италия</div>
+          <div class="review-from" data-en="Astana, Kazakhstan → Bologna, Italy">Астана, Казахстан → Болонья, Италия</div>
         </div>
       </div>
-      <div class="review-result">
+      <div class="review-result" data-en="<strong>University</strong> Università di Bologna, International Management<br><strong>Career</strong> Marketing Manager, L'Oréal Italy (Bologna)">
         <strong>Университет</strong>
         Università di Bologna, «Международный менеджмент»
         <br><strong>Карьера</strong>
@@ -1315,15 +1336,15 @@
 
     <div class="review-card">
       <div class="quote-mark">&ldquo;</div>
-      <div class="review-text">Поступил в Politecnico di Torino на аэрокосмическую инженерию. Edupath взяли на себя всё — от перевода документов до подачи на визу. Стипендия покрывает жильё. Сейчас работаю инженером в Турине — город авиационной промышленности Италии.</div>
+      <div class="review-text" data-en="I enrolled at Politecnico di Torino for aerospace engineering. Edupath handled everything — from document translation to visa application. The scholarship covers housing. Now I work as an engineer in Turin — Italy's aviation industry hub.">Поступил в Politecnico di Torino на аэрокосмическую инженерию. Edupath взяли на себя всё — от перевода документов до подачи на визу. Стипендия покрывает жильё. Сейчас работаю инженером в Турине — город авиационной промышленности Италии.</div>
       <div class="review-author">
         <div class="review-avatar">E</div>
         <div>
           <div class="review-name">Eldar M.</div>
-          <div class="review-from">Баку, Азербайджан → Турин, Италия</div>
+          <div class="review-from" data-en="Baku, Azerbaijan → Turin, Italy">Баку, Азербайджан → Турин, Италия</div>
         </div>
       </div>
-      <div class="review-result">
+      <div class="review-result" data-en="<strong>University</strong> Politecnico di Torino, Master's in Aerospace Engineering<br><strong>Career</strong> Aerospace Engineer, Leonardo S.p.A. (Turin)">
         <strong>Университет</strong>
         Politecnico di Torino, магистратура «Аэрокосмическая инженерия»
         <br><strong>Карьера</strong>
@@ -1333,15 +1354,15 @@
 
     <div class="review-card">
       <div class="quote-mark">&ldquo;</div>
-      <div class="review-text">Я хотела изучать дизайн в Италии, но не знала, какие вузы предлагают программы на английском. Edupath нашли идеальный вариант — Politecnico di Milano, Digital and Interaction Design. Сейчас работаю UX-дизайнером в международной компании.</div>
+      <div class="review-text" data-en="I wanted to study design in Italy but didn't know which universities offer English-taught programs. Edupath found the perfect option — Politecnico di Milano, Digital and Interaction Design. Now I work as a UX designer at an international company.">Я хотела изучать дизайн в Италии, но не знала, какие вузы предлагают программы на английском. Edupath нашли идеальный вариант — Politecnico di Milano, Digital and Interaction Design. Сейчас работаю UX-дизайнером в международной компании.</div>
       <div class="review-author">
         <div class="review-avatar">M</div>
         <div>
           <div class="review-name">Madina S.</div>
-          <div class="review-from">Шымкент, Казахстан → Милан, Италия</div>
+          <div class="review-from" data-en="Shymkent, Kazakhstan → Milan, Italy">Шымкент, Казахстан → Милан, Италия</div>
         </div>
       </div>
-      <div class="review-result">
+      <div class="review-result" data-en="<strong>University</strong> Politecnico di Milano, Digital &amp; Interaction Design<br><strong>Career</strong> UX Designer, Accenture Digital (Milan)">
         <strong>Университет</strong>
         Politecnico di Milano, Digital & Interaction Design
         <br><strong>Карьера</strong>
@@ -1351,15 +1372,15 @@
 
     <div class="review-card">
       <div class="quote-mark">&ldquo;</div>
-      <div class="review-text">Edupath помогли мне поступить в Università di Bologna на программу «Бизнес и менеджмент». Всё было чётко — дедлайны, документы, мотивационное письмо. Получил стипендию DSU. После выпуска основал свой стартап в Италии.</div>
+      <div class="review-text" data-en="Edupath helped me enroll at Università di Bologna in the Business and Management program. Everything was clear — deadlines, documents, motivation letter. I received a DSU scholarship. After graduation, I founded my own startup in Italy.">Edupath помогли мне поступить в Università di Bologna на программу «Бизнес и менеджмент». Всё было чётко — дедлайны, документы, мотивационное письмо. Получил стипендию DSU. После выпуска основал свой стартап в Италии.</div>
       <div class="review-author">
         <div class="review-avatar">T</div>
         <div>
           <div class="review-name">Togrul N.</div>
-          <div class="review-from">Гянджа, Азербайджан → Болонья, Италия</div>
+          <div class="review-from" data-en="Ganja, Azerbaijan → Bologna, Italy">Гянджа, Азербайджан → Болонья, Италия</div>
         </div>
       </div>
-      <div class="review-result">
+      <div class="review-result" data-en="<strong>University</strong> Università di Bologna, Master's in Business and Management<br><strong>Career</strong> Co-founder and CEO, fintech startup (Bologna)">
         <strong>Университет</strong>
         Università di Bologna, магистратура «Бизнес и менеджмент»
         <br><strong>Карьера</strong>
@@ -1373,11 +1394,11 @@
 <!-- ─── CTA ─── -->
 <section id="contact" class="fade-in">
   <div class="cta-section">
-    <h2>Готовы начать путь к европейскому образованию?</h2>
-    <p>Подайте заявку или забронируйте бесплатную консультацию — мы ответим в течение 24 часов.</p>
+    <h2 data-en="Ready to start your journey to European education?">Готовы начать путь к европейскому образованию?</h2>
+    <p data-en="Submit an application or book a free consultation — we'll respond within 24 hours.">Подайте заявку или забронируйте бесплатную консультацию — мы ответим в течение 24 часов.</p>
     <div class="cta-buttons">
-      <a href="login.html" class="cta-btn apply">📋 Подать заявку</a>
-      <button class="cta-btn consult" onclick="openConsultModal()">📅 Бесплатная консультация</button>
+      <a href="login.html" class="cta-btn apply" data-en="📋 Apply now">📋 Подать заявку</a>
+      <button class="cta-btn consult" onclick="openConsultModal()" data-en="📅 Free consultation">📅 Бесплатная консультация</button>
     </div>
   </div>
 </section>
@@ -1387,43 +1408,43 @@
   <div class="pub-modal" style="position:relative;">
     <button class="pub-close" onclick="closeConsult()">&times;</button>
     <div id="consultFormView">
-      <h2>📅 Бесплатная консультация</h2>
-      <p class="pub-sub">Запишитесь на бесплатный 30-минутный звонок с нашим консультантом. Регистрация не нужна — просто выберите удобное время.</p>
+      <h2 data-en="📅 Free consultation">📅 Бесплатная консультация</h2>
+      <p class="pub-sub" data-en="Book a free 30-minute call with our consultant. No registration needed — just pick a convenient time.">Запишитесь на бесплатный 30-минутный звонок с нашим консультантом. Регистрация не нужна — просто выберите удобное время.</p>
 
       <div class="pub-field">
-        <label>Ваше имя *</label>
-        <input type="text" id="consult-name" placeholder="Иван Иванов">
+        <label data-en="Your name *">Ваше имя *</label>
+        <input type="text" id="consult-name" placeholder="Иван Иванов" data-en-placeholder="John Smith">
       </div>
       <div class="pub-field">
         <label>Email *</label>
         <input type="email" id="consult-email" placeholder="you@example.com">
       </div>
       <div class="pub-field">
-        <label>Телефон / WhatsApp</label>
+        <label data-en="Phone / WhatsApp">Телефон / WhatsApp</label>
         <input type="text" id="consult-phone" placeholder="+994 50 123 45 67">
       </div>
 
-      <div class="pub-section-title">Выберите день</div>
+      <div class="pub-section-title" data-en="Choose a day">Выберите день</div>
       <div class="day-tabs" id="consultDayTabs"></div>
 
-      <div class="pub-section-title">Свободные слоты времени</div>
+      <div class="pub-section-title" data-en="Available time slots">Свободные слоты времени</div>
       <div class="tz-info" id="consultTzInfo"></div>
       <div class="slot-grid" id="consultSlotGrid"></div>
 
       <div class="pub-summary" id="consultSummary">
-        <strong>Ваша консультация:</strong><br>
+        <strong data-en="Your consultation:">Ваша консультация:</strong><br>
         <span id="consultSummaryText"></span>
       </div>
 
-      <button class="pub-btn" id="consultConfirmBtn" disabled onclick="submitConsult()">Подтвердить запись</button>
+      <button class="pub-btn" id="consultConfirmBtn" disabled onclick="submitConsult()" data-en="Confirm booking">Подтвердить запись</button>
       <div class="pub-status" id="consultStatus"></div>
     </div>
     <div id="consultSuccessView" style="display:none;">
       <div class="pub-success-view">
         <div class="check-icon">✓</div>
-        <h2>Запись подтверждена!</h2>
+        <h2 data-en="Booking confirmed!">Запись подтверждена!</h2>
         <p class="pub-sub" id="consultSuccessText"></p>
-        <button class="pub-btn" onclick="closeConsult()">Готово</button>
+        <button class="pub-btn" onclick="closeConsult()" data-en="Done">Готово</button>
       </div>
     </div>
   </div>
@@ -1432,36 +1453,36 @@
 <!-- ─── Ticket Modal (public, no login needed) ─── -->
 <!-- ─── Contact Form ─── -->
 <section id="contact-form" class="fade-in">
-  <div class="section-tag">Связаться с нами</div>
-  <div class="section-title">Отправьте нам сообщение</div>
-  <div class="section-sub">Заполните форму — мы ответим в течение 24 часов.</div>
+  <div class="section-tag" data-en="Contact us">Связаться с нами</div>
+  <div class="section-title" data-en="Send us a message">Отправьте нам сообщение</div>
+  <div class="section-sub" data-en="Fill out the form — we'll respond within 24 hours.">Заполните форму — мы ответим в течение 24 часов.</div>
 
   <div class="contact-form">
     <div class="form-group">
-      <label for="cf-name">Ваше имя</label>
-      <input type="text" id="cf-name" placeholder="Иван Иванов" required>
+      <label for="cf-name" data-en="Your name">Ваше имя</label>
+      <input type="text" id="cf-name" placeholder="Иван Иванов" data-en-placeholder="John Smith" required>
     </div>
     <div class="form-group">
       <label for="cf-email">Email</label>
       <input type="email" id="cf-email" placeholder="ivan@example.com" required>
     </div>
     <div class="form-group">
-      <label for="cf-phone">Телефон</label>
+      <label for="cf-phone" data-en="Phone">Телефон</label>
       <input type="tel" id="cf-phone" placeholder="+994 50 123 45 67" required>
     </div>
     <div class="form-group">
-      <label for="cf-whatsapp">WhatsApp <span style="text-transform:none; font-weight:400; color:var(--gray);">(необязательно)</span></label>
+      <label for="cf-whatsapp" data-en="WhatsApp <span style='text-transform:none; font-weight:400; color:var(--gray);'>(optional)</span>">WhatsApp <span style="text-transform:none; font-weight:400; color:var(--gray);">(необязательно)</span></label>
       <input type="text" id="cf-whatsapp" placeholder="+994 50 123 45 67">
     </div>
     <div class="form-group">
-      <label for="cf-telegram">Telegram <span style="text-transform:none; font-weight:400; color:var(--gray);">(необязательно)</span></label>
+      <label for="cf-telegram" data-en="Telegram <span style='text-transform:none; font-weight:400; color:var(--gray);'>(optional)</span>">Telegram <span style="text-transform:none; font-weight:400; color:var(--gray);">(необязательно)</span></label>
       <input type="text" id="cf-telegram" placeholder="@username">
     </div>
     <div class="form-group">
-      <label for="cf-message">Сообщение</label>
-      <textarea id="cf-message" placeholder="Расскажите о вашем студенте или вопросе..." required></textarea>
+      <label for="cf-message" data-en="Message">Сообщение</label>
+      <textarea id="cf-message" placeholder="Расскажите о вашем студенте или вопросе..." data-en-placeholder="Tell us about your student or question..." required></textarea>
     </div>
-    <button class="submit-btn" id="cf-submit" onclick="sendContactForm()">Отправить сообщение</button>
+    <button class="submit-btn" id="cf-submit" onclick="sendContactForm()" data-en="Send message">Отправить сообщение</button>
     <div class="form-status" id="cf-status"></div>
   </div>
 </section>
@@ -1469,12 +1490,23 @@
 <!-- ─── Footer ─── -->
 <footer>
   <div class="brand">Edupath <span>Education</span></div>
-  <p>Edupath Education · Италия, Lazio · Via Roma 37, Италия<br>
+  <p data-en="Edupath Education · Italy, Lazio · Via Roma 37, Italy<br>Admission to Italian universities">Edupath Education · Италия, Lazio · Via Roma 37, Италия<br>
   Поступление в университеты Италии</p>
   <a href="admin.html" style="color:rgba(255,255,255,0.15); font-size:10px; text-decoration:none; margin-top:8px; display:inline-block;">·</a>
 </footer>
 
 <script>
+  // ─── i18n helper for dynamic JS text ───
+  function lang() { return localStorage.getItem('edupath_lang') || 'ru'; }
+  const L = (ru, en) => lang() === 'en' ? en : ru;
+
+  // Re-render consultation modal & contact form when language changes
+  window.addEventListener('langchange', () => {
+    if (document.getElementById('consultOverlay').classList.contains('active')) {
+      openConsultModal();
+    }
+  });
+
   // Scroll fade-in animation
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -1573,15 +1605,19 @@
 
   function openConsultModal() {
     const localTz = getLocalTz().replace(/_/g, ' ');
-    document.getElementById('consultTzInfo').textContent = 'Время показано в вашем часовом поясе (' + localTz + '). Мы работаем 9:00–17:00 по итальянскому времени.';
+    document.getElementById('consultTzInfo').textContent = L(
+      'Время показано в вашем часовом поясе (' + localTz + '). Мы работаем 9:00–17:00 по итальянскому времени.',
+      'Times shown in your timezone (' + localTz + '). We work 9:00 AM – 5:00 PM Italian time.'
+    );
     const days = getNextWorkdays(5);
     consultSelectedDay = null; consultSelectedSlot = null;
     const tabsEl = document.getElementById('consultDayTabs');
     tabsEl.innerHTML = '';
+    const localeStr = lang() === 'en' ? 'en-US' : 'ru-RU';
     days.forEach((day, i) => {
       const tab = document.createElement('div');
       tab.className = 'day-tab';
-      tab.textContent = day.toLocaleDateString('ru-RU', { weekday: 'short', month: 'short', day: 'numeric' });
+      tab.textContent = day.toLocaleDateString(localeStr, { weekday: 'short', month: 'short', day: 'numeric' });
       tab.onclick = () => consultSelectDay(i, day);
       tabsEl.appendChild(tab);
     });
@@ -1622,8 +1658,8 @@
     const s = document.getElementById('consultSummary');
     const btn = document.getElementById('consultConfirmBtn');
     if (consultSelectedDay && consultSelectedSlot) {
-      const dayStr = consultSelectedDay.toLocaleDateString('ru-RU', { weekday: 'long', month: 'long', day: 'numeric' });
-      document.getElementById('consultSummaryText').innerHTML = dayStr + ' в ' + consultSelectedSlot.localTime + ' <span style="color:var(--gray);font-size:11px;">(' + consultSelectedSlot.localTz + ')</span><br><span style="color:var(--gray);font-size:11px;">Итальянское время: ' + consultSelectedSlot.italyTime + ' (Europe/Rome)</span>';
+      const dayStr = consultSelectedDay.toLocaleDateString(localeStr, { weekday: 'long', month: 'long', day: 'numeric' });
+      document.getElementById('consultSummaryText').innerHTML = dayStr + ' ' + L('в', 'at') + ' ' + consultSelectedSlot.localTime + ' <span style="color:var(--gray);font-size:11px;">(' + consultSelectedSlot.localTz + ')</span><br><span style="color:var(--gray);font-size:11px;">' + L('Итальянское время:', 'Italian time:') + ' ' + consultSelectedSlot.italyTime + ' (Europe/Rome)</span>';
       s.style.display = 'block';
       btn.disabled = false;
     } else {
@@ -1639,12 +1675,12 @@
     if (!name || !email || !consultSelectedDay || !consultSelectedSlot) {
       const st = document.getElementById('consultStatus');
       st.className = 'pub-status error';
-      st.textContent = 'Пожалуйста, укажите имя, email и выберите время.';
+      st.textContent = L('Пожалуйста, укажите имя, email и выберите время.', 'Please enter your name, email, and select a time.');
       return;
     }
     const btn = document.getElementById('consultConfirmBtn');
-    btn.disabled = true; btn.textContent = 'Запись...';
-    const dayStr = consultSelectedDay.toLocaleDateString('ru-RU', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    btn.disabled = true; btn.textContent = L('Запись...', 'Booking...');
+    const dayStr = consultSelectedDay.toLocaleDateString(localeStr, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
     try {
       const res = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/public-consultation', {
         method: 'POST',
@@ -1655,18 +1691,21 @@
       if (data.success) {
         document.getElementById('consultFormView').style.display = 'none';
         document.getElementById('consultSuccessView').style.display = 'block';
-        document.getElementById('consultSuccessText').innerHTML = 'Ваша консультация назначена на<br><strong>' + dayStr + ' в ' + consultSelectedSlot.localTime + ' (' + consultSelectedSlot.localTz + ')</strong><br><br>Мы свяжемся с вами по <strong>' + email + '</strong> с ссылкой на встречу.';
+        document.getElementById('consultSuccessText').innerHTML = L(
+          'Ваша консультация назначена на<br><strong>' + dayStr + ' в ' + consultSelectedSlot.localTime + ' (' + consultSelectedSlot.localTz + ')</strong><br><br>Мы свяжемся с вами по <strong>' + email + '</strong> с ссылкой на встречу.',
+          'Your consultation is scheduled for<br><strong>' + dayStr + ' at ' + consultSelectedSlot.localTime + ' (' + consultSelectedSlot.localTz + ')</strong><br><br>We\'ll contact you at <strong>' + email + '</strong> with the meeting link.'
+        );
       } else {
         const st = document.getElementById('consultStatus');
         st.className = 'pub-status error';
-        st.textContent = data.message || 'Ошибка записи. Попробуйте ещё раз.';
-        btn.disabled = false; btn.textContent = 'Подтвердить запись';
+        st.textContent = data.message || L('Ошибка записи. Попробуйте ещё раз.', 'Booking error. Please try again.');
+        btn.disabled = false; btn.textContent = L('Подтвердить запись', 'Confirm booking');
       }
     } catch (err) {
       const st = document.getElementById('consultStatus');
       st.className = 'pub-status error';
-      st.textContent = 'Ошибка сети. Попробуйте ещё раз.';
-      btn.disabled = false; btn.textContent = 'Подтвердить запись';
+      st.textContent = L('Ошибка сети. Попробуйте ещё раз.', 'Network error. Please try again.');
+      btn.disabled = false; btn.textContent = L('Подтвердить запись', 'Confirm booking');
     }
   }
 
@@ -1690,12 +1729,12 @@
 
     if (!name || !email || !phone || !message) {
       status.className = 'form-status error';
-      status.textContent = 'Пожалуйста, заполните обязательные поля.';
+      status.textContent = L('Пожалуйста, заполните обязательные поля.', 'Please fill in the required fields.');
       return;
     }
 
     btn.disabled = true;
-    btn.textContent = 'Отправка...';
+    btn.textContent = L('Отправка...', 'Sending...');
 
     try {
       const resp = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/send-contact', {
@@ -1706,7 +1745,10 @@
       const data = await resp.json();
       if (data.success) {
         status.className = 'form-status success';
-        status.innerHTML = '🎉 Поздравляем! Ваше сообщение успешно отправлено. Мы свяжемся с вами в ближайшее время.';
+        status.innerHTML = L(
+          '🎉 Поздравляем! Ваше сообщение успешно отправлено. Мы свяжемся с вами в ближайшее время.',
+          '🎉 Congratulations! Your message has been sent successfully. We\'ll contact you shortly.'
+        );
         document.getElementById('cf-name').value = '';
         document.getElementById('cf-email').value = '';
         document.getElementById('cf-phone').value = '';
@@ -1714,14 +1756,14 @@
         document.getElementById('cf-telegram').value = '';
         document.getElementById('cf-message').value = '';
       } else {
-        throw new Error(data.message || 'Ошибка отправки');
+        throw new Error(data.message || L('Ошибка отправки', 'Sending error'));
       }
     } catch (err) {
       status.className = 'form-status error';
-      status.textContent = 'Ошибка отправки. Попробуйте снова или напишите на hasanov.anar.2023@gmail.com';
+      status.textContent = L('Ошибка отправки. Попробуйте снова или напишите на hasanov.anar.2023@gmail.com', 'Sending error. Please try again or email hasanov.anar.2023@gmail.com');
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Отправить сообщение';
+      btn.textContent = L('Отправить сообщение', 'Send message');
     }
   }
 </script>

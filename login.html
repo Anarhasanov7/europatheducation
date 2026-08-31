@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Login — EuroPath Education</title>
+<title data-en="Student Login — EuroPath Education">Вход для студентов — EuroPath Education</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -48,52 +48,64 @@
   .google-btn:hover { background:#f8f9fa; }
   .google-btn:disabled { opacity:0.5; cursor:wait; }
   .google-btn svg { width:20px; height:20px; }
+  .lang-toggle { display: flex; align-items: center; gap: 4px; position: absolute; top: 16px; right: 20px; z-index: 999; }
+  .lang-btn { font-size: 18px; line-height: 1; cursor: pointer; border: 2px solid transparent; border-radius: 6px; padding: 4px 6px; background: transparent; transition: all 0.2s; opacity: 0.5; }
+  .lang-btn:hover { opacity: 0.8; }
+  .lang-btn.active { opacity: 1; border-color: #1a73e8; background: rgba(26,115,232,0.1); }
 </style>
 </head>
 <body>
 
+<div class="lang-toggle">
+  <button class="lang-btn" id="lang-ru" onclick="edupathI18n.setLang('ru')" title="Русский">🇷🇺</button>
+  <button class="lang-btn" id="lang-en" onclick="edupathI18n.setLang('en')" title="English">🇬🇧</button>
+</div>
+<script src="i18n.js"></script>
+
 <div class="card">
-  <h1 id="title">Sign In</h1>
-  <p class="sub" id="subtitle">Access your EuroPath application portal</p>
+  <h1 id="title" data-en="Sign In">Вход в личный кабинет</h1>
+  <p class="sub" id="subtitle" data-en="Access your EuroPath application portal">Войдите в портал заявлений EuroPath</p>
   <div class="error" id="error"></div>
   <div class="info" id="info"></div>
   <form id="form">
-    <label for="email">Email</label>
+    <label for="email" data-en="Email">Email</label>
     <div class="input-wrap">
       <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
     </div>
-    <label for="password">Password</label>
+    <label for="password" data-en="Password">Пароль</label>
     <div class="input-wrap">
       <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
-      <span class="pw-toggle" id="pwToggle">Show</span>
+      <span class="pw-toggle" id="pwToggle" data-en="Show">Показать</span>
     </div>
     <div class="pw-strength" id="pwStrength" style="display:none;">
       <div class="pw-bar" id="pwBar"></div>
       <div class="pw-label" id="pwLabel"></div>
     </div>
     <div class="forgot" id="forgotLink" style="display:none;">
-      <a id="resetPw">Forgot password?</a>
+      <a id="resetPw" data-en="Forgot password?">Забыли пароль?</a>
     </div>
-    <button type="submit" id="btn">Sign In</button>
+    <button type="submit" id="btn" data-en="Sign In">Войти</button>
   </form>
-  <div class="divider"><span>or</span></div>
+  <div class="divider"><span data-en="or">или</span></div>
   <button class="github-btn" id="githubBtn" onclick="signInWithGitHub()">
     <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    Continue with GitHub
+    <span data-en="Continue with GitHub">Продолжить с GitHub</span>
   </button>
   <button class="google-btn" id="googleBtn" onclick="signInWithGoogle()">
     <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-    Continue with Google
+    <span data-en="Continue with Google">Продолжить с Google</span>
   </button>
   <div class="toggle">
-    <span id="toggleText">New student?</span>
-    <a id="toggleLink">Create account</a>
+    <span id="toggleText" data-en="New student?">Новый студент?</span>
+    <a id="toggleLink" data-en="Create account">Создать аккаунт</a>
   </div>
-  <div class="back"><a href="index.html">← Back to homepage</a></div>
-  <div id="status">Loading...</div>
+  <div class="back"><a href="index.html" data-en="← Back to homepage">← Назад на главную</a></div>
+  <div id="status" data-en="Loading...">Загрузка...</div>
 </div>
 
 <script>
+function lang() { return localStorage.getItem('edupath_lang') || 'ru'; }
+
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 
@@ -129,7 +141,7 @@ script.onload = () => {
   });
 };
 script.onerror = () => {
-  statusEl.textContent = 'Failed to load. Please refresh.';
+  statusEl.textContent = lang() === 'en' ? 'Failed to load. Please refresh.' : 'Ошибка загрузки. Обновите страницу.';
   btn.disabled = true;
 };
 document.head.appendChild(script);
@@ -137,13 +149,13 @@ document.head.appendChild(script);
 // GitHub OAuth
 async function signInWithGitHub() {
   if (!sb) {
-    error.textContent = 'Still loading, please wait 2 seconds and try again.';
+    error.textContent = lang() === 'en' ? 'Still loading, please wait 2 seconds and try again.' : 'Загрузка, подождите 2 секунды и попробуйте снова.';
     error.style.display = 'block';
     return;
   }
   const githubBtn = document.getElementById('githubBtn');
   githubBtn.disabled = true;
-  githubBtn.textContent = 'Redirecting...';
+  githubBtn.textContent = lang() === 'en' ? 'Redirecting...' : 'Перенаправление...';
   try {
     const { data, error: err } = await sb.auth.signInWithOAuth({
       provider: 'github',
@@ -151,23 +163,23 @@ async function signInWithGitHub() {
     });
     if (err) throw err;
   } catch (err) {
-    error.textContent = err.message || 'GitHub sign-in failed.';
+    error.textContent = err.message || (lang() === 'en' ? 'GitHub sign-in failed.' : 'Ошибка входа через GitHub.');
     error.style.display = 'block';
     githubBtn.disabled = false;
-    githubBtn.innerHTML = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> Continue with GitHub';
+    githubBtn.innerHTML = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> ' + (lang() === 'en' ? 'Continue with GitHub' : 'Продолжить с GitHub');
   }
 }
 
 // Google OAuth
 async function signInWithGoogle() {
   if (!sb) {
-    error.textContent = 'Still loading, please wait 2 seconds and try again.';
+    error.textContent = lang() === 'en' ? 'Still loading, please wait 2 seconds and try again.' : 'Загрузка, подождите 2 секунды и попробуйте снова.';
     error.style.display = 'block';
     return;
   }
   const googleBtn = document.getElementById('googleBtn');
   googleBtn.disabled = true;
-  googleBtn.textContent = 'Redirecting...';
+  googleBtn.textContent = lang() === 'en' ? 'Redirecting...' : 'Перенаправление...';
   try {
     const { data, error: err } = await sb.auth.signInWithOAuth({
       provider: 'google',
@@ -175,10 +187,10 @@ async function signInWithGoogle() {
     });
     if (err) throw err;
   } catch (err) {
-    error.textContent = err.message || 'Google sign-in failed.';
+    error.textContent = err.message || (lang() === 'en' ? 'Google sign-in failed.' : 'Ошибка входа через Google.');
     error.style.display = 'block';
     googleBtn.disabled = false;
-    googleBtn.innerHTML = '<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Continue with Google';
+    googleBtn.innerHTML = '<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> ' + (lang() === 'en' ? 'Continue with Google' : 'Продолжить с Google');
   }
 }
 
@@ -186,10 +198,10 @@ async function signInWithGoogle() {
 pwToggle.addEventListener('click', () => {
   if (pwInput.type === 'password') {
     pwInput.type = 'text';
-    pwToggle.textContent = 'Hide';
+    pwToggle.textContent = lang() === 'en' ? 'Hide' : 'Скрыть';
   } else {
     pwInput.type = 'password';
-    pwToggle.textContent = 'Show';
+    pwToggle.textContent = lang() === 'en' ? 'Show' : 'Показать';
   }
 });
 
@@ -206,7 +218,9 @@ pwInput.addEventListener('input', () => {
   if (/[^A-Za-z0-9]/.test(pw)) score++;
   const pct = (score / 5) * 100;
   pwBar.style.width = pct + '%';
-  const labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Excellent'];
+  const labels = lang() === 'en'
+    ? ['', 'Weak', 'Fair', 'Good', 'Strong', 'Excellent']
+    : ['', 'Слабый', 'Средний', 'Хороший', 'Надёжный', 'Отличный'];
   const colors = ['', '#ff5c3d', '#ffb800', '#3ddfff', '#c6ff3d', '#22c55e'];
   pwBar.style.background = colors[score];
   pwLabel.textContent = labels[score];
@@ -215,16 +229,26 @@ pwInput.addEventListener('input', () => {
 
 toggleLink.addEventListener('click', () => {
   isLogin = !isLogin;
-  title.textContent = isLogin ? 'Sign In' : 'Create Account';
-  subtitle.textContent = isLogin ? 'Access your EuroPath application portal' : 'Start your European university application';
-  btn.textContent = isLogin ? 'Sign In' : 'Create Account';
-  toggleText.textContent = isLogin ? 'New student?' : 'Already have an account?';
-  toggleLink.textContent = isLogin ? 'Create account' : 'Sign in';
+  title.textContent = isLogin
+    ? (lang() === 'en' ? 'Sign In' : 'Вход в личный кабинет')
+    : (lang() === 'en' ? 'Create Account' : 'Создать аккаунт');
+  subtitle.textContent = isLogin
+    ? (lang() === 'en' ? 'Access your EuroPath application portal' : 'Войдите в портал заявлений EuroPath')
+    : (lang() === 'en' ? 'Start your European university application' : 'Начните заявку в европейский университет');
+  btn.textContent = isLogin
+    ? (lang() === 'en' ? 'Sign In' : 'Войти')
+    : (lang() === 'en' ? 'Create Account' : 'Создать аккаунт');
+  toggleText.textContent = isLogin
+    ? (lang() === 'en' ? 'New student?' : 'Новый студент?')
+    : (lang() === 'en' ? 'Already have an account?' : 'Уже есть аккаунт?');
+  toggleLink.textContent = isLogin
+    ? (lang() === 'en' ? 'Create account' : 'Создать аккаунт')
+    : (lang() === 'en' ? 'Sign in' : 'Войти');
   error.style.display = 'none';
   info.style.display = 'none';
   pwStrength.style.display = isLogin ? 'none' : 'block';
   forgotLink.style.display = isLogin ? 'block' : 'none';
-  demoBox.style.display = isLogin ? 'block' : 'none';
+  if (demoBox) demoBox.style.display = isLogin ? 'block' : 'none';
   pwInput.value = '';
   pwBar.style.width = '0%';
   pwLabel.textContent = '';
@@ -234,7 +258,9 @@ toggleLink.addEventListener('click', () => {
 resetPw.addEventListener('click', async () => {
   const email = document.getElementById('email').value.trim().toLowerCase();
   if (!email) {
-    error.textContent = 'Enter your email above first, then click "Forgot password?"';
+    error.textContent = lang() === 'en'
+      ? 'Enter your email above first, then click "Forgot password?"'
+      : 'Введите email выше, затем нажмите «Забыли пароль?»';
     error.style.display = 'block';
     return;
   }
@@ -243,7 +269,9 @@ resetPw.addEventListener('click', async () => {
   try {
     const { error: err } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
     if (err) throw err;
-    info.innerHTML = 'Password reset link sent to <strong>' + email + '</strong>. Check your inbox.';
+    info.innerHTML = lang() === 'en'
+      ? 'Password reset link sent to <strong>' + email + '</strong>. Check your inbox.'
+      : 'Ссылка для сброса пароля отправлена на <strong>' + email + '</strong>. Проверьте почту.';
     info.style.display = 'block';
     error.style.display = 'none';
   } catch (err) {
@@ -258,7 +286,7 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   if (!sb) {
-    error.textContent = 'Still loading, please wait 2 seconds and try again.';
+    error.textContent = lang() === 'en' ? 'Still loading, please wait 2 seconds and try again.' : 'Загрузка, подождите 2 секунды и попробуйте снова.';
     error.style.display = 'block';
     return;
   }
@@ -273,7 +301,7 @@ form.addEventListener('submit', async (e) => {
   info.style.display = 'none';
 
   if (!email || !password) {
-    error.textContent = 'Please fill in both fields.';
+    error.textContent = lang() === 'en' ? 'Please fill in both fields.' : 'Пожалуйста, заполните оба поля.';
     error.style.display = 'block';
     if (!email) document.getElementById('email').classList.add('invalid');
     if (!password) pwInput.classList.add('invalid');
@@ -282,19 +310,19 @@ form.addEventListener('submit', async (e) => {
 
   if (!isLogin) {
     if (password.length < 8) {
-      error.textContent = 'Password must be at least 8 characters.';
+      error.textContent = lang() === 'en' ? 'Password must be at least 8 characters.' : 'Пароль должен содержать не менее 8 символов.';
       error.style.display = 'block';
       pwInput.classList.add('invalid');
       return;
     }
     if (!/[A-Z]/.test(password)) {
-      error.textContent = 'Password must contain at least one uppercase letter.';
+      error.textContent = lang() === 'en' ? 'Password must contain at least one uppercase letter.' : 'Пароль должен содержать хотя бы одну заглавную букву.';
       error.style.display = 'block';
       pwInput.classList.add('invalid');
       return;
     }
     if (!/[0-9]/.test(password)) {
-      error.textContent = 'Password must contain at least one number.';
+      error.textContent = lang() === 'en' ? 'Password must contain at least one number.' : 'Пароль должен содержать хотя бы одну цифру.';
       error.style.display = 'block';
       pwInput.classList.add('invalid');
       return;
@@ -302,7 +330,9 @@ form.addEventListener('submit', async (e) => {
   }
 
   btn.disabled = true;
-  btn.textContent = isLogin ? 'Signing in...' : 'Creating account...';
+  btn.textContent = isLogin
+    ? (lang() === 'en' ? 'Signing in...' : 'Вход...')
+    : (lang() === 'en' ? 'Creating account...' : 'Создание аккаунта...');
 
   try {
     if (isLogin) {
@@ -315,29 +345,33 @@ form.addEventListener('submit', async (e) => {
       if (data.user && data.session) {
         window.location.href = 'dashboard.html';
       } else if (data.user && !data.session) {
-        info.innerHTML = 'Account created! Check your email to confirm, then sign in.';
+        info.innerHTML = lang() === 'en'
+          ? 'Account created! Check your email to confirm, then sign in.'
+          : 'Аккаунт создан! Проверьте почту для подтверждения, затем войдите.';
         info.style.display = 'block';
         isLogin = true;
-        title.textContent = 'Sign In';
-        btn.textContent = 'Sign In';
-        toggleText.textContent = 'New student?';
-        toggleLink.textContent = 'Create account';
+        title.textContent = lang() === 'en' ? 'Sign In' : 'Вход в личный кабинет';
+        btn.textContent = lang() === 'en' ? 'Sign In' : 'Войти';
+        toggleText.textContent = lang() === 'en' ? 'New student?' : 'Новый студент?';
+        toggleLink.textContent = lang() === 'en' ? 'Create account' : 'Создать аккаунт';
         pwStrength.style.display = 'none';
         forgotLink.style.display = 'block';
       } else {
-        info.textContent = 'Account created! You can now sign in.';
+        info.textContent = lang() === 'en' ? 'Account created! You can now sign in.' : 'Аккаунт создан! Теперь вы можете войти.';
         info.style.display = 'block';
         isLogin = true;
-        title.textContent = 'Sign In';
-        btn.textContent = 'Sign In';
+        title.textContent = lang() === 'en' ? 'Sign In' : 'Вход в личный кабинет';
+        btn.textContent = lang() === 'en' ? 'Sign In' : 'Войти';
       }
     }
   } catch (err) {
-    error.textContent = err.message || 'Something went wrong.';
+    error.textContent = err.message || (lang() === 'en' ? 'Something went wrong.' : 'Что-то пошло не так.');
     error.style.display = 'block';
   } finally {
     btn.disabled = false;
-    btn.textContent = isLogin ? 'Sign In' : 'Create Account';
+    btn.textContent = isLogin
+      ? (lang() === 'en' ? 'Sign In' : 'Войти')
+      : (lang() === 'en' ? 'Create Account' : 'Создать аккаунт');
   }
 });
 </script>
