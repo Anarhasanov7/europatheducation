@@ -183,126 +183,126 @@
 
   <div class="grid-2">
     <div class="card">
-      <h3>Profile & Program</h3>
-      <label for="fullName">Full name</label>
-      <input type="text" id="fullName" placeholder="Your full name">
-      <div class="field-hint" id="hint-fullName">Please enter your full name</div>
-      <label for="country">Preferred country</label>
-      <select id="country"><option value="">Select country</option><option value="Italy">Italy</option><option value="France">France</option></select>
-      <div class="field-hint" id="hint-country">Please select a country</div>
+      <h3 data-en="Profile & Program">Профиль и программа</h3>
+      <label for="fullName" data-en="Full name">Полное имя</label>
+      <input type="text" id="fullName" placeholder="Ваше полное имя" data-en-placeholder="Your full name">
+      <div class="field-hint" id="hint-fullName" data-en="Please enter your full name">Пожалуйста, введите ваше полное имя</div>
+      <label for="country" data-en="Preferred country">Предпочитаемая страна</label>
+      <select id="country"><option value="" data-en="Select country">Выберите страну</option><option value="Italy">Италия</option><option value="France">Франция</option></select>
+      <div class="field-hint" id="hint-country" data-en="Please select a country">Пожалуйста, выберите страну</div>
 
       <div class="filter-row">
-        <label class="filter-toggle"><input type="checkbox" id="englishOnly" checked> English-taught only</label>
+        <label class="filter-toggle"><input type="checkbox" id="englishOnly" checked> <span data-en="English-taught only">Только на английском</span></label>
       </div>
       <div class="filter-row">
-        <select id="fieldFilter" class="filter-select"><option value="">All fields</option></select>
-        <select id="levelFilter" class="filter-select"><option value="">All levels</option><option value="BSc">Bachelor (BSc)</option><option value="MSc">Master (MSc)</option></select>
+        <select id="fieldFilter" class="filter-select"><option value="" data-en="All fields">Все направления</option></select>
+        <select id="levelFilter" class="filter-select"><option value="" data-en="All levels">Все уровни</option><option value="BSc" data-en="Bachelor (BSc)">Бакалавриат (BSc)</option><option value="MSc" data-en="Master (MSc)">Магистратура (MSc)</option></select>
       </div>
 
-      <label for="university">University</label>
-      <select id="university" disabled><option value="">Select country first</option></select>
+      <label for="university" data-en="University">Университет</label>
+      <select id="university" disabled><option value="" data-en="Select country first">Сначала выберите страну</option></select>
       <div class="uni-info" id="uniInfo"></div>
-      <label for="program">Program</label>
-      <select id="program" disabled><option value="">Select university first</option></select>
+      <label for="program" data-en="Program">Программа</label>
+      <select id="program" disabled><option value="" data-en="Select university first">Сначала выберите университет</option></select>
       <div class="program-count" id="programCount"></div>
-      <button type="button" id="addProgramBtn" class="add-program-btn" disabled>+ Add this program (0/3 selected)</button>
-      <div class="field-hint" id="hint-programs">Please add at least one program</div>
+      <button type="button" id="addProgramBtn" class="add-program-btn" disabled>+ Добавить программу (0/3 выбрано)</button>
+      <div class="field-hint" id="hint-programs" data-en="Please add at least one program">Пожалуйста, добавьте хотя бы одну программу</div>
 
       <div class="selected-programs" id="selectedPrograms"></div>
     </div>
 
     <div class="card">
-      <h3>About You</h3>
-      <p style="font-size:13px; color:#666; margin-bottom:14px;">Tell us about yourself and your current studies.</p>
+      <h3 data-en="About You">О вас</h3>
+      <p style="font-size:13px; color:#666; margin-bottom:14px;" data-en="Tell us about yourself and your current studies.">Расскажите о себе и вашем текущем обучении.</p>
 
-      <label for="dateOfBirth">Date of birth</label>
+      <label for="dateOfBirth" data-en="Date of birth">Дата рождения</label>
       <input type="date" id="dateOfBirth" oninput="markDirty()">
 
-      <label for="currentCity">Where are you studying now?</label>
-      <input type="text" id="currentCity" placeholder="e.g. Baku, Azerbaijan" oninput="markDirty()">
+      <label for="currentCity" data-en="Where are you studying now?">Где вы учитесь сейчас?</label>
+      <input type="text" id="currentCity" placeholder="напр. Баку, Азербайджан" data-en-placeholder="e.g. Baku, Azerbaijan" oninput="markDirty()">
 
-      <label for="currentUni">Current university name</label>
-      <input type="text" id="currentUni" placeholder="e.g. Azerbaijan Cooperation University" oninput="markDirty()">
+      <label for="currentUni" data-en="Current university name">Название текущего университета</label>
+      <input type="text" id="currentUni" placeholder="напр. Азербайджанский кооперативный университет" data-en-placeholder="e.g. Azerbaijan Cooperation University" oninput="markDirty()">
 
-      <label for="currentDegree">Degree</label>
+      <label for="currentDegree" data-en="Degree">Степень</label>
       <select id="currentDegree" onchange="markDirty()">
-        <option value="">Select degree</option>
-        <option value="High School">High School / Secondary</option>
-        <option value="Bachelor">Bachelor's (ongoing)</option>
-        <option value="Bachelor Completed">Bachelor's (completed)</option>
-        <option value="Master">Master's (ongoing)</option>
-        <option value="Master Completed">Master's (completed)</option>
-        <option value="Other">Other</option>
+        <option value="" data-en="Select degree">Выберите степень</option>
+        <option value="High School" data-en="High School / Secondary">Аттестат / Среднее образование</option>
+        <option value="Bachelor" data-en="Bachelor's (ongoing)">Бакалавриат (продолжается)</option>
+        <option value="Bachelor Completed" data-en="Bachelor's (completed)">Бакалавриат (завершён)</option>
+        <option value="Master" data-en="Master's (ongoing)">Магистратура (продолжается)</option>
+        <option value="Master Completed" data-en="Master's (completed)">Магистратура (завершена)</option>
+        <option value="Other" data-en="Other">Другое</option>
       </select>
 
-      <label for="currentFaculty">Which faculty are you in?</label>
-      <input type="text" id="currentFaculty" placeholder="e.g. Faculty of Economics, Faculty of Engineering" oninput="markDirty()">
+      <label for="currentFaculty" data-en="Which faculty are you in?">На каком факультете вы учитесь?</label>
+      <input type="text" id="currentFaculty" placeholder="напр. Экономический факультет, Инженерный факультет" data-en-placeholder="e.g. Faculty of Economics, Faculty of Engineering" oninput="markDirty()">
 
-      <label for="studyStart">When did you start?</label>
+      <label for="studyStart" data-en="When did you start?">Когда вы начали обучение?</label>
       <input type="month" id="studyStart" oninput="markDirty()">
 
-      <label for="studyDuration">How long is your program? (years)</label>
-      <input type="number" id="studyDuration" min="1" max="8" placeholder="e.g. 4" oninput="markDirty()">
+      <label for="studyDuration" data-en="How long is your program? (years)">Сколько длится ваша программа? (лет)</label>
+      <input type="number" id="studyDuration" min="1" max="8" placeholder="напр. 4" data-en-placeholder="e.g. 4" oninput="markDirty()">
     </div>
 
     <div class="card">
-      <h3>Required Documents (max 5 MB each, PDF or images only)</h3>
+      <h3 data-en="Required Documents (max 5 MB each, PDF or images only)">Обязательные документы (макс 5 МБ, PDF или изображения)</h3>
       <div class="doc-list" id="docList">
-        <div class="doc-item"><div class="name">Passport</div><div class="status" id="st-passport">Not uploaded</div><input type="file" data-doc="passport" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint">PDF, PNG, or JPG · max 5 MB</div><div class="doc-actions" id="actions-passport" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('passport')">Download</button><button class="doc-btn delete" onclick="deleteDoc('passport')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">Diploma</div><div class="status" id="st-diploma">Not uploaded</div><input type="file" data-doc="diploma" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint">PDF, PNG, or JPG · max 5 MB</div><div class="doc-actions" id="actions-diploma" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('diploma')">Download</button><button class="doc-btn delete" onclick="deleteDoc('diploma')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">Transcript</div><div class="status" id="st-transcript">Not uploaded</div><input type="file" data-doc="transcript" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint">PDF, PNG, or JPG · max 5 MB</div><div class="doc-actions" id="actions-transcript" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('transcript')">Download</button><button class="doc-btn delete" onclick="deleteDoc('transcript')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">Motivation Letter</div><div class="status" id="st-motivation">Not uploaded</div><input type="file" data-doc="motivation" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint">PDF, PNG, or JPG · max 5 MB</div><div class="doc-actions" id="actions-motivation" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('motivation')">Download</button><button class="doc-btn delete" onclick="deleteDoc('motivation')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">CV / Resume</div><div class="status" id="st-cv">Not uploaded</div><input type="file" data-doc="cv" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint">PDF, PNG, or JPG · max 5 MB</div><div class="doc-actions" id="actions-cv" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('cv')">Download</button><button class="doc-btn delete" onclick="deleteDoc('cv')">Delete</button></div></div>
-        <div class="doc-item"><div class="name">English Certificate</div><div class="status" id="st-english">Not uploaded</div><input type="file" data-doc="english" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint">PDF, PNG, or JPG · max 5 MB</div><div class="doc-actions" id="actions-english" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('english')">Download</button><button class="doc-btn delete" onclick="deleteDoc('english')">Delete</button></div></div>
+        <div class="doc-item"><div class="name" data-en="Passport">Паспорт</div><div class="status" id="st-passport" data-en="Not uploaded">Не загружено</div><input type="file" data-doc="passport" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint" data-en="PDF, PNG, or JPG · max 5 MB">PDF, PNG или JPG · макс 5 МБ</div><div class="doc-actions" id="actions-passport" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('passport')" data-en="Download">Скачать</button><button class="doc-btn delete" onclick="deleteDoc('passport')" data-en="Delete">Удалить</button></div></div>
+        <div class="doc-item"><div class="name" data-en="Diploma">Диплом</div><div class="status" id="st-diploma" data-en="Not uploaded">Не загружено</div><input type="file" data-doc="diploma" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint" data-en="PDF, PNG, or JPG · max 5 MB">PDF, PNG или JPG · макс 5 МБ</div><div class="doc-actions" id="actions-diploma" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('diploma')" data-en="Download">Скачать</button><button class="doc-btn delete" onclick="deleteDoc('diploma')" data-en="Delete">Удалить</button></div></div>
+        <div class="doc-item"><div class="name" data-en="Transcript">Транскрипт</div><div class="status" id="st-transcript" data-en="Not uploaded">Не загружено</div><input type="file" data-doc="transcript" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint" data-en="PDF, PNG, or JPG · max 5 MB">PDF, PNG или JPG · макс 5 МБ</div><div class="doc-actions" id="actions-transcript" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('transcript')" data-en="Download">Скачать</button><button class="doc-btn delete" onclick="deleteDoc('transcript')" data-en="Delete">Удалить</button></div></div>
+        <div class="doc-item"><div class="name" data-en="Motivation Letter">Мотивационное письмо</div><div class="status" id="st-motivation" data-en="Not uploaded">Не загружено</div><input type="file" data-doc="motivation" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint" data-en="PDF, PNG, or JPG · max 5 MB">PDF, PNG или JPG · макс 5 МБ</div><div class="doc-actions" id="actions-motivation" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('motivation')" data-en="Download">Скачать</button><button class="doc-btn delete" onclick="deleteDoc('motivation')" data-en="Delete">Удалить</button></div></div>
+        <div class="doc-item"><div class="name" data-en="CV / Resume">CV / Резюме</div><div class="status" id="st-cv" data-en="Not uploaded">Не загружено</div><input type="file" data-doc="cv" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint" data-en="PDF, PNG, or JPG · max 5 MB">PDF, PNG или JPG · макс 5 МБ</div><div class="doc-actions" id="actions-cv" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('cv')" data-en="Download">Скачать</button><button class="doc-btn delete" onclick="deleteDoc('cv')" data-en="Delete">Удалить</button></div></div>
+        <div class="doc-item"><div class="name" data-en="English Certificate">Сертификат английского</div><div class="status" id="st-english" data-en="Not uploaded">Не загружено</div><input type="file" data-doc="english" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFile(this)"><div class="doc-hint" data-en="PDF, PNG, or JPG · max 5 MB">PDF, PNG или JPG · макс 5 МБ</div><div class="doc-actions" id="actions-english" style="display:none;"><button class="doc-btn download" onclick="downloadDoc('english')" data-en="Download">Скачать</button><button class="doc-btn delete" onclick="deleteDoc('english')" data-en="Delete">Удалить</button></div></div>
       </div>
     </div>
   </div>
 
   <div class="card" style="margin-top:24px;">
-    <h3>Motivation</h3>
-    <p style="font-size:13px; color:#666; margin-bottom:10px;">Write a short text explaining why you want to study in Italy. Just two sentences or a few lines — be yourself.</p>
-    <textarea id="motivationText" placeholder="e.g. I want to study in Italy because of its strong engineering programs and research opportunities. Studying in an international environment will help me build a global network for my future career." style="width:100%; min-height:100px; padding:12px; border:1px solid #ddd; border-radius:10px; font-size:14px; font-family:inherit; resize:vertical; outline:none;" oninput="markDirty()"></textarea>
-    <div class="field-hint" id="hint-motivation" style="display:none;">Please write a short motivation</div>
+    <h3 data-en="Motivation">Мотивация</h3>
+    <p style="font-size:13px; color:#666; margin-bottom:10px;" data-en="Write a short text explaining why you want to study in Italy. Just two sentences or a few lines — be yourself.">Напишите короткий текст о том, почему вы хотите учиться в Италии. Всего два предложения или несколько строк — будьте собой.</p>
+    <textarea id="motivationText" placeholder="напр. Я хочу учиться в Италии из-за сильных инженерных программ и исследовательских возможностей. Учёба в международной среде поможет мне создать глобальную сеть контактов для будущей карьеры." data-en-placeholder="e.g. I want to study in Italy because of its strong engineering programs and research opportunities. Studying in an international environment will help me build a global network for my future career." style="width:100%; min-height:100px; padding:12px; border:1px solid #ddd; border-radius:10px; font-size:14px; font-family:inherit; resize:vertical; outline:none;" oninput="markDirty()"></textarea>
+    <div class="field-hint" id="hint-motivation" style="display:none;" data-en="Please write a short motivation">Пожалуйста, напишите короткую мотивацию</div>
   </div>
 
   <div class="card" style="margin-top:24px;">
-    <h3>References</h3>
-    <p style="font-size:13px; color:#666; margin-bottom:10px;">List <strong>three professors</strong> you got the highest grades from and who can give you a recommendation. Write their names and the subjects they taught.</p>
+    <h3 data-en="References">Рекомендации</h3>
+    <p style="font-size:13px; color:#666; margin-bottom:10px;" data-en="List <strong>three professors</strong> you got the highest grades from and who can give you a recommendation. Write their names and the subjects they taught.">Перечислите <strong>трёх преподавателей</strong>, у которых вы получили самые высокие оценки и которые могут дать вам рекомендацию. Напишите их имена и предметы, которые они преподавали.</p>
     <div id="referencesContainer">
       <div class="ref-row" style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
-        <input type="text" id="ref1-name" placeholder="Professor name" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
-        <input type="text" id="ref1-subject" placeholder="Subject" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+        <input type="text" id="ref1-name" placeholder="Имя преподавателя" data-en-placeholder="Professor name" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+        <input type="text" id="ref1-subject" placeholder="Предмет" data-en-placeholder="Subject" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
       </div>
       <div class="ref-row" style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
-        <input type="text" id="ref2-name" placeholder="Professor name" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
-        <input type="text" id="ref2-subject" placeholder="Subject" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+        <input type="text" id="ref2-name" placeholder="Имя преподавателя" data-en-placeholder="Professor name" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+        <input type="text" id="ref2-subject" placeholder="Предмет" data-en-placeholder="Subject" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
       </div>
       <div class="ref-row" style="display:flex; gap:10px; margin-bottom:0; align-items:center;">
-        <input type="text" id="ref3-name" placeholder="Professor name" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
-        <input type="text" id="ref3-subject" placeholder="Subject" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+        <input type="text" id="ref3-name" placeholder="Имя преподавателя" data-en-placeholder="Professor name" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
+        <input type="text" id="ref3-subject" placeholder="Предмет" data-en-placeholder="Subject" style="flex:1; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none;" oninput="markDirty()">
       </div>
     </div>
   </div>
 
   <div class="card" style="margin-top:24px;">
-    <h3>Application Steps</h3>
+    <h3 data-en="Application Steps">Шаги заявки</h3>
     <div class="steps">
-      <div class="step"><input type="checkbox" id="step_account" checked disabled><label for="step_account">Create account</label></div>
-      <div class="step"><input type="checkbox" id="step_profile"><label for="step_profile">Complete profile & university selection</label></div>
-      <div class="step"><input type="checkbox" id="step_documents"><label for="step_documents">Upload required documents (at least 4)</label></div>
-      <div class="step"><input type="checkbox" id="step_review"><label for="step_review">Review and confirm application</label></div>
-      <div class="step"><input type="checkbox" id="step_submit"><label for="step_submit">Submit to advisor</label></div>
+      <div class="step"><input type="checkbox" id="step_account" checked disabled><label for="step_account" data-en="Create account">Создать аккаунт</label></div>
+      <div class="step"><input type="checkbox" id="step_profile"><label for="step_profile" data-en="Complete profile & university selection">Заполнить профиль и выбрать университет</label></div>
+      <div class="step"><input type="checkbox" id="step_documents"><label for="step_documents" data-en="Upload required documents (at least 4)">Загрузить документы (минимум 4)</label></div>
+      <div class="step"><input type="checkbox" id="step_review"><label for="step_review" data-en="Review and confirm application">Проверить и подтвердить заявку</label></div>
+      <div class="step"><input type="checkbox" id="step_submit"><label for="step_submit" data-en="Submit to advisor">Отправить консультанту</label></div>
     </div>
     <div class="btn-row">
-      <button class="save" id="saveBtn" onclick="saveApp()">Save Progress</button>
-      <button class="save submit-btn" id="submitBtn" onclick="submitApp()">Submit Application</button>
+      <button class="save" id="saveBtn" onclick="saveApp()" data-en="Save Progress">Сохранить прогресс</button>
+      <button class="save submit-btn" id="submitBtn" onclick="submitApp()" data-en="Submit Application">Отправить заявку</button>
     </div>
   </div>
 
   <div class="summary" id="summaryBox">
-    <h3>Application Summary</h3>
+    <h3 data-en="Application Summary">Сводка заявки</h3>
     <ul id="summaryList">
-      <li>Loading...</li>
+      <li data-en="Loading...">Загрузка...</li>
     </ul>
   </div>
 </div>
@@ -312,32 +312,32 @@
 <!-- ─── Education years modal (shown when BSc is selected) ─── -->
 <div class="booking-overlay" id="eduYearsOverlay">
   <div class="booking-modal" id="eduYearsModal" style="max-width:480px;">
-    <h2 style="margin-bottom:8px;">🎓 Education Background</h2>
-    <p style="color:#666; font-size:14px; margin-bottom:20px;">
-      You selected a <strong>Bachelor's (BSc) program</strong>. To enroll in a bachelor's degree in Italy or France, you need to have completed <strong>11 or 12 years of pre-university education</strong>.
+    <h2 style="margin-bottom:8px;" data-en="🎓 Education Background">🎓 Образование</h2>
+    <p style="color:#666; font-size:14px; margin-bottom:20px;" data-en="You selected a <strong>Bachelor's (BSc) program</strong>. To enroll in a bachelor's degree in Italy or France, you need to have completed <strong>11 or 12 years of pre-university education</strong>.">
+      Вы выбрали <strong>программу бакалавриата (BSc)</strong>. Для поступления на бакалавриат в Италии или Франции необходимо иметь <strong>11 или 12 лет довузовского образования</strong>.
     </p>
     <div style="background:#f0f4ff; border-radius:10px; padding:16px; margin-bottom:20px;">
-      <p style="font-size:15px; font-weight:600; color:#0b1e3f; margin-bottom:12px;">Do you have 11 or 12 years of education?</p>
+      <p style="font-size:15px; font-weight:600; color:#0b1e3f; margin-bottom:12px;" data-en="Do you have 11 or 12 years of education?">У вас 11 или 12 лет образования?</p>
       <div style="display:flex; gap:12px;">
-        <button onclick="eduYearsAnswer(true)" style="flex:1; padding:14px; border:none; border-radius:10px; background:#22c55e; color:#fff; font-size:15px; font-weight:700; cursor:pointer;">✓ Yes, I do</button>
-        <button onclick="eduYearsAnswer(false)" style="flex:1; padding:14px; border:none; border-radius:10px; background:#ef4444; color:#fff; font-size:15px; font-weight:700; cursor:pointer;">✗ No, I don't</button>
+        <button onclick="eduYearsAnswer(true)" style="flex:1; padding:14px; border:none; border-radius:10px; background:#22c55e; color:#fff; font-size:15px; font-weight:700; cursor:pointer;" data-en="✓ Yes, I do">✓ Да, есть</button>
+        <button onclick="eduYearsAnswer(false)" style="flex:1; padding:14px; border:none; border-radius:10px; background:#ef4444; color:#fff; font-size:15px; font-weight:700; cursor:pointer;" data-en="✗ No, I don't">✗ Нет, нет</button>
       </div>
     </div>
-    <button onclick="closeEduYearsModal()" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; background:#fff; font-size:14px; cursor:pointer; color:#666;">Cancel</button>
+    <button onclick="closeEduYearsModal()" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; background:#fff; font-size:14px; cursor:pointer; color:#666;" data-en="Cancel">Отмена</button>
   </div>
 </div>
 
 <!-- ─── Foundation programs modal (shown if education < 11/12 years) ─── -->
 <div class="booking-overlay" id="foundationOverlay">
   <div class="booking-modal" id="foundationModal" style="max-width:600px; max-height:85vh; overflow-y:auto;">
-    <h2 style="margin-bottom:8px;">📚 Foundation Program</h2>
-    <p style="color:#666; font-size:14px; margin-bottom:20px;">
-      Since you have fewer than 11 years of education, you'll need to complete a <strong>foundation year</strong> before starting your bachelor's degree. Here are the available foundation programs in <span id="foundationCountry"></span>:
+    <h2 style="margin-bottom:8px;" data-en="📚 Foundation Program">📚 Подготовительная программа</h2>
+    <p style="color:#666; font-size:14px; margin-bottom:20px;" data-en="Since you have fewer than 11 years of education, you'll need to complete a <strong>foundation year</strong> before starting your bachelor's degree. Here are the available foundation programs in <span id="foundationCountry"></span>:">
+      Поскольку у вас менее 11 лет образования, вам нужно пройти <strong>подготовительный год</strong> перед началом бакалавриата. Вот доступные подготовительные программы в <span id="foundationCountry"></span>:
     </p>
     <div id="foundationList" style="margin-bottom:20px;"></div>
     <div style="display:flex; gap:12px;">
-      <button onclick="selectFoundation()" id="foundationSelectBtn" disabled style="flex:1; padding:14px; border:none; border-radius:10px; background:linear-gradient(135deg, #3ddfff, #c6ff3d); color:#080a14; font-size:15px; font-weight:700; cursor:pointer;">Add selected foundation program</button>
-      <button onclick="closeFoundationModal()" style="padding:14px 20px; border:1px solid #ddd; border-radius:10px; background:#fff; font-size:14px; cursor:pointer; color:#666;">Cancel</button>
+      <button onclick="selectFoundation()" id="foundationSelectBtn" disabled style="flex:1; padding:14px; border:none; border-radius:10px; background:linear-gradient(135deg, #3ddfff, #c6ff3d); color:#080a14; font-size:15px; font-weight:700; cursor:pointer;" data-en="Add selected foundation program">Добавить выбранную программу</button>
+      <button onclick="closeFoundationModal()" style="padding:14px 20px; border:1px solid #ddd; border-radius:10px; background:#fff; font-size:14px; cursor:pointer; color:#666;" data-en="Cancel">Отмена</button>
     </div>
   </div>
 </div>
@@ -347,36 +347,38 @@
   <div class="booking-modal" id="bookingModal">
     <div id="bookingContent">
       <div class="congrats-icon">🎉</div>
-      <h2>Application Submitted!</h2>
-      <p class="congrats-sub">Congratulations! Your application has been received. As a next step, book a <strong>free consultation</strong> with our advisor to discuss your university choices and next steps.</p>
+      <h2 data-en="Application Submitted!">Заявка отправлена!</h2>
+      <p class="congrats-sub" data-en="Congratulations! Your application has been received. As a next step, book a <strong>free consultation</strong> with our advisor to discuss your university choices and next steps.">Поздравляем! Ваша заявка получена. В качестве следующего шага запишитесь на <strong>бесплатную консультацию</strong> с нашим консультантом, чтобы обсудить выбор университета и дальнейшие действия.</p>
 
-      <div class="booking-section-title">Select a day</div>
+      <div class="booking-section-title" data-en="Select a day">Выберите день</div>
       <div class="day-tabs" id="dayTabs"></div>
 
-      <div class="booking-section-title">Available time slots</div>
+      <div class="booking-section-title" data-en="Available time slots">Доступное время</div>
       <div class="tz-info" id="tzInfo"></div>
       <div class="slot-grid" id="slotGrid"></div>
 
       <div class="booking-summary" id="bookingSummary" style="display:none;">
-        <strong>Your consultation:</strong><br>
+        <strong data-en="Your consultation:">Ваша консультация:</strong><br>
         <span id="bookingSummaryText"></span>
       </div>
 
-      <button class="booking-btn" id="confirmBookingBtn" disabled onclick="confirmBooking()">Confirm Booking</button>
-      <button class="booking-skip" onclick="closeBooking()">Skip for now</button>
+      <button class="booking-btn" id="confirmBookingBtn" disabled onclick="confirmBooking()" data-en="Confirm Booking">Подтвердить запись</button>
+      <button class="booking-skip" onclick="closeBooking()" data-en="Skip for now">Пропустить</button>
     </div>
     <div id="bookingSuccess" style="display:none;">
       <div class="booking-success">
         <div class="success-icon">✓</div>
-        <h2>Booking Confirmed!</h2>
+        <h2 data-en="Booking Confirmed!">Запись подтверждена!</h2>
         <p class="congrats-sub" id="bookingSuccessText"></p>
-        <button class="booking-btn" onclick="closeBooking()">Done</button>
+        <button class="booking-btn" onclick="closeBooking()" data-en="Done">Готово</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
+function lang() { return localStorage.getItem('edupath_lang') || 'ru'; }
+
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -394,7 +396,7 @@ sbScript.onload = () => {
   init();
 };
 sbScript.onerror = () => {
-  document.getElementById('summaryList').innerHTML = '<li>Failed to load. Please refresh.</li>';
+  document.getElementById('summaryList').innerHTML = '<li>' + (lang() === 'en' ? 'Failed to load. Please refresh.' : 'Ошибка загрузки. Обновите страницу.') + '</li>';
 };
 document.head.appendChild(sbScript);
 

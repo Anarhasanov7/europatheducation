@@ -176,26 +176,26 @@
 </div>
 
 <div class="stats" id="statsSection" style="display:none;">
-  <div class="stat-card"><div class="label">Total Applications</div><div class="value blue" id="statTotal">0</div></div>
-  <div class="stat-card"><div class="label">Submitted</div><div class="value green" id="statSubmitted">0</div></div>
-  <div class="stat-card"><div class="label">Drafts</div><div class="value orange" id="statDraft">0</div></div>
-  <div class="stat-card"><div class="label">Documents</div><div class="value" id="statDocs">0</div></div>
-  <div class="stat-card"><div class="label">Open Tickets</div><div class="value red" id="statTickets" style="color:var(--red);">0</div></div>
+  <div class="stat-card"><div class="label" data-en="Total Applications">Всего заявок</div><div class="value blue" id="statTotal">0</div></div>
+  <div class="stat-card"><div class="label" data-en="Submitted">Отправленные</div><div class="value green" id="statSubmitted">0</div></div>
+  <div class="stat-card"><div class="label" data-en="Drafts">Черновики</div><div class="value orange" id="statDraft">0</div></div>
+  <div class="stat-card"><div class="label" data-en="Documents">Документы</div><div class="value" id="statDocs">0</div></div>
+  <div class="stat-card"><div class="label" data-en="Open Tickets">Открытые тикеты</div><div class="value red" id="statTickets" style="color:var(--red);">0</div></div>
 </div>
 
 <div class="tab-bar" id="tabBar" style="display:none;">
-  <button class="tab-btn active" id="tabApps" onclick="switchTab('apps')">📋 Applications</button>
-  <button class="tab-btn" id="tabTickets" onclick="switchTab('tickets')">🎫 Tickets <span class="tab-badge zero" id="ticketBadge">0</span></button>
+  <button class="tab-btn active" id="tabApps" onclick="switchTab('apps')" data-en="📋 Applications">📋 Заявки</button>
+  <button class="tab-btn" id="tabTickets" onclick="switchTab('tickets')">🎫 <span data-en="Tickets">Тикеты</span> <span class="tab-badge zero" id="ticketBadge">0</span></button>
 </div>
 
 <div class="filter-bar" id="filterBar" style="display:none;">
-  <input type="text" id="searchInput" placeholder="Search by name, email, university..." oninput="currentPage=1;renderTable()">
+  <input type="text" id="searchInput" placeholder="Поиск по имени, email, университету..." data-en-placeholder="Search by name, email, university..." oninput="currentPage=1;renderTable()">
   <select id="statusFilter" onchange="currentPage=1;renderTable()">
-    <option value="">All Status</option>
-    <option value="submitted">Submitted</option>
-    <option value="draft">Draft</option>
+    <option value="" data-en="All Status">Все статусы</option>
+    <option value="submitted" data-en="Submitted">Отправленные</option>
+    <option value="draft" data-en="Draft">Черновик</option>
   </select>
-  <button onclick="exportCSV()" style="padding:8px 16px; border:1px solid #ddd; border-radius:8px; background:#fff; cursor:pointer; font-size:13px; font-weight:600; margin-left:auto;">Export CSV</button>
+  <button onclick="exportCSV()" style="padding:8px 16px; border:1px solid #ddd; border-radius:8px; background:#fff; cursor:pointer; font-size:13px; font-weight:600; margin-left:auto;" data-en="Export CSV">Экспорт CSV</button>
 </div>
 
 <div class="table-container" id="tableSection" style="display:none;">
@@ -203,13 +203,13 @@
     <table>
       <thead>
         <tr>
-          <th>Student</th>
-          <th>Email</th>
-          <th class="hide-mobile">Country</th>
-          <th class="hide-mobile">Programs</th>
-          <th>Docs</th>
-          <th>Status</th>
-          <th class="hide-mobile">Date</th>
+          <th data-en="Student">Студент</th>
+          <th data-en="Email">Email</th>
+          <th class="hide-mobile" data-en="Country">Страна</th>
+          <th class="hide-mobile" data-en="Programs">Программы</th>
+          <th data-en="Docs">Документы</th>
+          <th data-en="Status">Статус</th>
+          <th class="hide-mobile" data-en="Date">Дата</th>
         </tr>
       </thead>
       <tbody id="appsTableBody"></tbody>
@@ -224,12 +224,12 @@
     <table>
       <thead>
         <tr>
-          <th>Ticket ID</th>
-          <th>Name</th>
-          <th class="hide-mobile">Category</th>
-          <th class="hide-mobile">Subject</th>
-          <th>Status</th>
-          <th class="hide-mobile">Date</th>
+          <th data-en="Ticket ID">ID тикета</th>
+          <th data-en="Name">Имя</th>
+          <th class="hide-mobile" data-en="Category">Категория</th>
+          <th class="hide-mobile" data-en="Subject">Тема</th>
+          <th data-en="Status">Статус</th>
+          <th class="hide-mobile" data-en="Date">Дата</th>
         </tr>
       </thead>
       <tbody id="ticketsTableBody"></tbody>
@@ -244,6 +244,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+function lang() { return localStorage.getItem('edupath_lang') || 'ru'; }
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 let sb;
@@ -281,7 +282,7 @@ async function adminGitHubLogin() {
   const btn = document.getElementById('githubLoginBtn');
   const err = document.getElementById('loginError');
   btn.disabled = true;
-  btn.textContent = 'Redirecting...';
+  btn.textContent = lang() === 'en' ? 'Redirecting...' : 'Перенаправление...';
   err.style.display = 'none';
   try {
     const { data, error: e } = await sb.auth.signInWithOAuth({
@@ -290,10 +291,10 @@ async function adminGitHubLogin() {
     });
     if (e) throw e;
   } catch (e) {
-    err.textContent = e.message || 'GitHub sign-in failed.';
+    err.textContent = e.message || (lang() === 'en' ? 'GitHub sign-in failed.' : 'Ошибка входа через GitHub.');
     err.style.display = 'block';
     btn.disabled = false;
-    btn.innerHTML = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> Continue with GitHub';
+    btn.innerHTML = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> ' + (lang() === 'en' ? 'Continue with GitHub' : 'Продолжить с GitHub');
   }
 }
 
@@ -302,13 +303,13 @@ async function adminLogin() {
   const password = document.getElementById('adminPassword').value;
   const btn = document.getElementById('loginBtn');
   const err = document.getElementById('loginError');
-  btn.disabled = true; btn.textContent = 'Signing in...'; err.style.display = 'none';
+  btn.disabled = true; btn.textContent = lang() === 'en' ? 'Signing in...' : 'Вход...'; err.style.display = 'none';
 
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
   if (error) {
     err.textContent = error.message;
     err.style.display = 'block';
-    btn.disabled = false; btn.textContent = 'Sign In';
+    btn.disabled = false; btn.textContent = lang() === 'en' ? 'Sign In' : 'Войти';
   } else {
     currentUser = data.user;
     showAdmin();
@@ -379,7 +380,7 @@ function renderTable() {
   );
 
   if (filtered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" class="empty"><h3>No applications found</h3></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="empty"><h3>' + (lang() === 'en' ? 'No applications found' : 'Заявки не найдены') + '</h3></td></tr>';
     paginationEl.innerHTML = '';
     return;
   }
@@ -404,7 +405,7 @@ function renderTable() {
       ? progs.map((p, i) => `<div style="margin-bottom:2px;"><strong>${i + 1}.</strong> ${esc(p.university)}<br><span style="color:#666;font-size:11px;">${esc(p.program)}</span></div>`).join('')
       : '—';
     return `<tr onclick="openModal('${esc(a.id)}')">
-      <td><strong>${a.full_name ? esc(a.full_name) : '<span style="color:#ccc">Not provided</span>'}</strong></td>
+      <td><strong>${a.full_name ? esc(a.full_name) : '<span style="color:#ccc">' + (lang() === 'en' ? 'Not provided' : 'Не указано') + '</span>'}</strong></td>
       <td style="font-size:13px;">${esc(a.user_id.slice(0,8))}...</td>
       <td class="hide-mobile">${esc(a.country) || '—'}</td>
       <td class="hide-mobile" style="font-size:12px;">${progsHtml}</td>
@@ -416,7 +417,7 @@ function renderTable() {
 
   // Render pagination controls
   if (totalPages <= 1) {
-    paginationEl.innerHTML = `<span class="page-info">${filtered.length} application${filtered.length !== 1 ? 's' : ''}</span>`;
+    paginationEl.innerHTML = `<span class="page-info">${filtered.length} ${lang() === 'en' ? 'application' : 'заявка'}${filtered.length !== 1 ? (lang() === 'en' ? 's' : '') : ''}</span>`;
   } else {
     let html = '';
     html += `<button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
@@ -430,7 +431,7 @@ function renderTable() {
     }
     html += `<button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
     html += `<button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>»</button>`;
-    html += `<span class="page-info">${filtered.length} total · Page ${currentPage}/${totalPages}</span>`;
+    html += `<span class="page-info">${filtered.length} ${lang() === 'en' ? 'total' : 'всего'} · ${lang() === 'en' ? 'Page' : 'Стр.'} ${currentPage}/${totalPages}</span>`;
     paginationEl.innerHTML = html;
   }
 }
@@ -451,7 +452,9 @@ function exportCSV() {
     (a.country || '').toLowerCase().includes(search)
   );
 
-  const headers = ['Full Name', 'Email', 'Country', 'Program 1', 'Program 2', 'Program 3', 'Documents', 'Status', 'Date'];
+  const headers = lang() === 'en'
+    ? ['Full Name', 'Email', 'Country', 'Program 1', 'Program 2', 'Program 3', 'Documents', 'Status', 'Date']
+    : ['ФИО', 'Email', 'Страна', 'Программа 1', 'Программа 2', 'Программа 3', 'Документы', 'Статус', 'Дата'];
   const rows = filtered.map(a => {
     const userDocs = allDocs.filter(d => d.user_id === a.user_id);
     const date = new Date(a.created_at).toLocaleDateString('en-GB');
@@ -502,9 +505,12 @@ async function openModal(appId) {
     userDocs.forEach(d => { d.retrieved_at = now; });
   }
 
-  const docLabels = {
+  const docLabels = lang() === 'en' ? {
     passport: 'Passport', diploma: 'High School Diploma', transcript: 'Transcript',
     motivation: 'Motivation Letter', cv: 'CV / Resume', english: 'English Certificate'
+  } : {
+    passport: 'Паспорт', diploma: 'Аттестат', transcript: 'Транскрипт',
+    motivation: 'Мотивационное письмо', cv: 'CV / Резюме', english: 'Сертификат английского'
   };
 
   // Generate signed URLs for each doc
@@ -516,10 +522,10 @@ async function openModal(appId) {
       const url = data?.signedUrl || '';
       docRows += `<div class="doc-item">
         <div><span class="doc-type">${docLabels[docType]}</span><span class="doc-file">${esc(doc.file_name)} · ${formatSize(doc.file_size)}</span></div>
-        <a href="${esc(url)}" target="_blank" download>Download</a>
+        <a href="${esc(url)}" target="_blank" download>${lang() === 'en' ? 'Download' : 'Скачать'}</a>
       </div>`;
     } else {
-      docRows += `<div class="doc-item"><div><span class="doc-type" style="color:#ccc;">${docLabels[docType]}</span></div><span class="doc-missing">Not uploaded</span></div>`;
+      docRows += `<div class="doc-item"><div><span class="doc-type" style="color:#ccc;">${docLabels[docType]}</span></div><span class="doc-missing">${lang() === 'en' ? 'Not uploaded' : 'Не загружено'}</span></div>`;
     }
   }
 
@@ -532,40 +538,40 @@ async function openModal(appId) {
     const deleteDate = new Date(retrievedDate.getTime() + 30 * 24 * 60 * 60 * 1000);
     const daysLeft = Math.ceil((deleteDate - new Date()) / (1000 * 60 * 60 * 24));
     deletionInfo = `<div style="margin-top:12px; padding:10px 14px; background:#fff3cd; border-radius:8px; font-size:12px; color:#856404;">
-      <strong>Auto-delete scheduled:</strong> Documents will be permanently deleted in ${daysLeft} day${daysLeft !== 1 ? 's' : ''} (${deleteDate.toLocaleDateString('en-GB')}). Download before then if needed.
+      <strong>${lang() === 'en' ? 'Auto-delete scheduled:' : 'Автоудаление запланировано:'}</strong> ${lang() === 'en' ? 'Documents will be permanently deleted in' : 'Документы будут безвозвратно удалены через'} ${daysLeft} ${lang() === 'en' ? 'day' : 'дн.'}${daysLeft !== 1 ? (lang() === 'en' ? 's' : '') : ''} (${deleteDate.toLocaleDateString('en-GB')}). ${lang() === 'en' ? 'Download before then if needed.' : 'Скачайте до этого срока, если нужно.'}
     </div>`;
   } else if (userDocs.length > 0) {
     deletionInfo = `<div style="margin-top:12px; padding:10px 14px; background:#d1ecf1; border-radius:8px; font-size:12px; color:#0c5460;">
-      <strong>Note:</strong> Opening this application starts a 30-day countdown. Documents will be auto-deleted 30 days from now.
+      <strong>${lang() === 'en' ? 'Note:' : 'Примечание:'}</strong> ${lang() === 'en' ? 'Opening this application starts a 30-day countdown. Documents will be auto-deleted 30 days from now.' : 'Открытие этой заявки запускает обратный отсчёт на 30 дней. Документы будут автоматически удалены через 30 дней.'}
     </div>`;
   }
 
   document.getElementById('modalContent').innerHTML = `
     <button class="modal-close" onclick="closeModal()">&times;</button>
-    <h2>${app.full_name ? esc(app.full_name) : 'Unknown Student'}</h2>
-    <p class="sub">Application ID: ${esc(app.id)}</p>
+    <h2>${app.full_name ? esc(app.full_name) : (lang() === 'en' ? 'Unknown Student' : 'Неизвестный студент')}</h2>
+    <p class="sub">${lang() === 'en' ? 'Application ID' : 'ID заявки'}: ${esc(app.id)}</p>
     <div class="info-grid">
-      <div class="info-item"><div class="key">Status</div><div class="val"><span class="badge ${esc(app.status)}">${esc(app.status)}</span></div></div>
-      <div class="info-item"><div class="key">Submitted</div><div class="val">${esc(date)}</div></div>
-      <div class="info-item"><div class="key">Country</div><div class="val">${esc(app.country) || 'Not selected'}</div></div>
-      <div class="info-item"><div class="key">Documents</div><div class="val">${userDocs.length} of 6</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Status' : 'Статус'}</div><div class="val"><span class="badge ${esc(app.status)}">${esc(app.status)}</span></div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Submitted' : 'Отправлено'}</div><div class="val">${esc(date)}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Country' : 'Страна'}</div><div class="val">${esc(app.country) || (lang() === 'en' ? 'Not selected' : 'Не выбрано')}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Documents' : 'Документы'}</div><div class="val">${userDocs.length} ${lang() === 'en' ? 'of' : 'из'} 6</div></div>
     </div>
     <div class="info-grid" style="margin-top:0;">
-      <div class="info-item"><div class="key">Date of birth</div><div class="val">${app.date_of_birth ? esc(new Date(app.date_of_birth).toLocaleDateString('en-GB')) : '—'}</div></div>
-      <div class="info-item"><div class="key">Currently studying in</div><div class="val">${esc(app.current_city) || '—'}</div></div>
-      <div class="info-item"><div class="key">Current university</div><div class="val">${esc(app.current_uni) || '—'}</div></div>
-      <div class="info-item"><div class="key">Degree</div><div class="val">${esc(app.current_degree) || '—'}</div></div>
-      <div class="info-item"><div class="key">Faculty</div><div class="val">${esc(app.current_faculty) || '—'}</div></div>
-      <div class="info-item"><div class="key">Started</div><div class="val">${app.study_start ? esc(app.study_start) : '—'}</div></div>
-      <div class="info-item"><div class="key">Program length</div><div class="val">${app.study_duration ? esc(app.study_duration) + ' years' : '—'}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Date of birth' : 'Дата рождения'}</div><div class="val">${app.date_of_birth ? esc(new Date(app.date_of_birth).toLocaleDateString('en-GB')) : '—'}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Currently studying in' : 'Сейчас учится в'}</div><div class="val">${esc(app.current_city) || '—'}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Current university' : 'Текущий университет'}</div><div class="val">${esc(app.current_uni) || '—'}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Degree' : 'Степень'}</div><div class="val">${esc(app.current_degree) || '—'}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Faculty' : 'Факультет'}</div><div class="val">${esc(app.current_faculty) || '—'}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Started' : 'Начал(а)'}</div><div class="val">${app.study_start ? esc(app.study_start) : '—'}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Program length' : 'Длительность'}</div><div class="val">${app.study_duration ? esc(app.study_duration) + ' ' + (lang() === 'en' ? 'years' : 'лет') : '—'}</div></div>
     </div>
     <div class="info-grid" style="margin-top:0;">
-      <div class="info-item" style="grid-column:1/-1;"><div class="key">Selected Programs (${modalProgs.length})</div><div class="val">${modalProgs.length > 0 ? modalProgs.map((p, i) => `<div style="margin-bottom:6px;"><strong>${i + 1}.</strong> ${esc(p.university)} — ${esc(p.program)}</div>`).join('') : 'Not selected'}</div></div>
+      <div class="info-item" style="grid-column:1/-1;"><div class="key">${lang() === 'en' ? 'Selected Programs' : 'Выбранные программы'} (${modalProgs.length})</div><div class="val">${modalProgs.length > 0 ? modalProgs.map((p, i) => `<div style="margin-bottom:6px;"><strong>${i + 1}.</strong> ${esc(p.university)} — ${esc(p.program)}</div>`).join('') : (lang() === 'en' ? 'Not selected' : 'Не выбрано')}</div></div>
     </div>
-    ${app.motivation_text ? `<div style="margin-top:16px;"><h3 style="font-size:15px; margin-bottom:8px; color:var(--blue);">Motivation</h3><div style="padding:14px; background:#f8f9fa; border-radius:10px; font-size:13px; line-height:1.7; white-space:pre-wrap;">${esc(app.motivation_text)}</div></div>` : ''}
-    ${app.references_json && app.references_json.length > 0 ? `<div style="margin-top:16px;"><h3 style="font-size:15px; margin-bottom:8px; color:var(--blue);">References (Professors)</h3><div style="padding:14px; background:#f8f9fa; border-radius:10px;">${app.references_json.map((r, i) => `<div style="margin-bottom:8px; font-size:13px;"><strong>${i + 1}.</strong> ${esc(r.name || '—')} — <em>${esc(r.subject || '—')}</em></div>`).join('')}</div></div>` : ''}
+    ${app.motivation_text ? `<div style="margin-top:16px;"><h3 style="font-size:15px; margin-bottom:8px; color:var(--blue);">${lang() === 'en' ? 'Motivation' : 'Мотивация'}</h3><div style="padding:14px; background:#f8f9fa; border-radius:10px; font-size:13px; line-height:1.7; white-space:pre-wrap;">${esc(app.motivation_text)}</div></div>` : ''}
+    ${app.references_json && app.references_json.length > 0 ? `<div style="margin-top:16px;"><h3 style="font-size:15px; margin-bottom:8px; color:var(--blue);">${lang() === 'en' ? 'References (Professors)' : 'Рекомендации (Преподаватели)'}</h3><div style="padding:14px; background:#f8f9fa; border-radius:10px;">${app.references_json.map((r, i) => `<div style="margin-bottom:8px; font-size:13px;"><strong>${i + 1}.</strong> ${esc(r.name || '—')} — <em>${esc(r.subject || '—')}</em></div>`).join('')}</div></div>` : ''}
     <div class="docs-list">
-      <h3>Uploaded Documents</h3>
+      <h3>${lang() === 'en' ? 'Uploaded Documents' : 'Загруженные документы'}</h3>
       ${docRows}
     </div>
     ${deletionInfo}
@@ -591,7 +597,7 @@ function renderTickets() {
   const paginationEl = document.getElementById('ticketPaginationControls');
 
   if (allTickets.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty"><h3>No tickets yet</h3><p>Tickets submitted from the landing page will appear here.</p></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="empty"><h3>' + (lang() === 'en' ? 'No tickets yet' : 'Тикетов пока нет') + '</h3><p>' + (lang() === 'en' ? 'Tickets submitted from the landing page will appear here.' : 'Тикеты, отправленные с лендинга, появятся здесь.') + '</p></td></tr>';
     paginationEl.innerHTML = '';
     return;
   }
@@ -615,7 +621,7 @@ function renderTickets() {
   }).join('');
 
   if (totalPages <= 1) {
-    paginationEl.innerHTML = `<span class="page-info">${allTickets.length} ticket${allTickets.length !== 1 ? 's' : ''}</span>`;
+    paginationEl.innerHTML = `<span class="page-info">${allTickets.length} ${lang() === 'en' ? 'ticket' : 'тикет'}${allTickets.length !== 1 ? (lang() === 'en' ? 's' : '') : ''}</span>`;
   } else {
     let html = '';
     html += `<button onclick="ticketGoToPage(1)" ${ticketCurrentPage === 1 ? 'disabled' : ''}>«</button>`;
@@ -629,7 +635,7 @@ function renderTickets() {
     }
     html += `<button onclick="ticketGoToPage(${ticketCurrentPage + 1})" ${ticketCurrentPage === totalPages ? 'disabled' : ''}>›</button>`;
     html += `<button onclick="ticketGoToPage(${totalPages})" ${ticketCurrentPage === totalPages ? 'disabled' : ''}>»</button>`;
-    html += `<span class="page-info">${allTickets.length} total · Page ${ticketCurrentPage}/${totalPages}</span>`;
+    html += `<span class="page-info">${allTickets.length} ${lang() === 'en' ? 'total' : 'всего'} · ${lang() === 'en' ? 'Page' : 'Стр.'} ${ticketCurrentPage}/${totalPages}</span>`;
     paginationEl.innerHTML = html;
   }
 }
@@ -651,13 +657,13 @@ async function openTicketModal(ticketId) {
     <h2>🎫 ${esc(ticket.ticket_id)}</h2>
     <p class="sub">${esc(ticket.subject)}</p>
     <div class="info-grid">
-      <div class="info-item"><div class="key">Status</div><div class="val"><span class="badge ${esc(ticket.status)}">${esc(ticket.status)}</span></div></div>
-      <div class="info-item"><div class="key">Category</div><div class="val"><span style="font-size:12px; padding:3px 10px; border-radius:10px; background:#e8ecf1; color:#0b1e3f; font-weight:600;">${esc(ticket.category || '—')}</span></div></div>
-      <div class="info-item"><div class="key">Date</div><div class="val">${esc(date)}</div></div>
-      <div class="info-item"><div class="key">From</div><div class="val">${esc(ticket.name)}</div></div>
-      <div class="info-item"><div class="key">Email</div><div class="val" style="font-size:13px;">${esc(ticket.email)}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Status' : 'Статус'}</div><div class="val"><span class="badge ${esc(ticket.status)}">${esc(ticket.status)}</span></div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Category' : 'Категория'}</div><div class="val"><span style="font-size:12px; padding:3px 10px; border-radius:10px; background:#e8ecf1; color:#0b1e3f; font-weight:600;">${esc(ticket.category || '—')}</span></div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Date' : 'Дата'}</div><div class="val">${esc(date)}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'From' : 'От'}</div><div class="val">${esc(ticket.name)}</div></div>
+      <div class="info-item"><div class="key">${lang() === 'en' ? 'Email' : 'Email'}</div><div class="val" style="font-size:13px;">${esc(ticket.email)}</div></div>
     </div>
-    <div id="convLoading" style="padding:20px; text-align:center; color:#888;">Loading conversation...</div>
+    <div id="convLoading" style="padding:20px; text-align:center; color:#888;">${lang() === 'en' ? 'Loading conversation...' : 'Загрузка переписки...'}</div>
   `;
   document.getElementById('modalOverlay').classList.add('active');
 
