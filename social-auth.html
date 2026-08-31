@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Account Authorization — EuroPath Education</title>
+<style>
+body { font-family: -apple-system, sans-serif; padding: 40px; max-width: 700px; margin: 0 auto; background: #0b1e3f; color: #fff; }
+.card { background: #16213e; border-radius: 12px; padding: 24px; margin: 20px 0; border: 1px solid #c9a84c33; }
+.card h2 { color: #c9a84c; margin-top: 0; font-size: 20px; }
+.btn { display: inline-block; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; margin: 8px 8px 8px 0; cursor: pointer; border: none; }
+.btn-threads { background: #000; color: #fff; }
+.btn-meta { background: #1877F2; color: #fff; }
+.btn:hover { opacity: 0.85; }
+.status { padding: 12px 16px; border-radius: 8px; margin: 12px 0; font-size: 14px; }
+.status-success { background: #d4edda; color: #155724; }
+.status-error { background: #f8d7da; color: #721c24; }
+.status-info { background: #d1ecf1; color: #0c5460; }
+code { background: #1a1a2e; color: #c9a84c; padding: 2px 6px; border-radius: 3px; word-break: break-all; font-size: 12px; }
+pre { background: #1a1a2e; color: #c9a84c; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 12px; }
+.small { font-size: 13px; color: #aaa; }
+.acct { padding: 8px 12px; background: #1a1a2e; border-radius: 6px; margin: 6px 0; font-size: 14px; }
+.acct label { display: block; color: #c9a84c; font-weight: bold; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<h1 style="color: #c9a84c;">Social Account Authorization</h1>
+<p class="small">Connect multiple Threads, Instagram, and Facebook accounts for cross-posting.</p>
+
+<div class="card">
+  <h2>Step 1: Threads — @europath_education</h2>
+  <p>Authorize the <strong>@europath_education</strong> Threads account.</p>
+  <p class="small">Make sure you're logged into the @europath_education Threads account in your browser, then click the button.</p>
+  <a class="btn btn-threads" href="#" id="threads-btn">Authorize @europath_education on Threads</a>
+  <div id="threads-status"></div>
+</div>
+
+<div class="card">
+  <h2>Step 2: Facebook + Instagram — All Pages</h2>
+  <p>Authorize Facebook to discover <strong>all Pages and Instagram Business accounts</strong> you manage (both EuroPath Education and study.with.anar).</p>
+  <p class="small">Log in with your Facebook account that manages both Pages. This will list all available Pages and IG accounts.</p>
+  <a class="btn btn-meta" href="#" id="meta-btn">Authorize Facebook (All Pages + IG)</a>
+  <div id="meta-status"></div>
+  <div id="meta-accounts"></div>
+</div>
+
+<div class="card">
+  <h2>Current Connected Accounts</h2>
+  <div id="current-accounts"><p class="small">Loading...</p></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
+
+const THREADS_CLIENT_ID = '4280706285480169';
+const THREADS_REDIRECT = 'https://europatheducation.eu/social-auth.html';
+const THREADS_SCOPE = 'threads_basic,threads_content_publish';
+
+const META_APP_ID = '959105600544977';
+const META_REDIRECT = 'https://europatheducation.eu/social-auth.html';
+const META_SCOPE = 'pages_manage_posts,pages_read_engagement,pages_show_list,instagram_basic,instagram_content_publish,publish_to_groups,business_management';
+
+// Build auth URLs
+const threadsAuthUrl = `https://threads.net/oauth/authorize?client_id=${THREADS_CLIENT_ID}&redirect_uri=${encodeURIComponent(THREADS_REDIRECT)}&scope=${THREADS_SCOPE}&response_type=code`;
+const metaAuthUrl = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${META_APP_ID}&redirect_uri=${encodeURIComponent(META_REDIRECT)}&scope=${encodeURIComponent(META_SCOPE)}&response_type=code`;
+
+document.getElementById('threads-btn').href = threadsAuthUrl;
+document.getElementById('meta-btn').href = metaAuthUrl;
+
+// Check URL for code/callback
+const url = new URL(window.location.href);
+const code = url.searchParams.get('code');
+const error = url.searchParams.get('error');
+
+async function init() {
+  if (error) {
+    const errMsg = url.searchParams.get('error_message') || url.searchParams.get('error_reason') || error;
+    showStatus('threads-status', `Error: ${errMsg}`, 'error');
+    showStatus('meta-status', `Error: ${errMsg}`, 'error');
+    return;
+  }
+
+  if (code) {
+    // Try exchanging with Threads first
+    await tryExchangeCode(code, 'threads');
+    // Also try Meta (Facebook)
+    await tryExchangeCode(code, 'meta');
+  }
+
+  // Load current accounts
+  await loadCurrentAccounts();
+}
+
+async function tryExchangeCode(code, type) {
+  const statusEl = document.getElementById(type === 'threads' ? 'threads-status' : 'meta-status');
+  showStatus(statusEl.id, `Exchanging ${type} authorization code...`, 'info');
+
+  try {
+    const endpoint = type === 'threads'
+      ? `${SUPABASE_URL}/functions/v1/social-auth-exchange`
+      : `${SUPABASE_URL}/functions/v1/social-auth-exchange`;
+
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ code, type })
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      showStatus(statusEl.id, `${type} exchange failed: ${data.error}`, 'error');
+    } else {
+      if (type === 'threads') {
+        showStatus(statusEl.id, `Threads connected! User ID: ${data.threads_user_id}`, 'success');
+      } else {
+        showStatus(statusEl.id, `Facebook connected! Found ${data.pages?.length || 0} pages, ${data.ig_accounts?.length || 0} IG accounts`, 'success');
+        displayMetaAccounts(data.pages, data.ig_accounts);
+      }
+    }
+  } catch (err) {
+    showStatus(statusEl.id, `${type} exchange error: ${err.message}`, 'error');
+  }
+}
+
+function displayMetaAccounts(pages, igAccounts) {
+  const el = document.getElementById('meta-accounts');
+  let html = '<h3 style="color:#c9a84c;margin-top:16px;">Discovered Pages:</h3>';
+  if (pages && pages.length) {
+    pages.forEach(p => {
+      html += `<div class="acct"><label>${p.name}</label>ID: ${p.id}<br>IG connected: ${p.instagram_business_account?.id || 'None'}</div>`;
+    });
+  } else {
+    html += '<p class="small">No pages found.</p>';
+  }
+  if (igAccounts && igAccounts.length) {
+    html += '<h3 style="color:#c9a84c;margin-top:16px;">Instagram Accounts:</h3>';
+    igAccounts.forEach(ig => {
+      html += `<div class="acct"><label>@${ig.username}</label>IG ID: ${ig.id}<br>Followers: ${ig.followers_count || '?'}</div>`;
+    });
+  }
+  el.innerHTML = html;
+}
+
+async function loadCurrentAccounts() {
+  const el = document.getElementById('current-accounts');
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/social-auth-exchange`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ action: 'list' })
+    });
+    const data = await res.json();
+    if (data.tokens) {
+      let html = '';
+      data.tokens.forEach(t => {
+        html += `<div class="acct"><label>${t.token_name}</label>Value: <code>${t.token_value?.substring(0,20)}...</code></div>`;
+      });
+      el.innerHTML = html || '<p class="small">No tokens stored yet.</p>';
+    } else {
+      el.innerHTML = '<p class="small">No tokens stored yet.</p>';
+    }
+  } catch (err) {
+    el.innerHTML = `<p class="small">Could not load: ${err.message}</p>`;
+  }
+}
+
+function showStatus(id, msg, type) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.innerHTML = `<div class="status status-${type}">${msg}</div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
