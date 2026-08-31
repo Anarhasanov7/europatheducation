@@ -252,11 +252,11 @@
     <div class="form-group">
       <label>Post Type</label>
       <select id="editPostType" onchange="onPostTypeChange()">
-        <option value="post">📝 Feed Post (text/image/video — all platforms)</option>
-        <option value="reel">🎬 Reel (video — Instagram + Facebook video)</option>
-        <option value="story">⭕ Story (image/video — 24h, Instagram + Facebook, no text)</option>
+        <option value="post">📝 Post (feed + story — all platforms automatically)</option>
+        <option value="reel">🎬 Reel (video — Instagram Reels + Facebook video + story)</option>
+        <option value="story">⭕ Story Only (image/video — 24h only, no feed post)</option>
       </select>
-      <div class="hint" id="postTypeHint">Regular post: text + optional image/video. Works on all 3 platforms.</div>
+      <div class="hint" id="postTypeHint">Posts go to all 3 platforms (Threads, Facebook, Instagram) + automatically as Instagram & Facebook stories. Videos go everywhere too.</div>
     </div>
     <div class="form-group" id="textFieldGroup">
       <label>Post Text / Caption</label>

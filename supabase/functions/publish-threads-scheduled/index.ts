@@ -361,11 +361,75 @@ Deno.serve(async (_req: Request) => {
       }
     }
 
-    // Determine overall status
-    const allResults = Object.values(platformResults);
-    const successCount = allResults.filter((r: any) => r.success).length;
+    // === ALSO PUBLISH AS STORY (Instagram + Facebook) ===
+    // Every post with media also gets published as a 24h story
+    if (hasMedia && postType !== 'story') {
+      // Instagram Story
+      try {
+        const igStoryBody: any = { media_type: 'STORY', access_token: PAGE_TOKEN };
+        if (isVideoMedia) {
+          igStoryBody.video_url = post.image_url;
+        } else {
+          igStoryBody.image_url = post.image_url;
+        }
+        const igStoryCreateRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(igStoryBody),
+        });
+        const igStoryCreateData = await igStoryCreateRes.json();
+        if (igStoryCreateData.error) {
+          platformResults.ig_story = { success: false, error: igStoryCreateData.error.message };
+        } else {
+          await new Promise(r => setTimeout(r, isVideoMedia ? 10000 : 5000));
+          const igStoryPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ creation_id: igStoryCreateData.id, access_token: PAGE_TOKEN }),
+          });
+          const igStoryPublishData = await igStoryPublishRes.json();
+          if (igStoryPublishData.error) {
+            platformResults.ig_story = { success: false, error: igStoryPublishData.error.message };
+          } else {
+            platformResults.ig_story = { success: true, post_id: igStoryPublishData.id };
+          }
+        }
+      } catch (err) {
+        platformResults.ig_story = { success: false, error: String(err) };
+      }
+
+      // Facebook Story
+      try {
+        let fbStoryRes;
+        if (isVideoMedia) {
+          fbStoryRes = await fetch(`${FB_API}/${PAGE_ID}/video_stories`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ file_url: post.image_url, access_token: PAGE_TOKEN }),
+          });
+        } else {
+          fbStoryRes = await fetch(`${FB_API}/${PAGE_ID}/photo_stories`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ photo_url: post.image_url, access_token: PAGE_TOKEN }),
+          });
+        }
+        const fbStoryData = await fbStoryRes.json();
+        if (fbStoryData.error) {
+          platformResults.fb_story = { success: false, error: fbStoryData.error.message };
+        } else {
+          platformResults.fb_story = { success: true, post_id: fbStoryData.id || fbStoryData.story_id };
+        }
+      } catch (err) {
+        platformResults.fb_story = { success: false, error: String(err) };
+      }
+    }
+
+    // Determine overall status (stories are bonus — don't count toward failure)
+    const mainResults = ['threads', 'facebook', 'instagram'].map(k => platformResults[k]).filter(Boolean);
+    const successCount = mainResults.filter((r: any) => r.success).length;
     let status = 'failed';
-    if (successCount === allResults.length) status = 'published';
+    if (successCount === mainResults.length) status = 'published';
     else if (successCount > 0) status = 'partial';
 
     const platformsStatus: Record<string, string> = {};
