@@ -69,11 +69,17 @@ Deno.serve(async (_req: Request) => {
     const isVideoMedia = hasMedia && isVideo(post.image_url);
     const postType = post.post_type || 'post'; // 'post', 'reel', 'story'
 
+    // Append organization tag to text (for all platforms that support captions)
+    // @europath_education becomes a tappable mention on Threads & Instagram
+    const ORG_TAG = '\n\n@europath_education';
+    const baseText = post.text || '';
+    const taggedText = baseText + (baseText && !baseText.includes('@europath_education') ? ORG_TAG : '');
+
     // === THREADS (supports: text, image, video — NO stories, NO reels) ===
     // Threads doesn't have stories or reels, so skip for those types
     if (postType === 'post') {
       try {
-        const threadsBody: any = { text: post.text, access_token: THREADS_TOKEN };
+        const threadsBody: any = { text: taggedText, access_token: THREADS_TOKEN };
         if (hasMedia) {
           if (isVideoMedia) {
             threadsBody.media_type = 'VIDEO';
@@ -160,7 +166,7 @@ Deno.serve(async (_req: Request) => {
           const fbRes = await fetch(`${FB_API}/${PAGE_ID}/videos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ file_url: post.image_url, description: post.text, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ file_url: post.image_url, description: taggedText, access_token: PAGE_TOKEN }),
           });
           const fbData = await fbRes.json();
           if (fbData.error) {
@@ -181,7 +187,7 @@ Deno.serve(async (_req: Request) => {
           const fbRes = await fetch(`${FB_API}/${PAGE_ID}/videos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ file_url: post.image_url, description: post.text, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ file_url: post.image_url, description: taggedText, access_token: PAGE_TOKEN }),
           });
           const fbData = await fbRes.json();
           if (fbData.error) {
@@ -195,7 +201,7 @@ Deno.serve(async (_req: Request) => {
           const fbRes = await fetch(`${FB_API}/${PAGE_ID}/photos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: post.image_url, caption: post.text, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ url: post.image_url, caption: taggedText, access_token: PAGE_TOKEN }),
           });
           const fbData = await fbRes.json();
           if (fbData.error) {
@@ -213,7 +219,7 @@ Deno.serve(async (_req: Request) => {
           const fbRes = await fetch(`${FB_API}/${PAGE_ID}/feed`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: post.text, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ message: taggedText, access_token: PAGE_TOKEN }),
           });
           const fbData = await fbRes.json();
           if (fbData.error) {
@@ -242,7 +248,7 @@ Deno.serve(async (_req: Request) => {
           const igCreateRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ media_type: 'REELS', video_url: post.image_url, caption: post.text, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ media_type: 'REELS', video_url: post.image_url, caption: taggedText, access_token: PAGE_TOKEN }),
           });
           const igCreateData = await igCreateRes.json();
           if (igCreateData.error) {
@@ -304,7 +310,7 @@ Deno.serve(async (_req: Request) => {
     } else {
       // Regular Instagram feed post: image or video
       try {
-        const igBody: any = { caption: post.text, access_token: PAGE_TOKEN };
+        const igBody: any = { caption: taggedText, access_token: PAGE_TOKEN };
         if (isVideoMedia) {
           igBody.media_type = 'VIDEO';
           igBody.video_url = post.image_url;
