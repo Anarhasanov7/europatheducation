@@ -188,42 +188,6 @@
   }
   .mission-card p strong { font-weight: 600; color: var(--electric); }
 
-  /* ─── Benefits ─── */
-  .benefits-grid {
-    display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 720px; margin: 0 auto;
-  }
-  .benefit-col h3 {
-    font-size: 16px; font-weight: 700; margin-bottom: 20px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .benefit-col.stud h3 { color: var(--coral); }
-  .benefit-col h3 .icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
-  .benefit-col.stud .icon { background: rgba(255,92,61,0.15); }
-  .benefit-list {
-    display: flex; flex-direction: column; gap: 12px;
-  }
-  .benefit-item {
-    background: #fff; border-radius: 12px; padding: 18px 20px;
-    border-left: 3px solid;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: default;
-  }
-  .benefit-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  }
-  .benefit-col.stud .benefit-item { border-color: var(--coral); }
-  .benefit-item h4 {
-    font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px;
-  }
-  .benefit-item p {
-    font-size: 13px; color: var(--gray); line-height: 1.5;
-  }
 
   /* ─── Why Italy / Best Cases ─── */
   .why-grid {
@@ -762,7 +726,7 @@
   @media (max-width: 768px) {
     nav ul { display: none; }
     .hero h1 { font-size: 36px; }
-    .benefits-grid, .pkg-grid, .location-grid, .corp-grid { grid-template-columns: 1fr; }
+    .pkg-grid, .location-grid, .corp-grid { grid-template-columns: 1fr; }
     .pay-grid, .provide-grid, .why-grid { grid-template-columns: 1fr; }
     .timeline { flex-direction: column; }
     .timeline::before { display: none; }
@@ -777,7 +741,6 @@
   <div class="brand">Edupath <span>Education</span></div>
   <ul>
     <li><a href="#mission">Миссия</a></li>
-    <li><a href="#benefits">Преимущества</a></li>
     <li><a href="#why-italy">Почему Италия</a></li>
     <li><a href="#packages">Пакеты</a></li>
     <li><a href="#process">Процесс</a></li>
@@ -821,45 +784,6 @@
   <div class="mission-card">
     <h3>Миссия Edupath Education</h3>
     <p>Мы помогаем международным выпускникам получить доступ к <strong>итальянскому высшему образованию</strong> — от подачи документов до получения диплома. Специализируемся на <strong>региональных стипендиях DSU/EDISU</strong>, которые покрывают обучение, стипендию до €7 000/год, общежитие и питание. Сопровождаем студента <strong>весь срок обучения</strong>, а не только на этапе поступления.</p>
-  </div>
-</section>
-
-<!-- ─── Benefits ─── -->
-<section id="benefits" class="fade-in">
-  <div class="section-tag">Преимущества</div>
-  <div class="section-title">Что получают студенты</div>
-  <div class="section-sub">С Edupath вы поступаете в итальянский вуз со стипендией и сопровождением на весь срок обучения.</div>
-
-  <div class="benefits-grid">
-    <div class="benefit-col stud">
-      <h3><span class="icon">🇮🇹</span> Преимущества для студентов</h3>
-      <div class="benefit-list">
-        <div class="benefit-item">
-          <h4>Стипендия DSU/EDISU</h4>
-          <p>Покрывает обучение (€0), стипендию до €7 000/год, общежитие (€0) и питание (€0). Назначается по доходу семьи (ISEE).</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Поступление в топовые вузы</h4>
-          <p>Bologna, Padova, Sapienza, PoliMi, PoliTo и другие. Подбираем 3–5 программ под профиль и бюджет.</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Сопровождение весь срок</h4>
-          <p>От подачи до диплома: продление стипендии, зачисление на курс, бюрократия. Мы не исчезаем после зачисления.</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Экстренная поддержка 24/7</h4>
-          <p>Горячая линия для студентов и родителей. Локальный контакт в каждом университетском городе.</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Codice Fiscale + банк</h4>
-          <p>Помощь в получении налогового номера и открытии банковского счёта в Италии.</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Адаптация и жильё</h4>
-          <p>Поиск жилья, аэропорт-встреча, SIM-карта, знакомство с городом — дополнительные услуги.</p>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
