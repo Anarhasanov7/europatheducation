@@ -69,11 +69,11 @@ Deno.serve(async (_req: Request) => {
     const isVideoMedia = hasMedia && isVideo(post.image_url);
     const postType = post.post_type || 'post'; // 'post', 'reel', 'story'
 
-    // Append organization tag to text (for all platforms that support captions)
+    // Append organization tag + website to text (for all platforms that support captions)
     // @europath_education becomes a tappable mention on Threads & Instagram
-    const ORG_TAG = '\n\n@europath_education';
+    const ORG_TAG = '\n\n@europath_education\n🌐 https://europatheducation.eu';
     const baseText = post.text || '';
-    const taggedText = baseText + (baseText && !baseText.includes('@europath_education') ? ORG_TAG : '');
+    const taggedText = baseText + (baseText && !baseText.includes('@europath_education') ? ORG_TAG : (baseText && !baseText.includes('europatheducation.eu') ? '\n\n🌐 https://europatheducation.eu' : ''));
 
     // === THREADS (supports: text, image, video — NO stories, NO reels) ===
     // Threads doesn't have stories or reels, so skip for those types

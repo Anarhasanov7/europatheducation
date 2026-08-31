@@ -17,11 +17,11 @@ async function getThreadsToken(sb: any): Promise<string> {
 
 // Default auto-reply templates (rotated to avoid being flagged as spam)
 const AUTO_REPLIES = [
-  "Thank you! 🙏 Follow for more content about studying in Italy.\n\n@europath_education",
-  "Thanks for your comment! DM us the word ITALY for more info 🇮🇹\n\n@europath_education",
-  "Grazie! 🙏 Write us in DM for a free consultation.\n\n@europath_education",
-  "Thank you! 🙏 We help students get into Italian universities with scholarships.\n\n@europath_education",
-  "Thanks! 🙏 Follow @study.with.anar for daily stories about studying in Italy.\n\n@europath_education",
+  "Thank you! 🙏 Follow for more content about studying in Italy.\n\n@europath_education\n🌐 https://europatheducation.eu",
+  "Thanks for your comment! DM us the word ITALY for more info 🇮🇹\n\n@europath_education\n🌐 https://europatheducation.eu",
+  "Grazie! 🙏 Write us in DM for a free consultation.\n\n@europath_education\n🌐 https://europatheducation.eu",
+  "Thank you! 🙏 We help students get into Italian universities with scholarships.\n\n@europath_education\n🌐 https://europatheducation.eu",
+  "Thanks! 🙏 Follow @study.with.anar for daily stories about studying in Italy.\n\n@europath_education\n🌐 https://europatheducation.eu",
 ];
 
 const corsHeaders = {
