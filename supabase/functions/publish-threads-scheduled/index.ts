@@ -72,14 +72,30 @@ Deno.serve(async (_req: Request) => {
     // Append organization tag + website to text (for all platforms that support captions)
     // @europath_education becomes a tappable mention on Threads & Instagram
     const ORG_TAG = '\n\n@europath_education\n🌐 https://europatheducation.eu';
+    const ORG_TAG_LEN = ORG_TAG.length;
+    const THREADS_LIMIT = 500;
     const baseText = post.text || '';
+
+    // For Threads: truncate text if needed so text + tag fits in 500 chars
+    let threadsText = baseText;
+    if (baseText && !baseText.includes('@europath_education')) {
+      if (baseText.length + ORG_TAG_LEN > THREADS_LIMIT) {
+        threadsText = baseText.substring(0, THREADS_LIMIT - ORG_TAG_LEN - 1) + '…' + ORG_TAG;
+      } else {
+        threadsText = baseText + ORG_TAG;
+      }
+    } else if (baseText && !baseText.includes('europatheducation.eu')) {
+      threadsText = baseText + '\n\n🌐 https://europatheducation.eu';
+    }
+
+    // For Facebook & Instagram: no character limit issue, use full text + tag
     const taggedText = baseText + (baseText && !baseText.includes('@europath_education') ? ORG_TAG : (baseText && !baseText.includes('europatheducation.eu') ? '\n\n🌐 https://europatheducation.eu' : ''));
 
     // === THREADS (supports: text, image, video — NO stories, NO reels) ===
     // Threads doesn't have stories or reels, so skip for those types
     if (postType === 'post') {
       try {
-        const threadsBody: any = { text: taggedText, access_token: THREADS_TOKEN };
+        const threadsBody: any = { text: threadsText, access_token: THREADS_TOKEN };
         if (hasMedia) {
           if (isVideoMedia) {
             threadsBody.media_type = 'VIDEO';
