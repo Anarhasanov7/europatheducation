@@ -544,16 +544,16 @@ async function publishNow(id) {
     .update({ scheduled_utc: new Date().toISOString(), status: 'pending' })
     .eq('id', id);
   if (updErr) { toast('Error: ' + updErr.message, 'error'); return; }
-  // Call the edge function
+  // Call the edge function via Supabase client (handles CORS/auth)
   try {
-    const resp = await fetch(`${SUPABASE_URL}/functions/v1/publish-threads-scheduled`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}'
+    const { data, error } = await sb.functions.invoke('publish-threads-scheduled', {
+      body: {}
     });
-    const data = await resp.json();
-    if (data.error) { toast('Publish error: ' + data.error, 'error'); }
-    else { toast(`Published: ${data.published || 0}, Partial: ${data.partial || 0}, Failed: ${data.failed || 0}`, data.failed > 0 ? 'error' : 'success'); }
+    if (error) { toast('Publish error: ' + error.message, 'error'); }
+    else if (data && data.error) { toast('Publish error: ' + data.error, 'error'); }
+    else { toast(`Published: ${data?.published || 0}, Partial: ${data?.partial || 0}, Failed: ${data?.failed || 0}`, (data?.failed || 0) > 0 ? 'error' : 'success'); }
   } catch (err) {
-    toast('Fetch error: ' + err, 'error');
+    toast('Error: ' + err, 'error');
   }
   loadPosts();
 }
@@ -566,14 +566,14 @@ async function publishAllDue() {
   btn.disabled = true; btn.textContent = 'Publishing...';
   toast('Publishing all due posts...', 'info');
   try {
-    const resp = await fetch(`${SUPABASE_URL}/functions/v1/publish-threads-scheduled`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}'
+    const { data, error } = await sb.functions.invoke('publish-threads-scheduled', {
+      body: {}
     });
-    const data = await resp.json();
-    if (data.error) { toast('Publish error: ' + data.error, 'error'); }
-    else { toast(`Done! Published: ${data.published || 0}, Partial: ${data.partial || 0}, Failed: ${data.failed || 0}`, data.failed > 0 ? 'error' : 'success'); }
+    if (error) { toast('Publish error: ' + error.message, 'error'); }
+    else if (data && data.error) { toast('Publish error: ' + data.error, 'error'); }
+    else { toast(`Done! Published: ${data?.published || 0}, Partial: ${data?.partial || 0}, Failed: ${data?.failed || 0}`, (data?.failed || 0) > 0 ? 'error' : 'success'); }
   } catch (err) {
-    toast('Fetch error: ' + err, 'error');
+    toast('Error: ' + err, 'error');
   }
   btn.disabled = false; btn.textContent = 'Publish All Due';
   loadPosts();
