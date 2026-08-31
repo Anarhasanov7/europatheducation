@@ -1038,6 +1038,89 @@
     .partner-card.expanded { grid-column: span 1; }
     .pkg-price { font-size: 24px; }
   }
+  /* ─── AI assistant chat popup (free, client-side) ─── */
+  .ep-chat-launcher {
+    position: fixed; bottom: 24px; right: 24px; z-index: 300;
+    width: 60px; height: 60px; border-radius: 50%; border: none;
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    color: var(--ink); font-size: 28px; cursor: pointer;
+    box-shadow: 0 6px 24px rgba(61,223,255,0.35);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s;
+  }
+  .ep-chat-launcher:hover { transform: scale(1.08); }
+  .ep-chat-window {
+    position: fixed; bottom: 96px; right: 24px; width: 360px; max-width: calc(100vw - 32px); max-height: 520px;
+    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25); z-index: 301;
+    display: flex; flex-direction: column; overflow: hidden;
+    transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none;
+    transition: all 0.25s ease;
+  }
+  .ep-chat-window.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+  .ep-chat-header {
+    background: linear-gradient(135deg, var(--navy), var(--slate)); color: #fff;
+    padding: 16px 18px; display: flex; align-items: center; gap: 10px;
+  }
+  .ep-chat-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--ink);
+  }
+  .ep-chat-title { flex: 1; }
+  .ep-chat-title strong { display: block; font-size: 14px; font-weight: 700; }
+  .ep-chat-title span { font-size: 11px; opacity: 0.85; }
+  .ep-chat-close { background: transparent; border: none; color: #fff; font-size: 22px; cursor: pointer; }
+  .ep-chat-messages {
+    flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px;
+    background: var(--off-white);
+  }
+  .ep-chat-messages .ep-msg {
+    max-width: 85%; padding: 12px 14px; border-radius: 16px;
+    font-size: 13px; line-height: 1.5;
+  }
+  .ep-chat-messages .ep-msg.bot {
+    background: #fff; color: var(--dark); border: 1px solid var(--card-border);
+    align-self: flex-start; border-bottom-left-radius: 4px;
+  }
+  .ep-chat-messages .ep-msg.user {
+    background: linear-gradient(135deg, var(--electric), var(--lime)); color: var(--ink);
+    align-self: flex-end; border-bottom-right-radius: 4px;
+  }
+  .ep-chat-typing { display: flex; gap: 4px; padding: 10px 0; }
+  .ep-chat-typing span { width: 8px; height: 8px; background: var(--gray); border-radius: 50%; animation: ep-typing 1.4s infinite; }
+  .ep-chat-typing span:nth-child(1) { animation-delay: 0s; }
+  .ep-chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .ep-chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes ep-typing { 0%,80%,100%{transform:translateY(0);} 40%{transform:translateY(-6px);} }
+  .ep-quick-replies {
+    display: flex; flex-wrap: wrap; gap: 6px; padding: 12px; background: #fff;
+    border-top: 1px solid var(--card-border);
+  }
+  .ep-quick-replies button {
+    border: 1px solid var(--input-border); border-radius: 16px; padding: 6px 10px;
+    font-size: 12px; background: var(--off-white); color: var(--dark);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .ep-quick-replies button:hover { background: var(--electric); color: var(--ink); border-color: var(--electric); }
+  .ep-chat-input {
+    display: flex; gap: 8px; padding: 12px; background: #fff;
+    border-top: 1px solid var(--card-border);
+  }
+  .ep-chat-input input {
+    flex: 1; border: 1px solid var(--input-border); border-radius: 24px;
+    padding: 10px 14px; font-family: inherit; font-size: 13px; outline: none;
+  }
+  .ep-chat-input button {
+    width: 40px; height: 40px; border-radius: 50%; border: none;
+    background: var(--navy); color: #fff; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  @media (max-width: 420px) {
+    .ep-chat-window { width: calc(100vw - 32px); right: 16px; bottom: 88px; max-height: 70vh; }
+    .ep-chat-launcher { bottom: 16px; right: 16px; }
+  }
 </style>
 </head>
 <body>
@@ -2046,5 +2129,132 @@
   }
 </script>
 
+<!-- ─── AI assistant popup (free, client-side) ─── -->
+<div id="epChatLauncher" class="ep-chat-launcher" role="button" aria-label="Открыть чат" tabindex="0">🤖</div>
+<div id="epChatWindow" class="ep-chat-window">
+  <div class="ep-chat-header">
+    <div class="ep-chat-avatar">✨</div>
+    <div class="ep-chat-title">
+      <strong>AI Консультант</strong>
+      <span>EuroPath Education</span>
+    </div>
+    <button id="epChatClose" class="ep-chat-close" aria-label="Закрыть">&times;</button>
+  </div>
+  <div id="epChatMessages" class="ep-chat-messages"></div>
+  <div id="epQuickReplies" class="ep-quick-replies"></div>
+  <form id="epChatForm" class="ep-chat-input">
+    <input id="epChatInput" type="text" placeholder="Напишите вопрос..." autocomplete="off" />
+    <button type="submit" aria-label="Отправить">➤</button>
+  </form>
+</div>
+<script src="chat-kb.js"></script>
+<script>
+(function(){
+  const win = document.getElementById('epChatWindow');
+  const msgBox = document.getElementById('epChatMessages');
+  const input = document.getElementById('epChatInput');
+  const form = document.getElementById('epChatForm');
+  const quickBox = document.getElementById('epQuickReplies');
+
+  function openChat(){ win.classList.add('open'); }
+  function closeChat(){ win.classList.remove('open'); }
+
+  document.getElementById('epChatLauncher').addEventListener('click', () => win.classList.toggle('open'));
+  document.getElementById('epChatClose').addEventListener('click', closeChat);
+
+  const topics = [
+    { label: 'Как поступить?', key: 'admission', keywords: ['поступ','вступ','абитуриент','зачислен','документ','university','admission','enroll','bologna','sapienza','polimi'] },
+    { label: 'Стипендии DSU', key: 'scholarships', keywords: ['стипенд','dsu','edisu','schol','grant','финанс','оплат','выплат','деньг'] },
+    { label: 'Стоимость', key: 'price', keywords: ['стоимост','цена','пакет','услуг','тариф','price','cost','package'] },
+    { label: 'Визы и документы', key: 'visa', keywords: ['виз','visa','permesso','soggiorno','апостиль','apostille','консульств'] },
+    { label: 'Жильё', key: 'housing', keywords: ['жиль','общежит','квартира','аренд','дом','housing','accommod','residenza'] },
+    { label: 'Консультация', key: 'consultation', keywords: ['консультац','встреч','запис','consultation','meeting','позвон','связ'] }
+  ];
+
+  const answers = {
+    admission: 'Мы сопровождаем от подачи документов до зачисления: подготовка, перевод + апостиль, подача в университет, виза, зачисление. Партнёры — Sapienza, Bologna, Padova, Pavia, Torino, Milano, Pisa, Firenze и др. Оставьте заявку на бесплатную консультацию.',
+    scholarships: 'Стипендии DSU/EDISU покрывают обучение, дают выплату до €7000/год, общежитие и питание. Мы помогаем собрать документы и не пропустить дедлайны. Потребуется ISEE и справки о доходах/имуществе, но есть облегчённые правила для иностранцев.',
+    price: 'Выберите пакет под ваш запрос. Стоимость зависит от этапа сопровождения — от базовой консультации до полного сопровождения. Начните с бесплатной консультации, чтобы обсудить задачу и бюджет.',
+    visa: 'Для учебной визы нужно: приглашение, подтверждение жилья, финансовые гарантии, страховка, переводы с апостилем. После приезда оформляется Permesso di Soggiorno. Мы помогаем на каждом этапе.',
+    housing: 'Помогаем с поиском жилья: общежитие DSU/EDISU, аренда квартиры, регистрация residenza. Стипендия часто включает проживание в студенческом общежитии. Обсудим варианты на консультации.',
+    consultation: 'Запишитесь на бесплатную консультацию. Уточним ваши цели, сроки, университет, бюджет и следующие шаги. Оставьте заявку в форме на сайте или напишите на info@europatheducation.eu.',
+    fallback: 'Я AI-консультант на основе информации сайта. Для личного ответа оставьте заявку в форме на сайте или напишите на info@europatheducation.eu. Попробуйте уточнить: поступление, стипендии, стоимость, виза, жильё.'
+  };
+
+  function matchAnswer(text){
+    const q = (text || '').toLowerCase();
+    // 1. curated quick-reply topics
+    for (const t of topics) if (t.keywords.some(k => q.includes(k))) return answers[t.key];
+    // 2. search the full free knowledge base
+    if (typeof epChatKnowledge !== 'undefined' && epChatKnowledge.length) {
+      const qTokens = (q.match(/[a-zа-яё0-9_]+/g) || []).filter(w => w.length >= 3);
+      if (qTokens.length) {
+        let best = null, bestScore = 0;
+        for (const item of epChatKnowledge) {
+          let score = 0;
+          for (const w of qTokens) {
+            if (item.keywords.some(k => w.startsWith(k) || k.startsWith(w))) {
+              score++;
+            }
+          }
+          if (score > bestScore) { bestScore = score; best = item; }
+        }
+        if (best && bestScore >= 1) return best.text;
+      }
+    }
+    return answers.fallback;
+  }
+
+  function addMessage(text, from){
+    const d = document.createElement('div');
+    d.className = 'ep-msg ' + from;
+    d.textContent = text;
+    msgBox.appendChild(d);
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }
+
+  function showTyping(){
+    const d = document.createElement('div');
+    d.className = 'ep-chat-typing'; d.id = 'epTyping';
+    d.innerHTML = '<span></span><span></span><span></span>';
+    msgBox.appendChild(d);
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }
+
+  function hideTyping(){
+    const t = document.getElementById('epTyping');
+    if (t) t.remove();
+  }
+
+  function handleSend(text){
+    if (!text.trim()) return;
+    addMessage(text, 'user');
+    input.value = '';
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage(matchAnswer(text), 'bot');
+    }, 600);
+  }
+
+  topics.forEach(t => {
+    const b = document.createElement('button');
+    b.textContent = t.label;
+    b.addEventListener('click', () => handleSend(t.label));
+    quickBox.appendChild(b);
+  });
+
+  form.addEventListener('submit', e => { e.preventDefault(); handleSend(input.value); });
+
+  setTimeout(() => {
+    addMessage('Здравствуйте! Я AI-консультант EuroPath Education. Задайте вопрос о поступлении, стипендиях, визе, жилье или выберите тему ниже.', 'bot');
+  }, 800);
+
+  if (!sessionStorage.getItem('epChatOpened')) {
+    setTimeout(openChat, 2500);
+    sessionStorage.setItem('epChatOpened', '1');
+  }
+})();
+</script>
 </body>
 </html>
