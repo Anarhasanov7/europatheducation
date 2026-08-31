@@ -3,12 +3,17 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-const THREADS_TOKEN = Deno.env.get('META_THREADS_ACCESS_TOKEN') || '';
+const THREADS_TOKEN_ENV = Deno.env.get('META_THREADS_ACCESS_TOKEN') || '';
 const PAGE_TOKEN = Deno.env.get('META_PAGE_ACCESS_TOKEN') || '';
 const IG_BUSINESS_ID = Deno.env.get('META_IG_BUSINESS_ID') || '';
 
 const THREADS_API = 'https://graph.threads.net/v1.0';
 const FB_API = 'https://graph.facebook.com/v21.0';
+
+async function getThreadsToken(sb: any): Promise<string> {
+  const { data } = await sb.from('social_tokens').select('token_value').eq('token_name', 'META_THREADS_ACCESS_TOKEN').single();
+  return data?.token_value || THREADS_TOKEN_ENV;
+}
 
 // Default auto-reply templates (rotated to avoid being flagged as spam)
 const AUTO_REPLIES = [
@@ -29,6 +34,7 @@ Deno.serve(async (_req: Request) => {
   if (_req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   const sb = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+  const THREADS_TOKEN = await getThreadsToken(sb);
 
   // Get all posts with auto_reply_enabled = true
   const { data: posts, error } = await sb.from('threads_scheduled_posts')

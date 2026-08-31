@@ -3,7 +3,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-const THREADS_TOKEN = Deno.env.get('META_THREADS_ACCESS_TOKEN') || '';
+const THREADS_TOKEN_ENV = Deno.env.get('META_THREADS_ACCESS_TOKEN') || '';
 const THREADS_USER_ID = Deno.env.get('META_THREADS_USER_ID') || '';
 const PAGE_ID = Deno.env.get('META_PAGE_ID') || '';
 const PAGE_TOKEN = Deno.env.get('META_PAGE_ACCESS_TOKEN') || '';
@@ -18,6 +18,12 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
 };
 
+// Helper: get Threads token from DB (refreshed by refresh-threads-token cron) or fall back to env
+async function getThreadsToken(sb: any): Promise<string> {
+  const { data } = await sb.from('social_tokens').select('token_value').eq('token_name', 'META_THREADS_ACCESS_TOKEN').single();
+  return data?.token_value || THREADS_TOKEN_ENV;
+}
+
 // Detect if URL is a video based on extension
 function isVideo(url: string): boolean {
   const lower = url.toLowerCase().split('?')[0];
@@ -28,6 +34,7 @@ Deno.serve(async (_req: Request) => {
   if (_req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   const sb = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+  const THREADS_TOKEN = await getThreadsToken(sb);
 
   const { data: duePosts, error: fetchErr } = await sb
     .from('threads_scheduled_posts')

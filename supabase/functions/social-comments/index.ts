@@ -3,7 +3,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-const THREADS_TOKEN = Deno.env.get('META_THREADS_ACCESS_TOKEN') || '';
+const THREADS_TOKEN_ENV = Deno.env.get('META_THREADS_ACCESS_TOKEN') || '';
 const PAGE_TOKEN = Deno.env.get('META_PAGE_ACCESS_TOKEN') || '';
 const IG_BUSINESS_ID = Deno.env.get('META_IG_BUSINESS_ID') || '';
 
@@ -16,6 +16,11 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
 };
 
+async function getThreadsToken(sb: any): Promise<string> {
+  const { data } = await sb.from('social_tokens').select('token_value').eq('token_name', 'META_THREADS_ACCESS_TOKEN').single();
+  return data?.token_value || THREADS_TOKEN_ENV;
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
@@ -23,6 +28,7 @@ Deno.serve(async (req: Request) => {
   try { body = await req.json(); } catch { /* empty body ok for GET */ }
 
   const sb = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+  const THREADS_TOKEN = await getThreadsToken(sb);
   const postId = body.post_id;
   const platform = body.platform; // 'threads', 'facebook', 'instagram'
 
