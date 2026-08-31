@@ -599,6 +599,68 @@
     .journey-section { padding: 40px 20px; }
   }
 
+  /* ─── Partners / Universities ─── */
+  .partners-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .partner-card {
+    background: #fff; border-radius: 14px; padding: 24px 16px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .partner-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+    border-color: var(--electric);
+  }
+  .partner-crest {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 800; color: #fff;
+    background: linear-gradient(135deg, var(--navy), var(--ink));
+    border: 3px solid var(--electric);
+  }
+  .partner-card:nth-child(2) .partner-crest { border-color: var(--lime-d); }
+  .partner-card:nth-child(3) .partner-crest { border-color: var(--coral); }
+  .partner-card:nth-child(4) .partner-crest { border-color: var(--amber); }
+  .partner-card:nth-child(5) .partner-crest { border-color: var(--magenta); }
+  .partner-card:nth-child(6) .partner-crest { border-color: var(--electric); }
+  .partner-card:nth-child(7) .partner-crest { border-color: var(--lime-d); }
+  .partner-card:nth-child(8) .partner-crest { border-color: var(--coral); }
+  .partner-card:nth-child(9) .partner-crest { border-color: var(--amber); }
+  .partner-card:nth-child(10) .partner-crest { border-color: var(--magenta); }
+  .partner-name {
+    font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.3;
+  }
+  .partner-city {
+    font-size: 11px; color: var(--gray); font-weight: 500;
+  }
+  .partner-badge {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--electric);
+    background: rgba(61,223,255,0.1); padding: 3px 8px; border-radius: 10px;
+  }
+  [data-theme="dark"] .partner-card {
+    background: var(--card-bg) !important;
+    border-color: var(--card-border) !important;
+  }
+  [data-theme="dark"] .partner-name { color: var(--text) !important; }
+  [data-theme="dark"] .partner-city { color: var(--gray) !important; }
+  [data-theme="dark"] .partner-crest {
+    background: linear-gradient(135deg, #0b1e3f, #080a14) !important;
+  }
+  @media (max-width: 1200px) {
+    .partners-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 700px) {
+    .partners-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
   /* ─── What We Provide ─── */
   .provide-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
@@ -993,6 +1055,7 @@
   <ul>
     <li><a href="#mission" data-en="Mission">Миссия</a></li>
     <li><a href="#why-italy" data-en="Why Italy">Почему Италия</a></li>
+    <li><a href="#partners" data-en="Partners">Партнёры</a></li>
     <li><a href="#journey" data-en="Career Path">Карьерный путь</a></li>
     <li><a href="#packages" data-en="Packages">Пакеты</a></li>
     <li><a href="#process" data-en="Process">Процесс</a></li>
@@ -1101,6 +1164,76 @@
     <div class="why-banner-content">
       <h4 data-en="Bottom line: the student gets not just a diploma — they get career capital">Итог: студент получает не просто диплом — он получает карьерный капитал</h4>
       <p data-en="Second language · European diploma · International network · EU work experience · Exchange to USA/Canada · Publications · Mentorship from top professors">Второй язык · Европейский диплом · Международная сеть · Опыт работы в ЕС · Возможность обмена в США/Канаду · Публикации · Менторство от топовых профессоров</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Partners / Top Universities ─── -->
+<section id="partners" class="fade-in">
+  <div class="section-tag" data-en="Our Partners">Наши партнёры</div>
+  <div class="section-title" data-en="Top 10 Italian state universities we work with">Топ-10 государственных университетов Италии, с которыми мы работаем</div>
+  <div class="section-sub" data-en="The largest and most prestigious public universities in Italy — direct partnerships, personal contacts, fast admissions.">Крупнейшие и самые престижные государственные вузы Италии — прямые партнёрства, личные контакты, быстрые зачисления.</div>
+
+  <div class="partners-grid">
+    <div class="partner-card">
+      <div class="partner-crest">S</div>
+      <div class="partner-name">Sapienza Università di Roma</div>
+      <div class="partner-city">Rome · Lazio</div>
+      <div class="partner-badge">QS #134</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-crest">B</div>
+      <div class="partner-name">Università di Bologna</div>
+      <div class="partner-city">Bologna · Emilia-Romagna</div>
+      <div class="partner-badge">QS #133 · 1088 г.</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-crest">P</div>
+      <div class="partner-name">Politecnico di Milano</div>
+      <div class="partner-city">Milan · Lombardy</div>
+      <div class="partner-badge">QS #123 · Engineering</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-crest">P</div>
+      <div class="partner-name">Politecnico di Torino</div>
+      <div class="partner-city">Turin · Piedmont</div>
+      <div class="partner-badge">QS #252 · Engineering</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-crest">P</div>
+      <div class="partner-name">Università di Padova</div>
+      <div class="partner-city">Padua · Veneto</div>
+      <div class="partner-badge">QS #219 · 1222 г.</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-crest">M</div>
+      <div class="partner-name">Università degli Studi di Milano</div>
+      <div class="partner-city">Milan · Lombardy</div>
+      <div class="partner-badge">QS #285</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-crest">N</div>
+      <div class="partner-name">Università di Napoli Federico II</div>
+      <div class="partner-city">Naples · Campania</div>
+      <div class="partner-badge">QS #347 · 1224 г.</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-crest">F</div>
+      <div class="partner-name">Università di Firenze</div>
+      <div class="partner-city">Florence · Tuscany</div>
+      <div class="partner-badge">QS #358</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-crest">R</div>
+      <div class="partner-name">Università degli Studi Roma Tre</div>
+      <div class="partner-city">Rome · Lazio</div>
+      <div class="partner-badge">Modern · Growing</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-crest">T</div>
+      <div class="partner-name">Università di Roma Tor Vergata</div>
+      <div class="partner-city">Rome · Lazio</div>
+      <div class="partner-badge">Research-focused</div>
     </div>
   </div>
 </section>
