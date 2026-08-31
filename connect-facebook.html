@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Подключение Facebook — EuroPath Education</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root { --navy:#0b1e3f; --ink:#080a14; --blue:#2E86C1; --electric:#3ddfff; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; --green:#22c55e; --red:#ef4444; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', -apple-system, sans-serif; background:var(--off); color:var(--ink); }
+  .login-box { background:#fff; border-radius:16px; padding:40px; width:380px; margin:80px auto; box-shadow:0 20px 60px rgba(0,0,0,.1); }
+  .login-box h1 { font-size:22px; margin-bottom:12px; }
+  .login-box input { width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; margin-bottom:12px; }
+  .login-box button { width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; }
+  .login-box .login-error { color:var(--red); font-size:13px; margin-top:8px; display:none; }
+  .app { display:none; max-width:720px; margin:40px auto; padding:0 24px; }
+  .card { background:#fff; border-radius:14px; padding:28px; margin-bottom:24px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .card h2 { font-size:18px; font-weight:700; margin-bottom:6px; }
+  .card .sub { color:var(--gray); font-size:13px; margin-bottom:20px; }
+  .btn { padding:12px 24px; border:none; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .btn-connect { background:#1877F2; color:#fff; }
+  .btn-connect:hover { background:#145db2; }
+  .btn-connect:disabled { opacity:.5; cursor:wait; }
+  .btn-test { background:#f0f0f0; color:var(--ink); }
+  .result { margin-top:16px; padding:14px; border-radius:10px; font-size:13px; display:none; }
+  .result.success { background:#e6f9ec; color:#155724; display:block; }
+  .result.error { background:#fde8e8; color:#721c1c; display:block; }
+  .log { background:#f8f9fa; border-radius:10px; padding:14px; font-size:13px; line-height:1.6; margin-top:14px; }
+  .log div { margin-bottom:4px; }
+</style>
+</head>
+<body>
+
+<div class="login-box" id="loginBox">
+  <h1>🔑 Вход</h1>
+  <input type="email" id="loginEmail" placeholder="Email" autocomplete="email" value="hasanov.anar.2023@gmail.com">
+  <input type="password" id="loginPassword" placeholder="Пароль" autocomplete="current-password">
+  <button onclick="doLogin()">Войти</button>
+  <div class="login-error" id="loginError"></div>
+</div>
+
+<div class="app" id="app">
+  <div class="card">
+    <h2>Подключить Facebook</h2>
+    <div class="sub">Нажмите кнопку, чтобы авторизоваться и получить токен для публикации на странице.</div>
+    <button class="btn btn-connect" id="connectBtn" onclick="connectFacebook()">🔵 Подключить Facebook</button>
+    <div class="log" id="log"></div>
+    <div class="result" id="result"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsZml6Y2dheXFlY252dGZpaGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTAzMDUsImV4cCI6MjEwMzU4NjMwNX0.V9MiUESH7Xu1TG4tadkj9a7_wi-pouLPtv3yYTSEn0I';
+const FB_APP_ID = '959105600544977';
+const API_VERSION = 'v21.0';
+let sb, sessionToken;
+
+sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function log(msg) {
+  const l = document.getElementById('log');
+  l.innerHTML += '<div>' + msg + '</div>';
+  console.log(msg);
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { err.textContent = error.message; err.style.display = 'block'; }
+  else { sessionToken = data.session.access_token; showApp(); }
+}
+
+function showApp() {
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  log('✅ Вход выполнен. Нажмите "Подключить Facebook".');
+}
+
+window.fbAsyncInit = function() {
+  FB.init({
+    appId: FB_APP_ID,
+    cookie: true,
+    xfbml: true,
+    version: API_VERSION
+  });
+  log('✅ Facebook SDK загружен.');
+};
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js';
+  fjs.parentNode.insertBefore(js, fjs);
+})(document, 'script', 'facebook-jssdk');
+
+async function connectFacebook() {
+  const btn = document.getElementById('connectBtn');
+  const result = document.getElementById('result');
+  btn.disabled = true; btn.textContent = 'Подключение...';
+  result.className = 'result'; result.innerHTML = '';
+
+  log('⏳ Открываю Facebook Login dialog...');
+  FB.login(async function(response) {
+    if (response.authResponse) {
+      const userToken = response.authResponse.accessToken;
+      log('✅ Пользователь авторизовался.');
+      await processToken(userToken);
+    } else {
+      log('❌ Пользователь отменил авторизацию.');
+      result.className = 'result error'; result.innerHTML = 'Авторизация отменена.';
+    }
+    btn.disabled = false; btn.textContent = '🔵 Подключить Facebook';
+  }, { scope: 'pages_manage_posts,pages_read_engagement,instagram_content_publish', return_scopes: true });
+}
+
+async function processToken(userToken) {
+  try {
+    log('⏳ Получаю страницы...');
+    const pagesRes = await fetch(`https://graph.facebook.com/${API_VERSION}/me/accounts?access_token=${userToken}`);
+    const pagesData = await pagesRes.json();
+    if (!pagesData.data || pagesData.data.length === 0) throw new Error('Страницы не найдены. Убедитесь, что аккаунт админ страницы.');
+    const page = pagesData.data[0];
+    log(`✅ Найдена страница: ${page.name} (${page.id})`);
+
+    log('⏳ Получаю Instagram Business ID...');
+    const igRes = await fetch(`https://graph.facebook.com/${API_VERSION}/${page.id}?fields=instagram_business_account&access_token=${page.access_token}`);
+    const igData = await igRes.json();
+    const igBusinessId = igData.instagram_business_account ? igData.instagram_business_account.id : '';
+    if (igBusinessId) log(`✅ Instagram Business ID: ${igBusinessId}`);
+    else log('⚠️ Instagram Business ID не найден.');
+
+    log('⏳ Сохраняю токены...');
+    const settings = {
+      page_id: page.id,
+      page_token: page.access_token,
+      ig_business_id: igBusinessId,
+    };
+    const saveRes = await fetch(SUPABASE_URL + '/functions/v1/save-meta-settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionToken },
+      body: JSON.stringify({ settings })
+    });
+    const saveData = await saveRes.json();
+    if (!saveData.success) throw new Error(saveData.error || 'Ошибка сохранения');
+    log('✅ Токены сохранены.');
+
+    const result = document.getElementById('result');
+    result.className = 'result success';
+    result.innerHTML = `✅ Facebook подключен.<br>Страница: ${page.name}<br>Page ID: ${page.id}<br>Instagram ID: ${igBusinessId || 'не найден'}<br>Теперь можно публиковать.`;
+  } catch (err) {
+    log('❌ ' + err.message);
+    const result = document.getElementById('result');
+    result.className = 'result error'; result.innerHTML = 'Ошибка: ' + err.message;
+  }
+}
+
+document.getElementById('loginPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>
