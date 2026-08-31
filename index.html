@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233ddfff'/><stop offset='1' stop-color='%23c6ff3d'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='72' font-size='62' font-weight='900' text-anchor='middle' fill='%23080a14' font-family='Arial,sans-serif'>E</text></svg>">
 <title>EuroPath Education — Study in Italy | University Admissions Consulting</title>
 <meta name="description" content="EuroPath Education is a consulting company based in Italy that helps students enroll in top Italian state universities. Direct partnerships with Sapienza, Bologna, Padova, Pavia, Torino, Milano, Pisa, Firenze, Roma Tre, and Tor Vergata. Scholarships, visas, housing, and full support.">
 <meta name="keywords" content="EuroPath Education, europatheducation.eu, study in Italy, Italian universities, university admissions Italy, Sapienza, Bologna, Padova, Pavia, Torino, Milano, Pisa, scholarships Italy, DSU, EDISU, student visa Italy, education consulting Italy">
@@ -38,7 +38,7 @@
   "name": "EuroPath Education",
   "alternateName": ["EuroPath Education", "europatheducation.eu", "Euro Path Education"],
   "url": "https://europatheducation.eu/",
-  "logo": "https://europatheducation.eu/images/universities/bologna.png",
+  "logo": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233ddfff'/><text x='50' y='72' font-size='62' font-weight='900' text-anchor='middle' fill='%23080a14'>E</text></svg>",
   "description": "EuroPath Education is a consulting company based in Italy that helps international students enroll in top Italian state universities. Direct partnerships with Sapienza, Bologna, Padova, Pavia, Torino, Milano, Pisa, Firenze, Roma Tre, and Tor Vergata. Scholarships, visas, housing, and full support.",
   "address": {
     "@type": "PostalAddress",
@@ -127,6 +127,18 @@
     padding: 12px 40px 12px 160px;
     display: flex; align-items: center; justify-content: space-between;
   }
+  /* ─── Letter sign logo ─── */
+  .logo-sign {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    color: var(--ink); font-size: 22px; font-weight: 900;
+    font-family: 'Inter', -apple-system, sans-serif;
+    letter-spacing: -1px; flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(61,223,255,0.3);
+  }
+  footer .logo-sign { width: 32px; height: 32px; font-size: 20px; border-radius: 8px; }
+  .brand-with-logo { display: flex; align-items: center; gap: 10px; }
   nav .brand {
     font-size: 18px; font-weight: 800; color: #fff;
     letter-spacing: -0.5px;
@@ -1050,7 +1062,7 @@
   }
   .ep-chat-launcher:hover { transform: scale(1.08); }
   .ep-chat-window {
-    position: fixed; bottom: 96px; right: 24px; width: 360px; max-width: calc(100vw - 32px); max-height: 520px;
+    position: fixed; bottom: 96px; right: 24px; width: 460px; max-width: calc(100vw - 32px); max-height: 680px;
     background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.25); z-index: 301;
     display: flex; flex-direction: column; overflow: hidden;
@@ -1063,10 +1075,11 @@
     padding: 16px 18px; display: flex; align-items: center; gap: 10px;
   }
   .ep-chat-avatar {
-    width: 36px; height: 36px; border-radius: 50%;
+    width: 40px; height: 40px; border-radius: 50%;
     background: linear-gradient(135deg, var(--electric), var(--lime));
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; color: var(--ink);
+    font-size: 20px; font-weight: 800; color: var(--ink);
+    font-family: 'Inter', sans-serif;
   }
   .ep-chat-title { flex: 1; }
   .ep-chat-title strong { display: block; font-size: 14px; font-weight: 700; }
@@ -1077,8 +1090,8 @@
     background: var(--off-white);
   }
   .ep-chat-messages .ep-msg {
-    max-width: 85%; padding: 12px 14px; border-radius: 16px;
-    font-size: 13px; line-height: 1.5;
+    max-width: 85%; padding: 14px 16px; border-radius: 16px;
+    font-size: 14px; line-height: 1.55;
   }
   .ep-chat-messages .ep-msg.bot {
     background: #fff; color: var(--dark); border: 1px solid var(--card-border);
@@ -1110,15 +1123,15 @@
   }
   .ep-chat-input input {
     flex: 1; border: 1px solid var(--input-border); border-radius: 24px;
-    padding: 10px 14px; font-family: inherit; font-size: 13px; outline: none;
+    padding: 12px 16px; font-family: inherit; font-size: 14px; outline: none;
   }
   .ep-chat-input button {
     width: 40px; height: 40px; border-radius: 50%; border: none;
     background: var(--navy); color: #fff; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
   }
-  @media (max-width: 420px) {
-    .ep-chat-window { width: calc(100vw - 32px); right: 16px; bottom: 88px; max-height: 70vh; }
+  @media (max-width: 520px) {
+    .ep-chat-window { width: calc(100vw - 32px); right: 16px; bottom: 88px; max-height: 75vh; }
     .ep-chat-launcher { bottom: 16px; right: 16px; }
   }
 </style>
@@ -1127,7 +1140,7 @@
 
 <!-- ─── Nav ─── -->
 <nav>
-  <div class="brand">EuroPath <span>Education</span></div>
+  <div class="brand-with-logo"><div class="logo-sign">E</div><div class="brand">EuroPath <span>Education</span></div></div>
   <ul>
     <li><a href="#mission" data-en="Mission">Миссия</a></li>
     <li><a href="#why-italy" data-en="Why Italy">Почему Италия</a></li>
@@ -1850,7 +1863,7 @@
 
 <!-- ─── Footer ─── -->
 <footer>
-  <div class="brand">EuroPath <span>Education</span></div>
+  <div class="brand-with-logo"><div class="logo-sign">E</div><div class="brand">EuroPath <span>Education</span></div></div>
   <p data-en="EuroPath Education · Italy, Lazio · Via Roma 37, Italy<br>Admission to Italian universities">EuroPath Education · Италия, Lazio · Via Roma 37, Италия<br>
   Поступление в университеты Италии</p>
   <a href="admin.html" style="color:rgba(255,255,255,0.15); font-size:10px; text-decoration:none; margin-top:8px; display:inline-block;">·</a>
@@ -2130,13 +2143,13 @@
 </script>
 
 <!-- ─── AI assistant popup (free, client-side) ─── -->
-<div id="epChatLauncher" class="ep-chat-launcher" role="button" aria-label="Открыть чат" tabindex="0">🤖</div>
+<div id="epChatLauncher" class="ep-chat-launcher" role="button" aria-label="Открыть чат с Алисой" tabindex="0">💬</div>
 <div id="epChatWindow" class="ep-chat-window">
   <div class="ep-chat-header">
-    <div class="ep-chat-avatar">✨</div>
+    <div class="ep-chat-avatar">А</div>
     <div class="ep-chat-title">
-      <strong>AI Консультант</strong>
-      <span>EuroPath Education</span>
+      <strong>Алиса</strong>
+      <span>AI-консультант EuroPath</span>
     </div>
     <button id="epChatClose" class="ep-chat-close" aria-label="Закрыть">&times;</button>
   </div>
@@ -2178,7 +2191,7 @@
     visa: 'Для учебной визы нужно: приглашение, подтверждение жилья, финансовые гарантии, страховка, переводы с апостилем. После приезда оформляется Permesso di Soggiorno. Мы помогаем на каждом этапе.',
     housing: 'Помогаем с поиском жилья: общежитие DSU/EDISU, аренда квартиры, регистрация residenza. Стипендия часто включает проживание в студенческом общежитии. Обсудим варианты на консультации.',
     consultation: 'Запишитесь на бесплатную консультацию. Уточним ваши цели, сроки, университет, бюджет и следующие шаги. Оставьте заявку в форме на сайте или напишите на info@europatheducation.eu.',
-    fallback: 'Я AI-консультант на основе информации сайта. Для личного ответа оставьте заявку в форме на сайте или напишите на info@europatheducation.eu. Попробуйте уточнить: поступление, стипендии, стоимость, виза, жильё.'
+    fallback: 'Я Алиса, AI-консультант EuroPath Education. Я знаю о поступлении, стипендиях DSU/EDISU, визах, жилье и университетах-партнёрах. Уточните вопрос или оставьте заявку в форме на сайте. Также можно написать на info@europatheducation.eu.'
   };
 
   function matchAnswer(text){
@@ -2247,7 +2260,7 @@
   form.addEventListener('submit', e => { e.preventDefault(); handleSend(input.value); });
 
   setTimeout(() => {
-    addMessage('Здравствуйте! Я AI-консультант EuroPath Education. Задайте вопрос о поступлении, стипендиях, визе, жилье или выберите тему ниже.', 'bot');
+    addMessage('Здравствуйте! Я Алиса — AI-консультант EuroPath Education. Спросите меня о поступлении, стипендиях, визе, жилье или выберите тему ниже.', 'bot');
   }, 800);
 
   if (!sessionStorage.getItem('epChatOpened')) {
