@@ -19,13 +19,10 @@ const corsHeaders = {
 };
 
 Deno.serve(async (_req: Request) => {
-  if (_req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
-  }
+  if (_req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   const sb = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-  // Get pending posts whose scheduled time has passed
   const { data: duePosts, error: fetchErr } = await sb
     .from('threads_scheduled_posts')
     .select('*')
@@ -55,22 +52,32 @@ Deno.serve(async (_req: Request) => {
 
     const platformResults: Record<string, any> = {};
     const postIds: Record<string, string> = {};
+    const hasImage = !!post.image_url;
 
-    // === THREADS (text only) ===
+    // === THREADS ===
     try {
+      const threadsBody: any = { text: post.text, access_token: THREADS_TOKEN };
+      if (hasImage) {
+        threadsBody.media_type = 'IMAGE';
+        threadsBody.image_url = post.image_url;
+      } else {
+        threadsBody.media_type = 'TEXT';
+      }
       const createRes = await fetch(`${THREADS_API}/${THREADS_USER_ID}/threads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ media_type: 'TEXT', text: post.text, access_token: THREADS_TOKEN }),
+        body: JSON.stringify(threadsBody),
       });
       const createData = await createRes.json();
       if (createData.error) {
         platformResults.threads = { success: false, error: createData.error.message };
       } else {
-        const publishRes = await fetch(`${THREADS_API}/${createData.id}/publish`, {
+        // Wait for processing (3s for text, 10s for images)
+        await new Promise(r => setTimeout(r, hasImage ? 10000 : 3000));
+        const publishRes = await fetch(`${THREADS_API}/${THREADS_USER_ID}/threads_publish`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ access_token: THREADS_TOKEN }),
+          body: JSON.stringify({ creation_id: createData.id, access_token: THREADS_TOKEN }),
         });
         const publishData = await publishRes.json();
         if (publishData.error) {
@@ -84,42 +91,60 @@ Deno.serve(async (_req: Request) => {
       platformResults.threads = { success: false, error: String(err) };
     }
 
-    // === FACEBOOK PAGE (text only) ===
+    // === FACEBOOK PAGE ===
     try {
-      const fbRes = await fetch(`${FB_API}/${PAGE_ID}/feed`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: post.text, access_token: PAGE_TOKEN }),
-      });
-      const fbData = await fbRes.json();
-      if (fbData.error) {
-        platformResults.facebook = { success: false, error: fbData.error.message };
+      const fbBody: any = { message: post.text, access_token: PAGE_TOKEN };
+      if (hasImage) {
+        // Post with photo
+        const fbRes = await fetch(`${FB_API}/${PAGE_ID}/photos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: post.image_url, caption: post.text, access_token: PAGE_TOKEN }),
+        });
+        const fbData = await fbRes.json();
+        if (fbData.error) {
+          platformResults.facebook = { success: false, error: fbData.error.message };
+        } else {
+          // Get the post ID (not the photo ID)
+          const postIdRes = await fetch(`${FB_API}/${fbData.id}?fields=post_id&access_token=${PAGE_TOKEN}`);
+          const postIdData = await postIdRes.json();
+          const fbPostId = postIdData.post_id || fbData.id;
+          platformResults.facebook = { success: true, post_id: fbPostId };
+          postIds.fb_post_id = fbPostId;
+        }
       } else {
-        platformResults.facebook = { success: true, post_id: fbData.id };
-        postIds.fb_post_id = fbData.id;
+        // Text-only post
+        const fbRes = await fetch(`${FB_API}/${PAGE_ID}/feed`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: post.text, access_token: PAGE_TOKEN }),
+        });
+        const fbData = await fbRes.json();
+        if (fbData.error) {
+          platformResults.facebook = { success: false, error: fbData.error.message };
+        } else {
+          platformResults.facebook = { success: true, post_id: fbData.id };
+          postIds.fb_post_id = fbData.id;
+        }
       }
     } catch (err) {
       platformResults.facebook = { success: false, error: String(err) };
     }
 
     // === INSTAGRAM (image + caption) ===
-    if (post.image_url) {
+    if (hasImage) {
       try {
-        // Step 1: Create IG media container
         const igCreateRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            image_url: post.image_url,
-            caption: post.text,
-            access_token: PAGE_TOKEN,
-          }),
+          body: JSON.stringify({ image_url: post.image_url, caption: post.text, access_token: PAGE_TOKEN }),
         });
         const igCreateData = await igCreateRes.json();
         if (igCreateData.error) {
           platformResults.instagram = { success: false, error: igCreateData.error.message };
         } else {
-          // Step 2: Publish
+          // Wait for processing
+          await new Promise(r => setTimeout(r, 5000));
           const igPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -137,7 +162,7 @@ Deno.serve(async (_req: Request) => {
         platformResults.instagram = { success: false, error: String(err) };
       }
     } else {
-      platformResults.instagram = { success: false, error: 'No image_url — Instagram requires an image' };
+      platformResults.instagram = { success: false, error: 'No image — Instagram requires an image' };
     }
 
     // Determine overall status
@@ -147,7 +172,6 @@ Deno.serve(async (_req: Request) => {
     if (successCount === allResults.length) status = 'published';
     else if (successCount > 0) status = 'partial';
 
-    // Build platforms_status
     const platformsStatus: Record<string, string> = {};
     for (const [platform, result] of Object.entries(platformResults)) {
       platformsStatus[platform] = (result as any).success ? 'published' : 'failed';
@@ -166,9 +190,25 @@ Deno.serve(async (_req: Request) => {
       })
       .eq('id', post.id);
 
+    // Delete uploaded file from storage after publishing (cleanup)
+    if (post.image_url && post.image_url.includes('social-uploads')) {
+      try {
+        // Extract file path from URL
+        const urlObj = new URL(post.image_url);
+        const pathParts = urlObj.pathname.split('/social-uploads/');
+        if (pathParts.length > 1) {
+          const filePath = pathParts[1];
+          await sb.storage.from('social-uploads').remove([filePath]);
+        }
+      } catch (e) { /* best effort cleanup */ }
+      // Clear image_url from DB since file is deleted
+      await sb.from('threads_scheduled_posts')
+        .update({ image_url: null })
+        .eq('id', post.id);
+    }
+
     results.push({ post_number: post.post_number, status, platformResults });
 
-    // 5s delay between posts to avoid rate limits
     await new Promise(r => setTimeout(r, 5000));
   }
 
