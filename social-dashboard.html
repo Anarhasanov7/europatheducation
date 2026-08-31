@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Dashboard — EuroPath Education</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📣</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --blue:#2E86C1; --lime:#c6ff3d; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; --green:#22c55e; --red:#ef4444; --orange:#e67e22; --purple:#8b5cf6; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', -apple-system, sans-serif; background:var(--off); color:var(--ink); }
+
+  /* Login */
+  #loginOverlay { position:fixed; inset:0; background:linear-gradient(135deg,#0b1e3f,#16213e); display:flex; align-items:center; justify-content:center; z-index:100; }
+  .login-box { background:#fff; border-radius:16px; padding:40px; width:380px; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+  .login-box h1 { font-size:24px; margin-bottom:4px; }
+  .login-box .sub { color:var(--gray); margin-bottom:24px; font-size:14px; }
+  .login-box input { width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; margin-bottom:12px; }
+  .login-box button { width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; }
+  .login-box button:hover { background:#1a6ba8; }
+  .login-box button:disabled { opacity:.6; cursor:wait; }
+  .login-error { color:var(--red); font-size:13px; margin-top:8px; display:none; }
+  .login-divider { display:flex; align-items:center; gap:12px; margin:16px 0; }
+  .login-divider::before, .login-divider::after { content:''; flex:1; height:1px; background:#e0e0e0; }
+  .login-divider span { font-size:12px; color:#888; }
+  .login-github { width:100%; padding:12px 14px; border:1px solid #ddd; border-radius:8px; background:#24292f; color:#fff; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:background .2s; font-family:'Inter',sans-serif; }
+  .login-github:hover { background:#1c2025; }
+  .login-github:disabled { opacity:0.5; cursor:wait; }
+  .login-github svg { width:20px; height:20px; }
+
+  /* Header */
+  .header { background:#fff; border-bottom:1px solid #e0e0e0; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
+  .header h1 { font-size:18px; color:var(--blue); }
+  .header .user-info { font-size:13px; color:var(--gray); }
+  .logout-btn { background:none; border:1px solid #ddd; padding:6px 16px; border-radius:6px; cursor:pointer; font-size:13px; color:#666; }
+  .logout-btn:hover { background:#f5f5f5; }
+
+  /* Stats */
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; padding:24px; max-width:1400px; margin:0 auto; }
+  .stat-card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .stat-card .label { font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.5px; }
+  .stat-card .value { font-size:32px; font-weight:700; margin-top:4px; }
+  .stat-card .value.blue { color:var(--blue); }
+  .stat-card .value.green { color:var(--green); }
+  .stat-card .value.orange { color:var(--orange); }
+  .stat-card .value.red { color:var(--red); }
+  .stat-card .value.purple { color:var(--purple); }
+
+  /* Toolbar */
+  .toolbar { display:flex; gap:12px; padding:0 24px 16px; max-width:1400px; margin:0 auto; flex-wrap:wrap; align-items:center; }
+  .toolbar input, .toolbar select { padding:8px 12px; border:1px solid #ddd; border-radius:6px; font-size:14px; }
+  .toolbar input { flex:1; min-width:200px; }
+  .btn { padding:8px 16px; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; }
+  .btn-primary { background:var(--blue); color:#fff; }
+  .btn-primary:hover { background:#1a6ba8; }
+  .btn-green { background:var(--green); color:#fff; }
+  .btn-green:hover { background:#16a34a; }
+  .btn-red { background:var(--red); color:#fff; }
+  .btn-red:hover { background:#dc2626; }
+  .btn-orange { background:var(--orange); color:#fff; }
+  .btn-orange:hover { background:#d35400; }
+  .btn-gray { background:#e0e0e0; color:#333; }
+  .btn-gray:hover { background:#d0d0d0; }
+  .btn:disabled { opacity:.5; cursor:wait; }
+  .btn-sm { padding:5px 10px; font-size:12px; }
+
+  /* Table */
+  .table-container { max-width:1400px; margin:0 auto; padding:0 24px 24px; }
+  .table-wrap { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  table { width:100%; border-collapse:collapse; }
+  th { background:#f8f9fa; padding:12px 16px; text-align:left; font-size:11px; text-transform:uppercase; color:#666; letter-spacing:.5px; border-bottom:1px solid #e0e0e0; }
+  td { padding:12px 16px; border-bottom:1px solid #f0f0f0; font-size:14px; vertical-align:top; }
+  tr:hover { background:#f8f9fa; }
+
+  /* Badges */
+  .badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; text-transform:uppercase; }
+  .badge.pending { background:#fff3cd; color:#856404; }
+  .badge.published { background:#d4edda; color:#155724; }
+  .badge.partial { background:#cce5ff; color:#004085; }
+  .badge.failed { background:#fee2e2; color:#991b1b; }
+  .badge.threads { background:#000; color:#fff; }
+  .badge.facebook { background:#1877f2; color:#fff; }
+  .badge.instagram { background:#c13584; color:#fff; }
+  .badge.dot { width:8px; height:8px; border-radius:50%; display:inline-block; padding:0; }
+  .badge.dot.published { background:var(--green); }
+  .badge.dot.failed { background:var(--red); }
+  .badge.dot.pending { background:#ccc; }
+
+  /* Post text preview */
+  .post-text { max-width:400px; white-space:pre-wrap; word-break:break-word; font-size:13px; line-height:1.5; color:#333; max-height:80px; overflow:hidden; position:relative; }
+  .post-text.expanded { max-height:none; }
+  .post-text-toggle { color:var(--blue); cursor:pointer; font-size:12px; font-weight:600; }
+
+  /* Platform status */
+  .platform-status { display:flex; gap:6px; align-items:center; }
+  .platform-icon { font-size:16px; }
+
+  /* Modal */
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
+  .modal-overlay.active { display:flex; }
+  .modal { background:#fff; border-radius:16px; max-width:700px; width:100%; max-height:90vh; overflow-y:auto; padding:32px; }
+  .modal.large { max-width:900px; }
+  .modal h2 { font-size:22px; margin-bottom:4px; }
+  .modal .sub { color:#666; font-size:14px; margin-bottom:24px; }
+  .modal-close { float:right; background:none; border:none; font-size:24px; cursor:pointer; color:#999; }
+  .form-group { margin-bottom:16px; }
+  .form-group label { display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:var(--ink); }
+  .form-group input, .form-group textarea, .form-group select { width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px; font-size:14px; font-family:'Inter',sans-serif; outline:none; transition:border-color .2s; }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--blue); }
+  .form-group textarea { min-height:120px; resize:vertical; line-height:1.6; }
+  .form-group .hint { font-size:11px; color:#888; margin-top:4px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .form-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; padding-top:20px; border-top:1px solid #eee; }
+  .char-count { font-size:12px; color:#888; text-align:right; margin-top:4px; }
+  .char-count.over { color:var(--red); font-weight:600; }
+
+  /* Detail view */
+  .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+  .detail-item { padding:12px; background:#f8f9fa; border-radius:8px; }
+  .detail-item .key { font-size:11px; color:#888; text-transform:uppercase; }
+  .detail-item .val { font-size:14px; font-weight:500; margin-top:2px; word-break:break-word; }
+  .detail-text { padding:16px; background:#f8f9fa; border-radius:10px; font-size:14px; line-height:1.7; white-space:pre-wrap; margin-bottom:16px; }
+  .detail-img { max-width:100%; border-radius:10px; margin-bottom:16px; }
+  .error-box { padding:14px; background:#fee2e2; border-radius:8px; font-size:12px; color:#991b1b; white-space:pre-wrap; word-break:break-all; margin-top:12px; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; right:24px; padding:14px 24px; border-radius:10px; color:#fff; font-size:14px; font-weight:600; z-index:200; opacity:0; transition:opacity .3s; box-shadow:0 8px 30px rgba(0,0,0,.2); }
+  .toast.show { opacity:1; }
+  .toast.success { background:var(--green); }
+  .toast.error { background:var(--red); }
+  .toast.info { background:var(--blue); }
+
+  .empty { text-align:center; padding:60px; color:#888; }
+  .loading { text-align:center; padding:40px; color:#888; }
+
+  @media (max-width:768px) {
+    .form-row { grid-template-columns:1fr; }
+    .detail-grid { grid-template-columns:1fr; }
+    .stats { grid-template-columns:1fr 1fr; }
+    table { font-size:12px; }
+    th, td { padding:8px; }
+    .hide-mobile { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loginOverlay">
+  <div class="login-box">
+    <h1>📣 Social Media Dashboard</h1>
+    <p class="sub">EuroPath Education — Threads · Facebook · Instagram</p>
+    <input type="email" id="adminEmail" placeholder="Admin email" value="hasanov.anar.2023@gmail.com">
+    <input type="password" id="adminPassword" placeholder="Password">
+    <button id="loginBtn" onclick="adminLogin()">Sign In</button>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-divider"><span>or</span></div>
+    <button class="login-github" id="githubLoginBtn" onclick="adminGitHubLogin()">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      Continue with GitHub
+    </button>
+  </div>
+</div>
+
+<div class="header" id="mainHeader" style="display:none;">
+  <h1>📣 EuroPath — Social Media</h1>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <span class="user-info" id="adminInfo"></span>
+    <button class="logout-btn" onclick="adminLogout()">Logout</button>
+  </div>
+</div>
+
+<div class="stats" id="statsSection" style="display:none;">
+  <div class="stat-card"><div class="label">Total Posts</div><div class="value blue" id="statTotal">0</div></div>
+  <div class="stat-card"><div class="label">Pending</div><div class="value orange" id="statPending">0</div></div>
+  <div class="stat-card"><div class="label">Published</div><div class="value green" id="statPublished">0</div></div>
+  <div class="stat-card"><div class="label">Partial</div><div class="value purple" id="statPartial">0</div></div>
+  <div class="stat-card"><div class="label">Failed</div><div class="value red" id="statFailed">0</div></div>
+</div>
+
+<div class="toolbar" id="toolbar" style="display:none;">
+  <input type="text" id="searchInput" placeholder="Search post text..." oninput="renderTable()">
+  <select id="statusFilter" onchange="renderTable()">
+    <option value="">All Status</option>
+    <option value="pending">Pending</option>
+    <option value="published">Published</option>
+    <option value="partial">Partial</option>
+    <option value="failed">Failed</option>
+  </select>
+  <button class="btn btn-primary" onclick="openCreateModal()">+ New Post</button>
+  <button class="btn btn-green" onclick="publishAllDue()" id="publishAllBtn">Publish All Due</button>
+  <button class="btn btn-gray" onclick="loadPosts()">Refresh</button>
+</div>
+
+<div class="table-container" id="tableSection" style="display:none;">
+  <div class="table-wrap">
+    <div class="loading" id="tableLoading">Loading posts...</div>
+    <table id="postsTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Text</th>
+          <th>Scheduled (UTC)</th>
+          <th>Status</th>
+          <th>Platforms</th>
+          <th class="hide-mobile">Published At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="postsBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Create/Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
+    <h2 id="editModalTitle">New Post</h2>
+    <p class="sub" id="editModalSub">Schedule a post for Threads, Facebook & Instagram</p>
+    <input type="hidden" id="editPostId">
+    <div class="form-group">
+      <label>Post Text</label>
+      <textarea id="editText" oninput="updateCharCount()" placeholder="Write your post..."></textarea>
+      <div class="char-count" id="charCount">0 / 500 (Threads limit)</div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Scheduled Date (CEST)</label>
+        <input type="date" id="editDate">
+        <div class="hint">Italy time (CEST = UTC+2)</div>
+      </div>
+      <div class="form-group">
+        <label>Scheduled Time (CEST)</label>
+        <input type="time" id="editTime" value="09:00">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Image URL (optional, required for Instagram)</label>
+      <input type="url" id="editImageUrl" placeholder="https://europatheducation.eu/images/...">
+      <div class="hint">If empty, Instagram will be skipped. Use 1080x1080 for best results.</div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-gray" onclick="closeModal('editModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePost()" id="savePostBtn">Save Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal large">
+    <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+    <h2 id="detailTitle">Post Details</h2>
+    <p class="sub" id="detailSub"></p>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
+let sb;
+let allPosts = [];
+let currentUser = null;
+
+function esc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function toast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+(function loadSB() {
+  if (window.supabase) { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); checkSession(); }
+  else { setTimeout(loadSB, 100); }
+})();
+
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) { currentUser = session.user; showDashboard(); }
+}
+
+async function adminLogin() {
+  const email = document.getElementById('adminEmail').value;
+  const pass = document.getElementById('adminPassword').value;
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  document.getElementById('loginError').style.display = 'none';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  btn.disabled = false; btn.textContent = 'Sign In';
+  if (error) { document.getElementById('loginError').textContent = error.message; document.getElementById('loginError').style.display = 'block'; return; }
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) { currentUser = session.user; showDashboard(); }
+}
+
+async function adminGitHubLogin() {
+  const btn = document.getElementById('githubLoginBtn');
+  btn.disabled = true;
+  await sb.auth.signInWithOAuth({ provider: 'github', options: { redirectTo: window.location.href } });
+}
+
+async function adminLogout() {
+  await sb.auth.signOut();
+  location.reload();
+}
+
+function showDashboard() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('mainHeader').style.display = 'flex';
+  document.getElementById('statsSection').style.display = 'grid';
+  document.getElementById('toolbar').style.display = 'flex';
+  document.getElementById('tableSection').style.display = 'block';
+  document.getElementById('adminInfo').textContent = currentUser.email;
+  loadPosts();
+}
+
+async function loadPosts() {
+  document.getElementById('tableLoading').style.display = 'block';
+  document.getElementById('postsTable').style.display = 'none';
+  const { data, error } = await sb.from('threads_scheduled_posts')
+    .select('*')
+    .order('post_number', { ascending: true });
+  if (error) { toast('Error: ' + error.message, 'error'); return; }
+  allPosts = data || [];
+  updateStats();
+  renderTable();
+}
+
+function updateStats() {
+  const total = allPosts.length;
+  const pending = allPosts.filter(p => p.status === 'pending').length;
+  const published = allPosts.filter(p => p.status === 'published').length;
+  const partial = allPosts.filter(p => p.status === 'partial').length;
+  const failed = allPosts.filter(p => p.status === 'failed').length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statPublished').textContent = published;
+  document.getElementById('statPartial').textContent = partial;
+  document.getElementById('statFailed').textContent = failed;
+}
+
+function renderTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const statusF = document.getElementById('statusFilter').value;
+  let filtered = allPosts;
+  if (search) filtered = filtered.filter(p => (p.text || '').toLowerCase().includes(search));
+  if (statusF) filtered = filtered.filter(p => p.status === statusF);
+
+  document.getElementById('tableLoading').style.display = 'none';
+  document.getElementById('postsTable').style.display = 'table';
+
+  const tbody = document.getElementById('postsBody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty">No posts found</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(p => {
+    const ps = p.platforms_status || {};
+    const platforms = ['threads','facebook','instagram'].map(plat => {
+      const st = ps[plat] || 'pending';
+      const icon = plat === 'threads' ? '🧵' : plat === 'facebook' ? '📘' : '📸';
+      const color = st === 'published' ? 'var(--green)' : st === 'failed' ? 'var(--red)' : '#ccc';
+      return `<span title="${plat}: ${st}" style="cursor:help">${icon}<span class="badge dot ${st}" style="margin-left:2px"></span></span>`;
+    }).join(' ');
+
+    const textPreview = esc((p.text || '').substring(0, 120));
+    const needsToggle = (p.text || '').length > 120;
+    const scheduled = p.scheduled_utc ? new Date(p.scheduled_utc).toLocaleString('en-GB', { timeZone:'Europe/Rome', year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit' }) : '—';
+    const pubAt = p.published_at ? new Date(p.published_at).toLocaleString('en-GB') : '—';
+
+    return `<tr>
+      <td><strong>${p.post_number}</strong></td>
+      <td><div class="post-text" id="text-${p.id}">${textPreview}${needsToggle ? '...' : ''}</div></td>
+      <td>${scheduled}</td>
+      <td><span class="badge ${p.status}">${p.status}</span></td>
+      <td><div class="platform-status">${platforms}</div></td>
+      <td class="hide-mobile">${pubAt}</td>
+      <td>
+        <button class="btn btn-gray btn-sm" onclick="showDetail('${p.id}')">View</button>
+        ${p.status === 'pending' ? `<button class="btn btn-orange btn-sm" onclick="publishNow('${p.id}')">Publish</button>` : ''}
+        <button class="btn btn-blue btn-sm" style="background:var(--blue);color:#fff" onclick="openEditModal('${p.id}')">Edit</button>
+        <button class="btn btn-red btn-sm" onclick="deletePost('${p.id}')">Del</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function showDetail(id) {
+  const p = allPosts.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('detailTitle').textContent = `Post #${p.post_number}`;
+  document.getElementById('detailSub').textContent = `Status: ${p.status} · Scheduled: ${p.scheduled_utc ? new Date(p.scheduled_utc).toLocaleString('en-GB', { timeZone:'Europe/Rome' }) : '—'}`;
+
+  const ps = p.platforms_status || {};
+  const platformsHtml = ['threads','facebook','instagram'].map(plat => {
+    const st = ps[plat] || 'pending';
+    const icon = plat === 'threads' ? '🧵 Threads' : plat === 'facebook' ? '📘 Facebook' : '📸 Instagram';
+    const postId = plat === 'threads' ? p.threads_post_id : plat === 'facebook' ? p.fb_post_id : p.ig_media_id;
+    return `<div class="detail-item">
+      <div class="key">${icon}</div>
+      <div class="val"><span class="badge ${st}">${st}</span> ${postId ? '<br>ID: ' + esc(postId) : ''}</div>
+    </div>`;
+  }).join('');
+
+  let html = `
+    <div class="detail-text">${esc(p.text || '')}</div>
+    ${p.image_url ? `<img class="detail-img" src="${esc(p.image_url)}" alt="Post image" style="max-width:300px">` : ''}
+    <div class="detail-grid">${platformsHtml}</div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="key">Post Number</div><div class="val">${p.post_number}</div></div>
+      <div class="detail-item"><div class="key">Attempts</div><div class="val">${p.attempts || 0}</div></div>
+      <div class="detail-item"><div class="key">Scheduled (UTC)</div><div class="val">${p.scheduled_utc ? new Date(p.scheduled_utc).toISOString() : '—'}</div></div>
+      <div class="detail-item"><div class="key">Published At</div><div class="val">${p.published_at ? new Date(p.published_at).toLocaleString('en-GB') : '—'}</div></div>
+    </div>
+    ${p.error_message ? `<div class="error-box"><strong>Error details:</strong><br>${esc(p.error_message)}</div>` : ''}
+    <div class="form-actions">
+      ${p.status === 'pending' ? `<button class="btn btn-orange" onclick="publishNow('${p.id}'); closeModal('detailModal')">Publish Now</button>` : ''}
+      <button class="btn btn-blue" style="background:var(--blue);color:#fff" onclick="closeModal('detailModal'); openEditModal('${p.id}')">Edit</button>
+      <button class="btn btn-red" onclick="deletePost('${p.id}'); closeModal('detailModal')">Delete</button>
+    </div>
+  `;
+  document.getElementById('detailContent').innerHTML = html;
+  document.getElementById('detailModal').classList.add('active');
+}
+
+function openCreateModal() {
+  document.getElementById('editModalTitle').textContent = 'New Post';
+  document.getElementById('editModalSub').textContent = 'Schedule a post for Threads, Facebook & Instagram';
+  document.getElementById('editPostId').value = '';
+  document.getElementById('editText').value = '';
+  document.getElementById('editDate').value = '';
+  document.getElementById('editTime').value = '09:00';
+  document.getElementById('editImageUrl').value = '';
+  // Default date: tomorrow
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('editDate').value = tomorrow.toISOString().split('T')[0];
+  updateCharCount();
+  document.getElementById('editModal').classList.add('active');
+}
+
+function openEditModal(id) {
+  const p = allPosts.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('editModalTitle').textContent = `Edit Post #${p.post_number}`;
+  document.getElementById('editModalSub').textContent = `Status: ${p.status}`;
+  document.getElementById('editPostId').value = p.id;
+  document.getElementById('editText').value = p.text || '';
+  document.getElementById('editImageUrl').value = p.image_url || '';
+  if (p.scheduled_utc) {
+    const d = new Date(p.scheduled_utc);
+    // Convert to Italy time for the form
+    const italyDate = new Date(d.toLocaleString('en-US', { timeZone: 'Europe/Rome' }));
+    document.getElementById('editDate').value = italyDate.toISOString().split('T')[0];
+    const h = String(italyDate.getHours()).padStart(2, '0');
+    const m = String(italyDate.getMinutes()).padStart(2, '0');
+    document.getElementById('editTime').value = `${h}:${m}`;
+  }
+  updateCharCount();
+  document.getElementById('editModal').classList.add('active');
+}
+
+function updateCharCount() {
+  const text = document.getElementById('editText').value;
+  const count = text.length;
+  const el = document.getElementById('charCount');
+  el.textContent = `${count} / 500 (Threads limit)`;
+  el.classList.toggle('over', count > 500);
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+async function savePost() {
+  const id = document.getElementById('editPostId').value;
+  const text = document.getElementById('editText').value.trim();
+  const date = document.getElementById('editDate').value;
+  const time = document.getElementById('editTime').value;
+  const imageUrl = document.getElementById('editImageUrl').value.trim();
+
+  if (!text) { toast('Post text is required', 'error'); return; }
+  if (!date || !time) { toast('Date and time are required', 'error'); return; }
+  if (text.length > 500) { toast('Text exceeds 500 char Threads limit', 'error'); return; }
+
+  // Convert CEST (Italy, UTC+2) to UTC
+  const localDT = new Date(`${date}T${time}:00`);
+  // Italy is UTC+2 in summer (CEST). Subtract 2 hours for UTC.
+  const utcDate = new Date(localDT.getTime() - 2 * 60 * 60 * 1000);
+  const scheduledUtc = utcDate.toISOString();
+
+  const btn = document.getElementById('savePostBtn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+
+  if (id) {
+    // Update existing
+    const { error } = await sb.from('threads_scheduled_posts')
+      .update({ text, scheduled_utc: scheduledUtc, image_url: imageUrl || null })
+      .eq('id', id);
+    btn.disabled = false; btn.textContent = 'Save Post';
+    if (error) { toast('Error: ' + error.message, 'error'); return; }
+    toast('Post updated', 'success');
+  } else {
+    // Create new — find next post_number
+    const maxNum = allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0;
+    const { error } = await sb.from('threads_scheduled_posts')
+      .insert({ post_number: maxNum + 1, text, scheduled_utc: scheduledUtc, image_url: imageUrl || null, status: 'pending', attempts: 0, platforms_status: { threads: 'pending', facebook: 'pending', instagram: 'pending' } });
+    btn.disabled = false; btn.textContent = 'Save Post';
+    if (error) { toast('Error: ' + error.message, 'error'); return; }
+    toast('Post created', 'success');
+  }
+
+  closeModal('editModal');
+  loadPosts();
+}
+
+async function deletePost(id) {
+  const p = allPosts.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Delete post #${p.post_number}? This cannot be undone.`)) return;
+  const { error } = await sb.from('threads_scheduled_posts').delete().eq('id', id);
+  if (error) { toast('Error: ' + error.message, 'error'); return; }
+  toast('Post deleted', 'success');
+  loadPosts();
+}
+
+async function publishNow(id) {
+  const p = allPosts.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Publish post #${p.post_number} now to all platforms?`)) return;
+  toast('Publishing...', 'info');
+  // Set scheduled_utc to now so the edge function picks it up
+  const { error: updErr } = await sb.from('threads_scheduled_posts')
+    .update({ scheduled_utc: new Date().toISOString(), status: 'pending' })
+    .eq('id', id);
+  if (updErr) { toast('Error: ' + updErr.message, 'error'); return; }
+  // Call the edge function
+  try {
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/publish-threads-scheduled`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}'
+    });
+    const data = await resp.json();
+    if (data.error) { toast('Publish error: ' + data.error, 'error'); }
+    else { toast(`Published: ${data.published || 0}, Partial: ${data.partial || 0}, Failed: ${data.failed || 0}`, data.failed > 0 ? 'error' : 'success'); }
+  } catch (err) {
+    toast('Fetch error: ' + err, 'error');
+  }
+  loadPosts();
+}
+
+async function publishAllDue() {
+  const due = allPosts.filter(p => p.status === 'pending');
+  if (due.length === 0) { toast('No pending posts', 'info'); return; }
+  if (!confirm(`Publish all ${due.length} pending posts now?`)) return;
+  const btn = document.getElementById('publishAllBtn');
+  btn.disabled = true; btn.textContent = 'Publishing...';
+  toast('Publishing all due posts...', 'info');
+  try {
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/publish-threads-scheduled`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}'
+    });
+    const data = await resp.json();
+    if (data.error) { toast('Publish error: ' + data.error, 'error'); }
+    else { toast(`Done! Published: ${data.published || 0}, Partial: ${data.partial || 0}, Failed: ${data.failed || 0}`, data.failed > 0 ? 'error' : 'success'); }
+  } catch (err) {
+    toast('Fetch error: ' + err, 'error');
+  }
+  btn.disabled = false; btn.textContent = 'Publish All Due';
+  loadPosts();
+}
+</script>
+</body>
+</html>
