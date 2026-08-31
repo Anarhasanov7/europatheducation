@@ -282,6 +282,16 @@
         <div class="upload-hint" id="uploadHint">JPG, PNG, MP4 — will be deleted after publishing</div>
       </div>
       <input type="file" id="fileInput" accept="image/*,video/*" style="display:none" onchange="handleFileSelect(event)">
+      <div style="margin-top:10px; display:flex; align-items:center; gap:8px;" id="autoImageRow">
+        <label class="toggle">
+          <input type="checkbox" id="autoImageToggle" checked onchange="onAutoImageToggle()">
+          <span class="toggle-slider"></span>
+        </label>
+        <label for="autoImageToggle" style="font-size:13px; cursor:pointer; user-select:none;" id="autoImageLabel">
+          🎨 Auto-generate branded image from text (navy bg + gold + @study.with.anar)
+        </label>
+        <button type="button" class="btn btn-gray btn-sm" onclick="previewBrandedImage()" style="margin-left:8px;">Preview</button>
+      </div>
       <div class="upload-progress" id="uploadProgress" style="display:none;">
         <div class="upload-progress-bar" id="uploadProgressBar" style="width:0%"></div>
       </div>
@@ -686,6 +696,16 @@ async function refreshStats() {
 }
 
 // ─── Create / Edit ───
+function onAutoImageToggle() {
+  const checked = document.getElementById('autoImageToggle').checked;
+  const label = document.getElementById('autoImageLabel');
+  if (checked) {
+    label.textContent = '🎨 Auto-generate branded image from text (navy bg + gold + @study.with.anar)';
+  } else {
+    label.textContent = '🎨 Auto-generate branded image (OFF — text-only post)';
+  }
+}
+
 function onPostTypeChange() {
   const type = document.getElementById('editPostType').value;
   const textFieldGroup = document.getElementById('textFieldGroup');
@@ -693,10 +713,12 @@ function onPostTypeChange() {
   const uploadHint = document.getElementById('uploadHint');
   const uploadText = document.getElementById('uploadText');
   const uploadIcon = document.getElementById('uploadIcon');
+  const autoImageRow = document.getElementById('autoImageRow');
 
   if (type === 'story') {
     // Stories: no text/caption, media required
     textFieldGroup.style.display = 'none';
+    autoImageRow.style.display = 'none';
     hint.textContent = 'Story: image or video. Disappears after 24h. Instagram + Facebook only (no Threads).';
     uploadHint.textContent = 'Required: JPG, PNG, or MP4 — disappears after 24h';
     uploadText.textContent = 'Click to select image or video (required)';
@@ -704,6 +726,7 @@ function onPostTypeChange() {
   } else if (type === 'reel') {
     // Reels: caption optional, video required
     textFieldGroup.style.display = 'block';
+    autoImageRow.style.display = 'none';
     hint.textContent = 'Reel: video file required. Instagram Reels + Facebook video. No Threads.';
     uploadHint.textContent = 'Required: MP4 or MOV video file';
     uploadText.textContent = 'Click to select a video (required)';
@@ -711,9 +734,10 @@ function onPostTypeChange() {
   } else {
     // Regular post
     textFieldGroup.style.display = 'block';
+    autoImageRow.style.display = 'flex';
     hint.textContent = 'Regular post: text + optional image/video. Works on all 3 platforms.';
     uploadHint.textContent = 'JPG, PNG, MP4 — will be deleted after publishing';
-    uploadText.textContent = 'Click to select an image or video';
+    uploadText.textContent = 'Click to select an image or video (or leave empty for auto-generated branded image)';
     uploadIcon.textContent = '📷';
   }
 }
@@ -785,6 +809,104 @@ function updateCharCount() {
 
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
+// ─── Auto-generate branded text image ───
+async function previewBrandedImage() {
+  const text = document.getElementById('editText').value.trim();
+  if (!text) { toast('Write some text first to preview', 'error'); return; }
+  const file = await generateBrandedImage(text);
+  const url = URL.createObjectURL(file);
+  const preview = document.getElementById('uploadPreview');
+  preview.src = url;
+  preview.style.display = 'block';
+  toast('Preview generated — this is what the branded image will look like', 'info');
+}
+
+async function generateBrandedImage(text) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1080;
+  const ctx = canvas.getContext('2d');
+
+  // Background: dark navy gradient
+  const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
+  grad.addColorStop(0, '#0b1e3f');
+  grad.addColorStop(1, '#16213e');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1080, 1080);
+
+  // Gold accent bar at top
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillRect(0, 0, 1080, 6);
+
+  // Gold accent bar at bottom
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillRect(0, 1074, 1080, 6);
+
+  // EuroPath logo text (top)
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = 'bold 36px Inter, Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('EUROPATH EDUCATION', 540, 80);
+
+  // Decorative line under logo
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(380, 100);
+  ctx.lineTo(700, 100);
+  ctx.stroke();
+
+  // Main text — word-wrap centered
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '42px Inter, Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  const maxWidth = 900;
+  const lineHeight = 56;
+  const words = text.split(' ');
+  const lines = [];
+  let currentLine = '';
+
+  for (const word of words) {
+    const testLine = currentLine ? currentLine + ' ' + word : word;
+    if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+      lines.push(currentLine);
+      currentLine = word;
+    } else {
+      currentLine = testLine;
+    }
+  }
+  if (currentLine) lines.push(currentLine);
+
+  // Limit to 12 lines to fit
+  const displayLines = lines.slice(0, 12);
+  const totalHeight = displayLines.length * lineHeight;
+  const startY = 540 - totalHeight / 2;
+
+  displayLines.forEach((line, i) => {
+    ctx.fillText(line, 540, startY + i * lineHeight);
+  });
+
+  // If text was truncated, add ellipsis
+  if (lines.length > 12) {
+    ctx.fillText('...', 540, startY + 12 * lineHeight);
+  }
+
+  // Handle @username at bottom
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = 'bold 32px Inter, Arial, sans-serif';
+  ctx.fillText('@study.with.anar', 540, 1020);
+
+  // Convert to blob
+  return new Promise(resolve => {
+    canvas.toBlob(blob => {
+      const file = new File([blob], 'branded_text.png', { type: 'image/png' });
+      resolve(file);
+    }, 'image/png', 0.95);
+  });
+}
+
 async function savePost() {
   const id = document.getElementById('editPostId').value;
   const postType = document.getElementById('editPostType').value;
@@ -820,6 +942,13 @@ async function savePost() {
       const maxNum = id ? 0 : (allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0);
       imageUrl = await uploadFile(selectedFile, id || (maxNum + 1));
       toast('File uploaded', 'success');
+    } else if (postType === 'post' && !imageUrl && document.getElementById('autoImageToggle').checked && text) {
+      // Auto-generate branded image from text
+      btn.textContent = 'Generating branded image...';
+      const brandedFile = await generateBrandedImage(text);
+      const maxNum = id ? 0 : (allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0);
+      imageUrl = await uploadFile(brandedFile, id || (maxNum + 1));
+      toast('Branded image generated & uploaded', 'success');
     }
 
     // Convert CEST (UTC+2) to UTC
