@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News Studio — EuroPath Education</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root { --navy:#0b1e3f; --ink:#080a14; --blue:#2E86C1; --electric:#3ddfff; --lime:#c6ff3d; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; --green:#22c55e; --red:#ef4444; --amber:#ffb800; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', -apple-system, sans-serif; background:var(--off); color:var(--ink); }
+
+  /* Login */
+  #loginOverlay { position:fixed; inset:0; background:linear-gradient(135deg,#0b1e3f,#16213e); display:flex; align-items:center; justify-content:center; z-index:100; }
+  .login-box { background:#fff; border-radius:16px; padding:40px; width:380px; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+  .login-box h1 { font-size:24px; margin-bottom:4px; }
+  .login-box .sub { color:var(--gray); margin-bottom:24px; font-size:14px; }
+  .login-box input { width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; margin-bottom:12px; }
+  .login-box button { width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; }
+  .login-box button:hover { background:#1a6ba8; }
+  .login-box button:disabled { opacity:.6; cursor:wait; }
+  .login-error { color:var(--red); font-size:13px; margin-top:8px; display:none; }
+
+  /* Header */
+  .header { background:#fff; border-bottom:1px solid #e0e0e0; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
+  .header h1 { font-size:18px; color:var(--blue); display:flex; align-items:center; gap:8px; }
+  .header .actions { display:flex; gap:10px; align-items:center; }
+  .header .user-info { font-size:13px; color:var(--gray); }
+  .btn { padding:8px 16px; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .btn-fetch { background:var(--blue); color:#fff; }
+  .btn-fetch:hover { background:#1a6ba8; }
+  .btn-fetch:disabled { opacity:.5; cursor:wait; }
+  .btn-logout { background:none; border:1px solid #ddd; color:#666; }
+  .btn-logout:hover { background:#f5f5f5; }
+
+  /* Main layout */
+  .main { display:grid; grid-template-columns:380px 1fr; gap:0; height:calc(100vh - 56px); overflow:hidden; }
+
+  /* Left panel — news list */
+  .news-panel { background:#fff; border-right:1px solid #e0e0e0; overflow-y:auto; }
+  .news-panel-header { padding:16px; border-bottom:1px solid #f0f0f0; position:sticky; top:0; background:#fff; z-index:5; }
+  .news-panel-header h2 { font-size:15px; font-weight:700; margin-bottom:10px; }
+  .filter-tabs { display:flex; gap:6px; }
+  .filter-tab { padding:5px 12px; border:1px solid #ddd; border-radius:16px; font-size:12px; font-weight:600; cursor:pointer; background:#fff; transition:all .2s; }
+  .filter-tab.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+  .filter-tab .count { font-size:10px; opacity:.7; margin-left:4px; }
+
+  .news-item { padding:14px 16px; border-bottom:1px solid #f0f0f0; cursor:pointer; transition:background .15s; }
+  .news-item:hover { background:#f8f9fa; }
+  .news-item.active { background:#e8f4fd; border-left:3px solid var(--blue); }
+  .news-item .source { font-size:10px; color:var(--blue); font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .news-item .title { font-size:13px; font-weight:600; line-height:1.4; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .news-item .meta { font-size:11px; color:var(--gray); display:flex; gap:8px; align-items:center; }
+  .news-item .status-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+  .status-dot.new { background:var(--amber); }
+  .status-dot.rephrased { background:var(--electric); }
+  .status-dot.posted { background:var(--green); }
+  .status-dot.ignored { background:#ccc; }
+
+  /* Right panel — editor */
+  .editor-panel { overflow-y:auto; padding:24px; }
+  .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:var(--gray); gap:12px; }
+  .empty-state .icon { font-size:48px; opacity:.3; }
+  .empty-state .text { font-size:15px; }
+
+  .editor-card { background:#fff; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .editor-card h3 { font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gray); margin-bottom:14px; }
+
+  .source-info { display:flex; gap:12px; margin-bottom:16px; }
+  .source-info img { width:120px; height:80px; object-fit:cover; border-radius:8px; background:#f0f0f0; }
+  .source-info .details { flex:1; }
+  .source-info .source-name { font-size:11px; color:var(--blue); font-weight:600; text-transform:uppercase; }
+  .source-info .original-title { font-size:16px; font-weight:700; margin-top:4px; line-height:1.3; }
+  .source-info .original-summary { font-size:13px; color:var(--gray); margin-top:6px; line-height:1.5; }
+  .source-info .source-link { font-size:12px; color:var(--blue); text-decoration:none; margin-top:6px; display:inline-block; }
+  .source-info .source-link:hover { text-decoration:underline; }
+
+  .caption-section { margin-top:20px; }
+  .caption-section label { font-size:13px; font-weight:600; display:block; margin-bottom:8px; }
+  .caption-section textarea { width:100%; min-height:140px; padding:14px; border:1px solid #ddd; border-radius:10px; font-size:14px; font-family:'Inter',sans-serif; resize:vertical; line-height:1.6; outline:none; transition:border-color .2s; }
+  .caption-section textarea:focus { border-color:var(--blue); }
+  .char-count { font-size:11px; color:var(--gray); text-align:right; margin-top:4px; }
+
+  .image-section { margin-top:16px; }
+  .image-section label { font-size:13px; font-weight:600; display:block; margin-bottom:8px; }
+  .image-section input { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:13px; outline:none; }
+  .image-section input:focus { border-color:var(--blue); }
+  .image-preview { margin-top:8px; max-width:300px; border-radius:8px; }
+
+  .platforms-section { margin-top:20px; }
+  .platforms-section label { font-size:13px; font-weight:600; display:block; margin-bottom:10px; }
+  .platform-toggles { display:flex; gap:12px; }
+  .platform-toggle { display:flex; align-items:center; gap:8px; padding:10px 16px; border:1px solid #ddd; border-radius:10px; cursor:pointer; transition:all .2s; user-select:none; }
+  .platform-toggle:hover { border-color:var(--blue); }
+  .platform-toggle.active { background:#e8f4fd; border-color:var(--blue); }
+  .platform-toggle input { width:18px; height:18px; accent-color:var(--blue); }
+  .platform-toggle .platform-name { font-size:14px; font-weight:600; }
+  .platform-toggle .platform-icon { font-size:18px; }
+  .platform-toggle .platform-note { font-size:10px; color:var(--gray); margin-left:4px; }
+
+  .publish-bar { display:flex; gap:12px; margin-top:24px; align-items:center; }
+  .btn-publish { background:linear-gradient(135deg, var(--blue), #1a6ba8); color:#fff; border:none; padding:14px 32px; border-radius:24px; font-size:15px; font-weight:700; cursor:pointer; transition:transform .2s; }
+  .btn-publish:hover { transform:scale(1.03); }
+  .btn-publish:disabled { opacity:.5; cursor:wait; transform:none; }
+  .btn-save-draft { background:#f0f0f0; color:var(--ink); border:none; padding:14px 24px; border-radius:24px; font-size:14px; font-weight:600; cursor:pointer; }
+  .btn-ignore { background:none; border:1px solid #ddd; color:var(--gray); padding:14px 20px; border-radius:24px; font-size:13px; cursor:pointer; margin-left:auto; }
+  .btn-ignore:hover { border-color:var(--red); color:var(--red); }
+
+  .publish-result { margin-top:16px; padding:14px; border-radius:10px; font-size:13px; display:none; }
+  .publish-result.success { background:#e6f9ec; color:#155724; display:block; }
+  .publish-result.error { background:#fde8e8; color:#721c1c; display:block; }
+  .publish-result.partial { background:#fff8e1; color:#856404; display:block; }
+  .publish-result .platform-status { margin-top:8px; }
+  .publish-result .platform-status div { padding:4px 0; }
+
+  /* Published posts section */
+  .history-section { margin-top:30px; }
+  .history-section h2 { font-size:16px; font-weight:700; margin-bottom:16px; }
+  .history-item { background:#fff; border-radius:10px; padding:16px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,.04); display:flex; gap:14px; }
+  .history-item img { width:60px; height:60px; object-fit:cover; border-radius:8px; background:#f0f0f0; flex-shrink:0; }
+  .history-item .info { flex:1; }
+  .history-item .caption { font-size:13px; line-height:1.5; margin-bottom:6px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .history-item .platforms-row { display:flex; gap:6px; margin-top:6px; }
+  .history-item .platform-badge { font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600; }
+  .platform-badge.fb { background:#e7f0ff; color:#1877f2; }
+  .platform-badge.ig { background:#fde8f3; color:#c13584; }
+  .platform-badge.threads { background:#f0f0f0; color:#000; }
+  .history-item .posted-date { font-size:11px; color:var(--gray); }
+
+  /* Toast */
+  .toast { position:fixed; bottom:30px; right:30px; background:var(--ink); color:#fff; padding:14px 24px; border-radius:12px; font-size:14px; box-shadow:0 8px 30px rgba(0,0,0,.2); display:none; z-index:200; }
+  .toast.show { display:block; animation:slideIn .3s; }
+  @keyframes slideIn { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+
+  /* Loading */
+  .loading { display:inline-block; width:16px; height:16px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin .8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .main { grid-template-columns:1fr; }
+    .news-panel { max-height:300px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Login Overlay -->
+<div id="loginOverlay">
+  <div class="login-box">
+    <h1>📰 News Studio</h1>
+    <div class="sub">EuroPath Education — вход для администратора</div>
+    <input type="email" id="loginEmail" placeholder="Email" autocomplete="email">
+    <input type="password" id="loginPassword" placeholder="Пароль" autocomplete="current-password">
+    <button id="loginBtn" onclick="doLogin()">Войти</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="app" style="display:none;">
+  <div class="header">
+    <h1>📰 News Studio</h1>
+    <div class="actions">
+      <button class="btn btn-fetch" id="fetchBtn" onclick="fetchNews()">↻ Обновить новости</button>
+      <span class="user-info" id="userInfo"></span>
+      <button class="btn btn-logout" onclick="doLogout()">Выйти</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- Left: News List -->
+    <div class="news-panel">
+      <div class="news-panel-header">
+        <h2>Итальянские новости об образовании</h2>
+        <div class="filter-tabs">
+          <div class="filter-tab active" data-filter="new" onclick="setFilter('new')">Новые <span class="count" id="count-new">0</span></div>
+          <div class="filter-tab" data-filter="rephrased" onclick="setFilter('rephrased')">В работе <span class="count" id="count-rephrased">0</span></div>
+          <div class="filter-tab" data-filter="posted" onclick="setFilter('posted')">Опубликованные <span class="count" id="count-posted">0</span></div>
+          <div class="filter-tab" data-filter="ignored" onclick="setFilter('ignored')">Скрытые <span class="count" id="count-ignored">0</span></div>
+        </div>
+      </div>
+      <div id="newsList"></div>
+    </div>
+
+    <!-- Right: Editor -->
+    <div class="editor-panel" id="editorPanel">
+      <div class="empty-state" id="emptyState">
+        <div class="icon">📰</div>
+        <div class="text">Выберите новость слева, чтобы начать</div>
+      </div>
+
+      <div id="editorContent" style="display:none;">
+        <div class="editor-card">
+          <h3>Источник</h3>
+          <div class="source-info">
+            <img id="sourceImg" src="" alt="" onerror="this.style.display='none'">
+            <div class="details">
+              <div class="source-name" id="sourceName"></div>
+              <div class="original-title" id="originalTitle"></div>
+              <div class="original-summary" id="originalSummary"></div>
+              <a href="#" id="sourceLink" target="_blank" class="source-link">Читать оригинал →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="editor-card">
+          <h3>Ваш пост на русском</h3>
+          <div class="caption-section">
+            <label>Текст поста (перефразируйте новость на русском)</label>
+            <textarea id="captionRu" placeholder="Напишите здесь ваш пост на русском языке..." oninput="updateCharCount()"></textarea>
+            <div class="char-count"><span id="charCount">0</span> символов</div>
+          </div>
+
+          <div class="image-section">
+            <label>URL изображения (для Instagram и Facebook)</label>
+            <input type="text" id="imageUrl" placeholder="https://..." oninput="previewImage()">
+            <img id="imagePreview" class="image-preview" style="display:none;" alt="Preview">
+          </div>
+        </div>
+
+        <div class="editor-card">
+          <h3>Платформы для публикации</h3>
+          <div class="platforms-section">
+            <div class="platform-toggles">
+              <label class="platform-toggle" id="toggle-fb" onclick="togglePlatform('facebook')">
+                <input type="checkbox" id="platform-fb">
+                <span class="platform-icon">📘</span>
+                <span class="platform-name">Facebook</span>
+              </label>
+              <label class="platform-toggle" id="toggle-ig" onclick="togglePlatform('instagram')">
+                <input type="checkbox" id="platform-ig">
+                <span class="platform-icon">📷</span>
+                <span class="platform-name">Instagram</span>
+                <span class="platform-note">(нужна картинка)</span>
+              </label>
+              <label class="platform-toggle" id="toggle-threads" onclick="togglePlatform('threads')">
+                <input type="checkbox" id="platform-threads">
+                <span class="platform-icon">🧵</span>
+                <span class="platform-name">Threads</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="publish-bar">
+            <button class="btn-publish" id="publishBtn" onclick="publishPost()">🚀 Опубликовать</button>
+            <button class="btn-save-draft" onclick="saveDraft()">💾 Сохранить</button>
+            <button class="btn-ignore" onclick="ignoreNews()">✕ Скрыть</button>
+          </div>
+
+          <div class="publish-result" id="publishResult"></div>
+        </div>
+
+        <div class="history-section">
+          <h2>📋 История публикаций</h2>
+          <div id="historyList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
+const EDGE_BASE = 'https://glfizcgayqecnvtfihgy.supabase.co/functions/v1';
+let sb;
+let currentUser = null;
+let currentFilter = 'new';
+let selectedNewsId = null;
+let selectedNewsData = null;
+let newsCache = [];
+
+(function loadSB() {
+  if (window.supabase) { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); checkSession(); }
+  else { setTimeout(loadSB, 100); }
+})();
+
+async function checkSession() {
+  const { data } = await sb.auth.getSession();
+  if (data.session) {
+    currentUser = data.session.user;
+    showApp();
+  }
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  btn.disabled = true; btn.textContent = 'Вход...'; err.style.display = 'none';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    err.textContent = error.message;
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Войти';
+  } else {
+    currentUser = data.user;
+    showApp();
+  }
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginOverlay').style.display = 'flex';
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginBtn').disabled = false;
+  document.getElementById('loginBtn').textContent = 'Войти';
+}
+
+function showApp() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('userInfo').textContent = currentUser.email;
+  loadNews();
+  loadHistory();
+}
+
+// ─── News list ───
+async function loadNews() {
+  const { data, error } = await sb
+    .from('fetched_news')
+    .select('*')
+    .order('fetched_at', { ascending: false })
+    .limit(200);
+
+  if (error) { console.error('loadNews error:', error); return; }
+  newsCache = data || [];
+  updateCounts();
+  renderNewsList();
+}
+
+function updateCounts() {
+  const counts = { new: 0, rephrased: 0, posted: 0, ignored: 0 };
+  newsCache.forEach(n => { if (counts[n.status] !== undefined) counts[n.status]++; });
+  document.getElementById('count-new').textContent = counts.new;
+  document.getElementById('count-rephrased').textContent = counts.rephrased;
+  document.getElementById('count-posted').textContent = counts.posted;
+  document.getElementById('count-ignored').textContent = counts.ignored;
+}
+
+function renderNewsList() {
+  const list = document.getElementById('newsList');
+  const filtered = newsCache.filter(n => n.status === currentFilter);
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="padding:30px;text-align:center;color:#999;font-size:13px;">Нет новостей в этой категории</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(n => `
+    <div class="news-item ${n.id === selectedNewsId ? 'active' : ''}" onclick="selectNews('${n.id}')">
+      <div class="source">${n.source_name}</div>
+      <div class="title">${escapeHtml(n.title)}</div>
+      <div class="meta">
+        <span class="status-dot ${n.status}"></span>
+        ${n.published_at ? formatDate(n.published_at) : formatDate(n.fetched_at)}
+        ${n.image_url ? ' 🖼️' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+  renderNewsList();
+}
+
+// ─── Editor ───
+function selectNews(id) {
+  const news = newsCache.find(n => n.id === id);
+  if (!news) return;
+  selectedNewsId = id;
+  selectedNewsData = news;
+  renderNewsList();
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('editorContent').style.display = 'block';
+
+  // Fill source info
+  document.getElementById('sourceName').textContent = news.source_name;
+  document.getElementById('originalTitle').textContent = news.title;
+  document.getElementById('originalSummary').textContent = news.summary || '';
+  document.getElementById('sourceLink').href = news.url;
+  const img = document.getElementById('sourceImg');
+  if (news.image_url) { img.src = news.image_url; img.style.display = 'block'; }
+  else { img.style.display = 'none'; }
+
+  // Fill editor fields
+  document.getElementById('captionRu').value = '';
+  document.getElementById('imageUrl').value = news.image_url || '';
+  document.getElementById('charCount').textContent = '0';
+  previewImage();
+
+  // Reset platforms
+  ['fb', 'ig', 'threads'].forEach(p => {
+    document.getElementById('platform-' + p).checked = false;
+    document.getElementById('toggle-' + p).classList.remove('active');
+  });
+
+  // Reset result
+  document.getElementById('publishResult').className = 'publish-result';
+  document.getElementById('publishResult').innerHTML = '';
+}
+
+function updateCharCount() {
+  const count = document.getElementById('captionRu').value.length;
+  document.getElementById('charCount').textContent = count;
+}
+
+function previewImage() {
+  const url = document.getElementById('imageUrl').value.trim();
+  const img = document.getElementById('imagePreview');
+  if (url) { img.src = url; img.style.display = 'block'; img.onerror = () => img.style.display = 'none'; }
+  else { img.style.display = 'none'; }
+}
+
+function togglePlatform(platform) {
+  const map = { facebook: 'fb', instagram: 'ig', threads: 'threads' };
+  const key = map[platform];
+  const cb = document.getElementById('platform-' + key);
+  cb.checked = !cb.checked;
+  const toggle = document.getElementById('toggle-' + key);
+  toggle.classList.toggle('active', cb.checked);
+}
+
+// ─── Actions ───
+async function fetchNews() {
+  const btn = document.getElementById('fetchBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Загрузка...';
+  try {
+    const res = await fetch(EDGE_BASE + '/fetch-italian-news', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      showToast(`✅ Загружено ${data.inserted} новых, пропущено ${data.skipped}`);
+      await loadNews();
+    } else {
+      showToast('❌ Ошибка: ' + (data.error || 'неизвестно'));
+    }
+  } catch (err) {
+    showToast('❌ Ошибка сети: ' + err.message);
+  }
+  btn.disabled = false; btn.textContent = '↻ Обновить новости';
+}
+
+async function saveDraft() {
+  if (!selectedNewsId) return;
+  const caption = document.getElementById('captionRu').value.trim();
+  if (!caption) { showToast('⚠️ Введите текст поста'); return; }
+
+  const { error } = await sb.from('fetched_news')
+    .update({ status: 'rephrased' })
+    .eq('id', selectedNewsId);
+
+  if (error) { showToast('❌ Ошибка сохранения'); return; }
+  showToast('💾 Сохранено как черновик');
+  await loadNews();
+}
+
+async function ignoreNews() {
+  if (!selectedNewsId) return;
+  const { error } = await sb.from('fetched_news')
+    .update({ status: 'ignored' })
+    .eq('id', selectedNewsId);
+  if (error) { showToast('❌ Ошибка'); return; }
+  showToast('✕ Новость скрыта');
+  selectedNewsId = null;
+  selectedNewsData = null;
+  document.getElementById('editorContent').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'flex';
+  await loadNews();
+}
+
+async function publishPost() {
+  if (!selectedNewsId) return;
+  const caption = document.getElementById('captionRu').value.trim();
+  if (!caption) { showToast('⚠️ Введите текст поста'); return; }
+
+  const platforms = {
+    facebook: document.getElementById('platform-fb').checked,
+    instagram: document.getElementById('platform-ig').checked,
+    threads: document.getElementById('platform-threads').checked,
+  };
+
+  if (!platforms.facebook && !platforms.instagram && !platforms.threads) {
+    showToast('⚠️ Выберите хотя бы одну платформу');
+    return;
+  }
+
+  if (platforms.instagram && !document.getElementById('imageUrl').value.trim()) {
+    showToast('⚠️ Для Instagram нужно изображение');
+    return;
+  }
+
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Публикация...';
+  const result = document.getElementById('publishResult');
+  result.className = 'publish-result';
+  result.innerHTML = '';
+
+  try {
+    const session = await sb.auth.getSession();
+    const token = session.data.session?.access_token;
+
+    const res = await fetch(EDGE_BASE + '/publish-social', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({
+        fetched_news_id: selectedNewsId,
+        caption_ru: caption,
+        image_url: document.getElementById('imageUrl').value.trim() || null,
+        platforms,
+      }),
+    });
+
+    const data = await res.json();
+    if (data.success || data.status === 'partial') {
+      const cls = data.status === 'partial' ? 'partial' : 'success';
+      result.className = 'publish-result ' + cls;
+      let html = data.status === 'partial' ? '⚠️ Частично опубликовано' : '✅ Успешно опубликовано!';
+      html += '<div class="platform-status">';
+      if (data.results) {
+        for (const [platform, r] of Object.entries(data.results)) {
+          const icon = platform === 'facebook' ? '📘' : platform === 'instagram' ? '📷' : '🧵';
+          if (r.success) html += `<div>${icon} ${platform}: ✅ ${r.post_id || 'OK'}</div>`;
+          else html += `<div>${icon} ${platform}: ❌ ${r.error || 'ошибка'}</div>`;
+        }
+      }
+      html += '</div>';
+      result.innerHTML = html;
+
+      // Update news status
+      await sb.from('fetched_news').update({ status: 'posted' }).eq('id', selectedNewsId);
+      await loadNews();
+      await loadHistory();
+    } else {
+      result.className = 'publish-result error';
+      result.innerHTML = '❌ Ошибка: ' + (data.error || 'неизвестно');
+      if (data.results) {
+        let html = '<div class="platform-status">';
+        for (const [platform, r] of Object.entries(data.results)) {
+          const icon = platform === 'facebook' ? '📘' : platform === 'instagram' ? '📷' : '🧵';
+          html += `<div>${icon} ${platform}: ❌ ${r.error || 'ошибка'}</div>`;
+        }
+        html += '</div>';
+        result.innerHTML += html;
+      }
+    }
+  } catch (err) {
+    result.className = 'publish-result error';
+    result.innerHTML = '❌ Ошибка сети: ' + err.message;
+  }
+  btn.disabled = false; btn.textContent = '🚀 Опубликовать';
+}
+
+// ─── History ───
+async function loadHistory() {
+  const { data, error } = await sb
+    .from('social_posts')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  if (error || !data) { console.error('loadHistory error:', error); return; }
+
+  const list = document.getElementById('historyList');
+  if (data.length === 0) {
+    list.innerHTML = '<div style="color:#999;font-size:13px;padding:10px;">Пока нет опубликованных постов</div>';
+    return;
+  }
+  list.innerHTML = data.map(p => {
+    const platforms = p.platforms || {};
+    const badges = [];
+    if (platforms.facebook) badges.push('<span class="platform-badge fb">Facebook</span>');
+    if (platforms.instagram) badges.push('<span class="platform-badge ig">Instagram</span>');
+    if (platforms.threads) badges.push('<span class="platform-badge threads">Threads</span>');
+    const statusBadge = p.status === 'published' ? '✅' : p.status === 'partial' ? '⚠️' : p.status === 'failed' ? '❌' : '📝';
+    return `
+      <div class="history-item">
+        ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" alt="" onerror="this.style.display='none'">` : '<div style="width:60px;height:60px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;">📄</div>'}
+        <div class="info">
+          <div class="caption">${statusBadge} ${escapeHtml(p.caption_ru)}</div>
+          <div class="platforms-row">${badges.join('')}</div>
+          <div class="posted-date">${p.posted_at ? formatDate(p.posted_at) : formatDate(p.created_at)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── Utils ───
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+
+// Enter key to login
+document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('loginEmail').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') document.getElementById('loginPassword').focus();
+});
+</script>
+</body>
+</html>
