@@ -1,0 +1,53 @@
+name: Refresh Threads Token
+
+on:
+  schedule:
+    # Run every Sunday at 05:00 UTC (backup to pg_cron at 04:00 UTC)
+    - cron: '0 5 * * 0'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  refresh-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call refresh endpoint
+        id: refresh
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            'https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/refresh-threads-token' \
+            -H 'Content-Type: application/json' \
+            -d '{}')
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | head -n -1)
+          echo "HTTP status: $HTTP_CODE"
+          echo "Response: $BODY"
+          echo "response=$BODY" >> $GITHUB_OUTPUT
+          echo "http_code=$HTTP_CODE" >> $GITHUB_OUTPUT
+
+          # Check if refresh succeeded
+          SUCCESS=$(echo "$BODY" | python3 -c "import sys,json; print(json.load(sys.stdin).get('success', False))" 2>/dev/null || echo "False")
+          echo "success=$SUCCESS" >> $GITHUB_OUTPUT
+
+          if [ "$SUCCESS" != "True" ]; then
+            echo "::warning::Threads token refresh failed — email notification sent by edge function"
+            exit 1
+          fi
+
+      - name: Send failure email (GitHub Actions backup)
+        if: failure()
+        run: |
+          curl -s -X POST 'https://api.resend.com/emails' \
+            -H "Authorization: Bearer ${{ secrets.RESEND_API_KEY }}" \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "from": "noreply@europatheducation.eu",
+              "to": "hasanov.anar.2023@gmail.com",
+              "subject": "⚠️ GitHub Actions: Threads Token Refresh FAILED",
+              "html": "<h2>⚠️ Threads token refresh failed (GitHub Actions backup)</h2><p>The weekly GitHub Actions workflow to refresh the Threads token has failed.</p><p>The Supabase edge function may have also failed and sent a separate email.</p><p><strong>Time:</strong> '"$(date -u)"'</p><p>If the pg_cron job also failed, manual re-authorization is needed:</p><p><a href=\"https://europatheducation.eu/threads-callback.html\">https://europatheducation.eu/threads-callback.html</a></p><hr><p style=\"color:#888;font-size:12px\">EuroPath Social Media System — GitHub Actions backup notification</p>"
+            }'
+          echo "Backup email sent"
+
+      - name: Send success email (first run only / optional)
+        if: success()
+        run: |
+          echo "Token refreshed successfully — no email needed"
