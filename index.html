@@ -521,7 +521,20 @@
     text-transform: uppercase; color: var(--electric);
     background: rgba(61,223,255,0.1); padding: 3px 8px; border-radius: 10px;
   }
-          @media (max-width: 1200px) {
+  .partner-card { cursor: pointer; }
+  .partner-desc {
+    display: none; margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    font-size: 12px; line-height: 1.5; color: var(--gray);
+    text-align: left;
+  }
+  .partner-card.expanded .partner-desc { display: block; }
+  .partner-card.expanded { grid-column: span 2; }
+  .partner-card .partner-hint {
+    font-size: 10px; color: var(--gray); opacity: 0.6; margin-top: 4px;
+  }
+  .partner-card.expanded .partner-hint { display: none; }
+  @media (max-width: 1200px) {
     .partners-grid { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 700px) {
@@ -1040,65 +1053,85 @@
   <div class="section-sub" data-en="The largest and most prestigious public universities in Italy — direct partnerships, personal contacts, fast admissions.">Крупнейшие и самые престижные государственные вузы Италии — прямые партнёрства, личные контакты, быстрые зачисления.</div>
 
   <div class="partners-grid">
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/sapienza.svg" alt="Sapienza" class="partner-logo"></div>
       <div class="partner-name">Sapienza Università di Roma</div>
       <div class="partner-city">Rome · Lazio</div>
       <div class="partner-badge">QS #134</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Founded in 1303, Sapienza is the largest university in Europe by enrollment, with over 110,000 students. It is consistently ranked as the top university in Italy and among the best in Europe. Notable alumni include Nobel laureates, heads of state, and scientists. The university offers over 250 degree programs across all disciplines, with strong programs in medicine, engineering, physics, and archaeology. Its main campus is located in the heart of Rome, designed by architect Marcello Piacentini. Sapienza is a leading research institution, producing over 10,000 scientific publications annually.">Основана в 1303 году, Сапиенца — крупнейший университет Европы по числу студентов (более 110 000). Занимает первое место в Италии и входит в топ-50 Европы. Выпускники включают нобелевских лауреатов, глав государств и учёных. Предлагает более 250 программ по всем направлениям, особенно сильна в медицине, инженерии, физике и археологии. Главный кампус расположен в центре Рима. Сапиенца — ведущий исследовательский центр, публикующий более 10 000 научных работ ежегодно.</div>
     </div>
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/bologna.png" alt="Bologna" class="partner-logo"></div>
       <div class="partner-name">Università di Bologna</div>
       <div class="partner-city">Bologna · Emilia-Romagna</div>
       <div class="partner-badge">QS #133 · 1088 г.</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Founded in 1088, the University of Bologna is the oldest university in the Western world. It has over 85,000 students across 5 campuses in Bologna, Cesena, Forlì, Ravenna, and Rimini. The university coined the term 'universitas' and established the model for higher education in Europe. It is consistently ranked among the top 150 universities globally. Strong programs include law, medicine, engineering, agriculture, and political science. The university maintains partnerships with over 1,000 international institutions and offers numerous English-taught programs. Bologna is a vibrant student city, known for its food culture and medieval architecture.">Основана в 1088 году — старейший университет Западного мира. Более 85 000 студентов на 5 кампусах. Университет придумал термин 'universitas' и заложил модель высшего образования в Европе. Входит в топ-150 мирового рейтинга. Сильные направления: право, медицина, инженерия, сельское хозяйство, политология. Более 1 000 международных партнёрств, множество программ на английском. Болонья — живой студенческий город, известный гастрономией и средневековой архитектурой.</div>
     </div>
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/polimi.svg" alt="PoliMi" class="partner-logo"></div>
       <div class="partner-name">Politecnico di Milano</div>
       <div class="partner-city">Milan · Lombardy</div>
       <div class="partner-badge">QS #123 · Engineering</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Founded in 1863, Politecnico di Milano is Italy's top engineering school, ranked #1 in Italy and among the top 20 engineering universities in the world. It has over 45,000 students and offers programs in engineering, architecture, and design. The university is known for its strong industry connections, with partnerships including Ferrari, IBM, and Google. Many graduates go on to work at top tech and engineering companies globally. The main campus is in Milan, with additional campuses in Como, Lecco, Cremona, Mantua, and Piacenza. Politecnico di Milano produces the most patents of any Italian university and has a thriving startup incubator.">Основан в 1863 году — лучший инженерный вуз Италии, входит в топ-20 инженерных университетов мира. Более 45 000 студентов, программы по инженерии, архитектуре и дизайну. Известен связями с индустрией: партнёрства с Ferrari, IBM, Google. Выпускники работают в ведущих технологических и инженерных компаниях мира. Главный кампус в Милане, дополнительные — в Комо, Лекко, Кремоне, Мантуе и Пьяченце. Политехнико производит больше всего патентов среди итальянских вузов и имеет успешный стартап-инкубатор.</div>
     </div>
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/polito.png" alt="PoliTo" class="partner-logo"></div>
       <div class="partner-name">Politecnico di Torino</div>
       <div class="partner-city">Turin · Piedmont</div>
       <div class="partner-badge">QS #252 · Engineering</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Founded in 1859, Politecnico di Torino is Italy's oldest engineering school and one of the top technical universities in Europe. It has over 35,000 students and is renowned for automotive engineering, aerospace, and industrial design. The university has close ties with Fiat, Ferrari, and the Italian aerospace industry. It offers over 30 English-taught master's programs and has partnerships with 400+ international universities. The campus is located in Turin, Italy's automotive capital. Notable achievements include Italy's first satellite and pioneering research in sustainable mobility. The university is a leader in EU research funding and innovation.">Основан в 1859 году — старейшая инженерная школа Италии и один из лучших технических вузов Европы. Более 35 000 студентов, известен автомобильной инженерией, аэрокосмической отраслью и промышленным дизайном. Тесные связи с Fiat, Ferrari и итальянской аэрокосмической промышленностью. Более 30 магистерских программ на английском, 400+ международных партнёрств. Кампус в Турине — автомобильной столице Италии. Среди достижений — первый итальянский спутник и исследования устойчивой мобильности.</div>
     </div>
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/padova.svg" alt="Padova" class="partner-logo"></div>
       <div class="partner-name">Università di Padova</div>
       <div class="partner-city">Padua · Veneto</div>
       <div class="partner-badge">QS #219 · 1222 г.</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Founded in 1222, the University of Padua is one of the oldest universities in the world and a leading Italian research institution. It has over 70,000 students and is renowned for medicine, physics, astronomy, and law. Galileo Galilei taught here for 18 years, and the university's botanical garden, founded in 1545, is the world's oldest. Padua produced pioneering research in anatomy, with the first permanent anatomy theater built in 1594. The university offers numerous English-taught programs and has strong international partnerships. Elena Lucrezia Cornaro Piscopia, the world's first woman to receive a university degree, graduated here in 1678.">Основана в 1222 году — один из старейших университетов мира и ведущий исследовательский центр Италии. Более 70 000 студентов, известна медициной, физикой, астрономией и правом. Галилео Галилей преподавал здесь 18 лет, а ботанический сад (1545) — старейший в мире. Университет внёс новаторский вклад в анатомию: первый постоянный анатомический театр построен в 1594 году. Множество программ на английском, сильные международные связи. Елена Корнаро Пископия — первая в мире женщина, получившая университетскую степень — окончила этот университет в 1678 году.</div>
     </div>
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/milano.png" alt="UniMi" class="partner-logo"></div>
       <div class="partner-name">Università degli Studi di Milano</div>
       <div class="partner-city">Milan · Lombardy</div>
       <div class="partner-badge">QS #285</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Founded in 1924, the University of Milan (UniMi) is one of Italy's largest and most prestigious universities, with over 60,000 students. It is the only Italian university in the League of European Research Universities (LERU). The university offers programs across all disciplines, with particular strength in medicine, law, sciences, and humanities. Its research output is among the highest in Italy, with significant EU funding. The main campus is in the historic Cà Granda building in central Milan. UniMi has strong ties with Milan's business and financial community, offering excellent internship and career opportunities. The university maintains over 500 international partnerships worldwide.">Основана в 1924 году — один из крупнейших и самых престижных вузов Италии, более 60 000 студентов. Единственный итальянский университет в Лиге европейских исследовательских университетов (LERU). Программы по всем направлениям, особенно сильна в медицине, праве, естественных и гуманитарных науках. Один из лидеров Италии по объёму исследований и финансированию ЕС. Главный кампус — в историческом здании Cà Granda в центре Милана. Тесные связи с бизнес-сообществом Милана, отличные возможности для стажировок. Более 500 международных партнёрств.</div>
     </div>
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/napoli.png" alt="Federico II" class="partner-logo"></div>
       <div class="partner-name">Università di Napoli Federico II</div>
       <div class="partner-city">Naples · Campania</div>
       <div class="partner-badge">QS #347 · 1224 г.</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Founded in 1224 by Holy Roman Emperor Frederick II, this is the oldest state university in the world still operating. It has over 80,000 students and is one of southern Italy's most important research institutions. The university is renowned for medicine, engineering, law, and natural sciences. It has produced notable alumni including philosopher Thomas Aquinas and Nobel laureates. The main campus is in the historic center of Naples, a UNESCO World Heritage site. Federico II offers numerous English-taught programs and participates in extensive EU research networks. The university is a key driver of innovation in southern Italy, with strong ties to the Mediterranean business community.">Основана в 1224 году императором Фридрихом II — старейший государственный университет мира, действующий непрерывно. Более 80 000 студентов, один из важнейших исследовательских центров юга Италии. Известна медициной, инженерией, правом и естественными науками. Среди выпускников — философ Фома Аквинский и нобелевские лауреаты. Главный кампус в историческом центре Неаполя (объект ЮНЕСКО). Множество программ на английском, активное участие в исследовательских сетях ЕС. Ключевой центр инноваций юга Италии с сильными связями в средиземноморском бизнес-сообществе.</div>
     </div>
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/firenze.png" alt="Firenze" class="partner-logo"></div>
       <div class="partner-name">Università di Firenze</div>
       <div class="partner-city">Florence · Tuscany</div>
       <div class="partner-badge">QS #358</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Founded in 1321, the University of Florence is one of Italy's oldest and largest universities, with over 50,000 students. It is a major research institution, particularly strong in Renaissance studies, art history, engineering, and agricultural sciences. The university has produced notable alumni including Nobel laureates and prominent Italian politicians. Its campuses are spread across the historic city of Florence, offering students a unique cultural environment. The university maintains strong international partnerships and offers several English-taught programs. Florence itself is a living museum of Renaissance art and architecture, making it an ideal setting for humanities and arts studies.">Основана в 1321 году — один из старейших и крупнейших вузов Италии, более 50 000 студентов. Крупный исследовательский центр, особенно сильна в ренессансоведении, истории искусств, инженерии и сельскохозяйственных науках. Среди выпускников — нобелевские лауреаты и видные политики. Кампусы расположены по всему историческому центру Флоренции. Сильные международные партнёрства, несколько программ на английском. Флоренция — живой музей искусства и архитектуры эпохи Возрождения, идеальное место для изучения гуманитарных наук.</div>
     </div>
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/roma3.png" alt="Roma Tre" class="partner-logo"></div>
       <div class="partner-name">Università degli Studi Roma Tre</div>
       <div class="partner-city">Rome · Lazio</div>
       <div class="partner-badge">Modern · Growing</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Established in 1992, Roma Tre is Rome's youngest and most dynamic public university, with over 35,000 students. Despite its young age, it has quickly become one of Italy's top universities for research quality and internationalization. The university is known for its modern approach to education, with strong programs in engineering, architecture, law, and economics. Roma Tre has a vibrant international community, with numerous English-taught programs and exchange agreements. The campus is located in the Ostiense district of Rome, a rapidly developing creative and tech hub. The university is particularly strong in STEM fields and has growing partnerships with tech companies in Rome.">Основана в 1992 году — самый молодой и динамичный государственный университет Рима, более 35 000 студентов. Несмотря на молодой возраст, быстро вошла в число лучших вузов Италии по качеству исследований и интернационализации. Известна современным подходом к образованию, сильные программы по инженерии, архитектуре, праву и экономике. Активное международное сообщество, множество программ на английском. Кампус в районе Остиенсе — развивающемся креативном и технологическом центре Рима. Особенно сильна в STEM-дисциплинах.</div>
     </div>
-    <div class="partner-card">
+    <div class="partner-card" onclick="this.classList.toggle('expanded')">
       <div class="partner-crest"><img src="images/universities/torvergata.png" alt="Tor Vergata" class="partner-logo"></div>
       <div class="partner-name">Università di Roma Tor Vergata</div>
       <div class="partner-city">Rome · Lazio</div>
       <div class="partner-badge">Research-focused</div>
+      <div class="partner-hint" data-en="Click for info">Нажмите для информации</div>
+      <div class="partner-desc" data-en="Founded in 1982, Tor Vergata is a modern research-focused university located on a large 600-hectare campus in southeastern Rome. It has over 40,000 students and is known for its strong emphasis on scientific research and innovation. The university excels in medicine, engineering, economics, and sciences, with several departments ranked among Italy's best. Tor Vergata houses one of Italy's most advanced medical centers and a major business school. The campus includes research facilities, sports centers, and student housing in a green, suburban setting. The university has strong industry partnerships and a growing number of English-taught programs. It is consistently ranked among the top young universities in Italy.">Основана в 1982 году — современный исследовательский университет на большом кампусе (600 га) в юго-восточном Риме. Более 40 000 студентов, упор на научные исследования и инновации. Сильна в медицине, инженерии, экономике и естественных науках, несколько факультетов — лучшие в Италии. Один из самых современных медицинских центров страны и крупная бизнес-школа. Кампус включает исследовательские центры, спортивные сооружения и общежития в зелёной пригородной зоне. Сильные связи с индустрией, растущее число программ на английском. Входит в число лучших молодых университетов Италии.</div>
     </div>
   </div>
 </section>
