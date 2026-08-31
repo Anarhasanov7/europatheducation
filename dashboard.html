@@ -150,73 +150,16 @@
   .lang-btn:hover { opacity: 0.8; }
   .lang-btn.active { opacity: 1; border-color: #1a73e8; background: rgba(26,115,232,0.1); }
 
-  /* Dark theme */
-  [data-theme="dark"] {
-    --bg: #0d1117;
-    --text: #e6edf3;
-    --card-bg: #161b22;
-    --card-border: rgba(255,255,255,0.08);
-    --gray: #8b949e;
-    --input-bg: #161b22;
-    --input-border: #30363d;
-  }
-  [data-theme="dark"] body { background: var(--bg); color: var(--text); }
-  [data-theme="dark"] nav { background: var(--card-bg); border-bottom-color: var(--card-border); }
-  [data-theme="dark"] .card,
-  [data-theme="dark"] .container,
-  [data-theme="dark"] .progress-wrap,
-  [data-theme="dark"] .summary,
-  [data-theme="dark"] .booking-modal,
-  [data-theme="dark"] .doc-item,
-  [data-theme="dark"] .step {
-    background: var(--card-bg) !important;
-    color: var(--text) !important;
-    border-color: var(--card-border) !important;
-  }
-  [data-theme="dark"] input,
-  [data-theme="dark"] textarea,
-  [data-theme="dark"] select {
-    background: var(--input-bg) !important;
-    border-color: var(--input-border) !important;
-    color: var(--text) !important;
-  }
-  [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3,
-  [data-theme="dark"] h4, [data-theme="dark"] label, [data-theme="dark"] p,
-  [data-theme="dark"] th, [data-theme="dark"] td {
-    color: var(--text) !important;
-  }
-  [data-theme="dark"] .sub, [data-theme="dark"] .progress-text,
-  [data-theme="dark"] .program-count, [data-theme="dark"] .doc-hint,
-  [data-theme="dark"] .doc-item .status { color: var(--gray) !important; }
-  [data-theme="dark"] .progress-bar { background: #30363d; }
-  [data-theme="dark"] .step { border-color: var(--card-border); }
-  [data-theme="dark"] .step.done { background: rgba(198,255,61,0.05); border-color: var(--lime); }
-  [data-theme="dark"] a { color: #3ddfff !important; }
-  [data-theme="dark"] .booking-overlay { background: rgba(0,0,0,0.8); }
-  [data-theme="dark"] .booking-modal .day-tab,
-  [data-theme="dark"] .booking-modal .slot { background: var(--card-bg); border-color: var(--input-border); color: var(--text); }
-  [data-theme="dark"] .booking-modal .booking-summary { background: #1c2128; }
-  [data-theme="dark"] .loading-overlay { background: var(--bg); }
-
-  /* Theme toggle button */
-  .theme-btn {
-    font-size: 18px; line-height: 1; cursor: pointer;
-    border: 2px solid transparent; border-radius: 6px;
-    padding: 4px 6px; background: transparent; transition: all 0.2s;
-    opacity: 0.5;
-  }
-  .theme-btn:hover { opacity: 0.8; }
-</style>
+                                  /* Theme toggle button */
+    </style>
 </head>
 <body>
 
 <div class="lang-toggle">
   <button class="lang-btn" id="lang-ru" onclick="edupathI18n.setLang('ru')" title="Русский">🇷🇺</button>
   <button class="lang-btn" id="lang-en" onclick="edupathI18n.setLang('en')" title="English">🇬🇧</button>
-  <button class="theme-btn" id="theme-toggle" onclick="edupathTheme.toggleTheme()" title="Switch to dark mode">🌙</button>
 </div>
 <script src="i18n.js"></script>
-<script src="theme.js"></script>
 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>

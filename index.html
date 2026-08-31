@@ -35,129 +35,7 @@
     --footer-bg: var(--ink);
   }
 
-  /* ─── Dark theme ─── */
-  [data-theme="dark"] {
-    --bg: #0d1117;
-    --text: #e6edf3;
-    --card-bg: #161b22;
-    --card-border: rgba(255,255,255,0.08);
-    --off-white: #0d1117;
-    --section-bg: #0d1117;
-    --nav-bg: rgba(13,17,23,0.92);
-    --input-bg: #161b22;
-    --input-border: #30363d;
-    --modal-bg: #161b22;
-    --footer-bg: #080a14;
-    --gray: #8b949e;
-  }
-  [data-theme="dark"] body {
-    background: var(--bg);
-    color: var(--text);
-  }
-  [data-theme="dark"] .section-title { color: var(--text) !important; }
-  [data-theme="dark"] .section-sub { color: var(--gray) !important; }
-  [data-theme="dark"] .why-card,
-  [data-theme="dark"] .provide-card,
-  [data-theme="dark"] .pkg-card,
-  [data-theme="dark"] .review-card,
-  [data-theme="dark"] .mission-card {
-    background: var(--card-bg) !important;
-    border-color: var(--card-border) !important;
-  }
-  [data-theme="dark"] .why-card h4,
-  [data-theme="dark"] .provide-card h4,
-  [data-theme="dark"] .pkg-name,
-  [data-theme="dark"] .journey-step h4,
-  [data-theme="dark"] .review-name,
-  [data-theme="dark"] .corp-item .value,
-  [data-theme="dark"] .location-info h3 {
-    color: var(--text) !important;
-  }
-  [data-theme="dark"] .why-card p,
-  [data-theme="dark"] .provide-card p,
-  [data-theme="dark"] .pkg-body li,
-  [data-theme="dark"] .journey-step p,
-  [data-theme="dark"] .review-text,
-  [data-theme="dark"] .corp-item .label,
-  [data-theme="dark"] .location-info p,
-  [data-theme="dark"] .review-from,
-  [data-theme="dark"] .review-result {
-    color: var(--gray) !important;
-  }
-  [data-theme="dark"] .journey-section {
-    background: linear-gradient(180deg, #0d1117 0%, #161b22 100%) !important;
-  }
-  [data-theme="dark"] .journey-circle {
-    background: var(--card-bg) !important;
-  }
-  [data-theme="dark"] .journey-final {
-    background: linear-gradient(135deg, #0b1e3f, #080a14) !important;
-  }
-  [data-theme="dark"] .why-banner {
-    background: linear-gradient(135deg, #0b1e3f, #161b22) !important;
-  }
-  [data-theme="dark"] .addon-banner {
-    background: var(--card-bg) !important;
-    border-color: var(--card-border) !important;
-  }
-  [data-theme="dark"] .location-map {
-    background: linear-gradient(135deg, #0b1e3f, #161b22) !important;
-  }
-  [data-theme="dark"] .corp-card {
-    background: var(--card-bg) !important;
-    border-color: var(--card-border) !important;
-  }
-  [data-theme="dark"] .contact-form,
-  [data-theme="dark"] .form-group input,
-  [data-theme="dark"] .form-group textarea {
-    background: var(--input-bg) !important;
-    border-color: var(--input-border) !important;
-    color: var(--text) !important;
-  }
-  [data-theme="dark"] .form-group label {
-    color: var(--text) !important;
-  }
-  [data-theme="dark"] .pub-modal {
-    background: var(--modal-bg) !important;
-    color: var(--text) !important;
-  }
-  [data-theme="dark"] .pub-field input {
-    background: var(--input-bg) !important;
-    border-color: var(--input-border) !important;
-    color: var(--text) !important;
-  }
-  [data-theme="dark"] .pub-field label {
-    color: var(--text) !important;
-  }
-  [data-theme="dark"] .day-tab {
-    background: var(--card-bg) !important;
-    color: var(--gray) !important;
-    border-color: var(--card-border) !important;
-  }
-  [data-theme="dark"] .day-tab.active {
-    background: var(--electric) !important;
-    color: var(--ink) !important;
-  }
-  [data-theme="dark"] .slot {
-    background: var(--card-bg) !important;
-    color: var(--gray) !important;
-    border-color: var(--card-border) !important;
-  }
-  [data-theme="dark"] .slot.active {
-    background: var(--electric) !important;
-    color: var(--ink) !important;
-  }
-  [data-theme="dark"] footer {
-    background: var(--footer-bg) !important;
-  }
-  [data-theme="dark"] .pkg-card.p1 {
-    background: var(--card-bg) !important;
-  }
-  [data-theme="dark"] .pkg-card.p2 {
-    background: var(--card-bg) !important;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+                                                        * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
 
@@ -223,15 +101,7 @@
   .lang-btn.active { opacity: 1; border-color: var(--electric); background: rgba(61,223,255,0.1); }
 
   /* ─── Theme toggle ─── */
-  .theme-btn {
-    font-size: 18px; line-height: 1; cursor: pointer;
-    border: 2px solid transparent; border-radius: 6px;
-    padding: 4px 6px; background: transparent; transition: all 0.2s;
-    opacity: 0.5;
-  }
-  .theme-btn:hover { opacity: 0.8; }
-
-  /* ─── Hero ─── */
+      /* ─── Hero ─── */
   .hero {
     min-height: 100vh;
     background: linear-gradient(160deg, var(--navy) 0%, var(--ink) 100%);
@@ -651,16 +521,7 @@
     text-transform: uppercase; color: var(--electric);
     background: rgba(61,223,255,0.1); padding: 3px 8px; border-radius: 10px;
   }
-  [data-theme="dark"] .partner-card {
-    background: var(--card-bg) !important;
-    border-color: var(--card-border) !important;
-  }
-  [data-theme="dark"] .partner-name { color: var(--text) !important; }
-  [data-theme="dark"] .partner-city { color: var(--gray) !important; }
-  [data-theme="dark"] .partner-crest {
-    background: linear-gradient(135deg, #0b1e3f, #080a14) !important;
-  }
-  @media (max-width: 1200px) {
+          @media (max-width: 1200px) {
     .partners-grid { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 700px) {
@@ -1074,13 +935,11 @@
     <div class="lang-toggle">
       <button class="lang-btn" id="lang-ru" onclick="edupathI18n.setLang('ru')" title="Русский">🇷🇺</button>
       <button class="lang-btn" id="lang-en" onclick="edupathI18n.setLang('en')" title="English">🇬🇧</button>
-      <button class="theme-btn" id="theme-toggle" onclick="edupathTheme.toggleTheme()" title="Switch to dark mode">🌙</button>
     </div>
     <a href="login.html" class="cta" data-en="Account">Личный кабинет</a>
   </div>
 </nav>
 <script src="i18n.js"></script>
-<script src="theme.js"></script>
 
 <!-- ─── Hero ─── -->
 <div class="hero">
