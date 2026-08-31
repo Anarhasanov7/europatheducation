@@ -52,6 +52,43 @@
   .lang-btn { font-size: 18px; line-height: 1; cursor: pointer; border: 2px solid transparent; border-radius: 6px; padding: 4px 6px; background: transparent; transition: all 0.2s; opacity: 0.5; }
   .lang-btn:hover { opacity: 0.8; }
   .lang-btn.active { opacity: 1; border-color: #1a73e8; background: rgba(26,115,232,0.1); }
+
+  /* Dark theme */
+  [data-theme="dark"] {
+    --bg: #0d1117;
+    --text: #e6edf3;
+    --card-bg: #161b22;
+    --card-border: rgba(255,255,255,0.08);
+    --gray: #8b949e;
+    --input-bg: #161b22;
+    --input-border: #30363d;
+  }
+  [data-theme="dark"] body { background: var(--bg); color: var(--text); }
+  [data-theme="dark"] .card {
+    background: var(--card-bg) !important;
+    color: var(--text) !important;
+    border-color: var(--card-border) !important;
+  }
+  [data-theme="dark"] input {
+    background: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--text) !important;
+  }
+  [data-theme="dark"] label,
+  [data-theme="dark"] h1,
+  [data-theme="dark"] p {
+    color: var(--text) !important;
+  }
+  [data-theme="dark"] a { color: var(--electric, #3ddfff) !important; }
+
+  /* Theme toggle button */
+  .theme-btn {
+    font-size: 18px; line-height: 1; cursor: pointer;
+    border: 2px solid transparent; border-radius: 6px;
+    padding: 4px 6px; background: transparent; transition: all 0.2s;
+    opacity: 0.5;
+  }
+  .theme-btn:hover { opacity: 0.8; }
 </style>
 </head>
 <body>
@@ -59,8 +96,10 @@
 <div class="lang-toggle">
   <button class="lang-btn" id="lang-ru" onclick="edupathI18n.setLang('ru')" title="Русский">🇷🇺</button>
   <button class="lang-btn" id="lang-en" onclick="edupathI18n.setLang('en')" title="English">🇬🇧</button>
+  <button class="theme-btn" id="theme-toggle" onclick="edupathTheme.toggleTheme()" title="Switch to dark mode">🌙</button>
 </div>
 <script src="i18n.js"></script>
+<script src="theme.js"></script>
 
 <div class="card">
   <h1 id="title" data-en="Sign In">Вход в личный кабинет</h1>

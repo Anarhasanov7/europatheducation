@@ -141,6 +141,61 @@
   .lang-btn { font-size: 18px; line-height: 1; cursor: pointer; border: 2px solid transparent; border-radius: 6px; padding: 4px 6px; background: transparent; transition: all 0.2s; opacity: 0.5; }
   .lang-btn:hover { opacity: 0.8; }
   .lang-btn.active { opacity: 1; border-color: #1a73e8; background: rgba(26,115,232,0.1); }
+
+  /* Dark theme */
+  [data-theme="dark"] {
+    --bg: #0d1117;
+    --text: #e6edf3;
+    --card-bg: #161b22;
+    --card-border: rgba(255,255,255,0.08);
+    --gray: #8b949e;
+    --input-bg: #161b22;
+    --input-border: #30363d;
+  }
+  [data-theme="dark"] body { background: var(--bg); color: var(--text); }
+  [data-theme="dark"] .login-box,
+  [data-theme="dark"] .header,
+  [data-theme="dark"] .stat-card,
+  [data-theme="dark"] .table-wrap,
+  [data-theme="dark"] .modal,
+  [data-theme="dark"] .info-item,
+  [data-theme="dark"] .doc-item,
+  [data-theme="dark"] .ticket-original-msg,
+  [data-theme="dark"] .pagination button {
+    background: var(--card-bg) !important;
+    color: var(--text) !important;
+    border-color: var(--card-border) !important;
+  }
+  [data-theme="dark"] input,
+  [data-theme="dark"] textarea,
+  [data-theme="dark"] select {
+    background: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--text) !important;
+  }
+  [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3,
+  [data-theme="dark"] h4, [data-theme="dark"] label, [data-theme="dark"] p,
+  [data-theme="dark"] th, [data-theme="dark"] td {
+    color: var(--text) !important;
+  }
+  [data-theme="dark"] th { background: #1c2128 !important; }
+  [data-theme="dark"] tr:hover { background: #1c2128 !important; }
+  [data-theme="dark"] .sub, [data-theme="dark"] .label, [data-theme="dark"] .page-info { color: var(--gray) !important; }
+  [data-theme="dark"] a { color: #3ddfff !important; }
+  [data-theme="dark"] .logout-btn { color: var(--gray); border-color: var(--input-border); }
+  [data-theme="dark"] .logout-btn:hover { background: #1c2128; }
+  [data-theme="dark"] .tab-btn { color: var(--gray); }
+  [data-theme="dark"] .tab-btn.active { color: var(--electric); border-bottom-color: var(--electric); }
+  [data-theme="dark"] .tab-bar { border-bottom-color: var(--card-border); }
+
+  /* Theme toggle button */
+  .theme-btn {
+    font-size: 18px; line-height: 1; cursor: pointer;
+    border: 2px solid transparent; border-radius: 6px;
+    padding: 4px 6px; background: transparent; transition: all 0.2s;
+    opacity: 0.5;
+  }
+  .theme-btn:hover { opacity: 0.8; }
 </style>
 </head>
 <body>
@@ -148,8 +203,10 @@
 <div class="lang-toggle">
   <button class="lang-btn" id="lang-ru" onclick="edupathI18n.setLang('ru')" title="Русский">🇷🇺</button>
   <button class="lang-btn" id="lang-en" onclick="edupathI18n.setLang('en')" title="English">🇬🇧</button>
+  <button class="theme-btn" id="theme-toggle" onclick="edupathTheme.toggleTheme()" title="Switch to dark mode">🌙</button>
 </div>
 <script src="i18n.js"></script>
+<script src="theme.js"></script>
 
 <div id="loginOverlay">
   <div class="login-box">
