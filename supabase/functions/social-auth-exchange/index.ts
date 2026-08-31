@@ -6,11 +6,11 @@ const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 
 const THREADS_CLIENT_ID = '4280706285480169';
 const THREADS_CLIENT_SECRET = Deno.env.get('THREADS_CLIENT_SECRET') || 'be9e8e8ee544c0f2546a3123bdc0e2cb';
-const THREADS_REDIRECT = 'https://europatheducation.eu/social-auth.html';
+const THREADS_REDIRECT = 'https://europatheducation.eu/threads-callback.html';
 
 const META_APP_ID = '959105600544977';
 const META_APP_SECRET = Deno.env.get('META_APP_SECRET') || 'bc08d26d0f929d3ea4daa44ac0759d8e';
-const META_REDIRECT = 'https://europatheducation.eu/social-auth.html';
+const META_REDIRECT = 'https://europatheducation.eu/threads-callback.html';
 
 const FB_API = 'https://graph.facebook.com/v21.0';
 

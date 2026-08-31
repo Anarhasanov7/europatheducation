@@ -3,43 +3,122 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Threads OAuth Callback</title>
+<title>OAuth Callback — EuroPath Education</title>
 <style>
-body { font-family: -apple-system, sans-serif; padding: 40px; max-width: 600px; margin: 0 auto; }
-#status { padding: 20px; border-radius: 8px; margin: 20px 0; }
-.success { background: #d4edda; color: #155724; }
-.error { background: #f8d7da; color: #721c24; }
-code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; word-break: break-all; }
+body { font-family: -apple-system, sans-serif; padding: 40px; max-width: 700px; margin: 0 auto; background: #0b1e3f; color: #fff; }
+.card { background: #16213e; border-radius: 12px; padding: 24px; margin: 20px 0; border: 1px solid #c9a84c33; }
+.card h2 { color: #c9a84c; margin-top: 0; font-size: 20px; }
+.status { padding: 12px 16px; border-radius: 8px; margin: 12px 0; font-size: 14px; }
+.status-success { background: #d4edda; color: #155724; }
+.status-error { background: #f8d7da; color: #721c24; }
+.status-info { background: #d1ecf1; color: #0c5460; }
+code { background: #1a1a2e; color: #c9a84c; padding: 4px 8px; border-radius: 4px; word-break: break-all; font-size: 12px; display: block; margin: 8px 0; }
+.small { font-size: 13px; color: #aaa; }
+.btn { display: inline-block; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0; background: #c9a84c; color: #0b1e3f; }
+.acct { padding: 10px 14px; background: #1a1a2e; border-radius: 6px; margin: 8px 0; font-size: 14px; }
+.acct strong { color: #c9a84c; }
 </style>
 </head>
 <body>
-<h1>Threads OAuth Callback</h1>
-<div id="status">Processing...</div>
+<h1 style="color: #c9a84c;">OAuth Callback</h1>
+<div id="status" class="status status-info">Processing authorization...</div>
+<div id="results"></div>
 <div id="code-display" style="display:none;">
-  <p><strong>Authorization Code:</strong></p>
-  <p><code id="code"></code></p>
-  <p>Copy this code and paste it where requested.</p>
+  <p class="small">If auto-exchange fails, copy this code:</p>
+  <code id="code"></code>
 </div>
+<p><a class="btn" href="https://europatheducation.eu/social-auth.html">← Back to Auth Page</a></p>
+
 <script>
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
+
 const url = new URL(window.location.href);
 const code = url.searchParams.get('code');
 const error = url.searchParams.get('error');
-const status = document.getElementById('status');
+const statusEl = document.getElementById('status');
+const resultsEl = document.getElementById('results');
 const codeDisplay = document.getElementById('code-display');
 const codeEl = document.getElementById('code');
 
-if (error) {
-  status.className = 'error';
-  status.textContent = 'Error: ' + error + ' - ' + url.searchParams.get('error_message');
-} else if (code) {
-  status.className = 'success';
-  status.textContent = 'Authorization successful! Copy the code below.';
-  codeDisplay.style.display = 'block';
+async function init() {
+  if (error) {
+    statusEl.className = 'status status-error';
+    statusEl.textContent = 'Error: ' + error + ' — ' + (url.searchParams.get('error_message') || url.searchParams.get('error_reason') || '');
+    return;
+  }
+
+  if (!code) {
+    statusEl.className = 'status status-error';
+    statusEl.textContent = 'No authorization code received.';
+    return;
+  }
+
+  // Show code as fallback
   codeEl.textContent = code;
-} else {
-  status.className = 'error';
-  status.textContent = 'No code or error received.';
+  codeDisplay.style.display = 'block';
+
+  // Try Threads exchange first
+  statusEl.className = 'status status-info';
+  statusEl.textContent = 'Trying Threads token exchange...';
+  let threadsOk = false;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/social-auth-exchange`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ code, type: 'threads' })
+    });
+    const data = await res.json();
+    if (data.success) {
+      threadsOk = true;
+      resultsEl.innerHTML += `<div class="card"><h2>✅ Threads Connected</h2><p>User ID: <strong>${data.threads_user_id}</strong></p><p class="small">${data.message}</p></div>`;
+    }
+  } catch (e) {
+    // Threads exchange failed — might be a Facebook code
+  }
+
+  // Try Meta (Facebook) exchange
+  statusEl.textContent = 'Trying Facebook token exchange...';
+  let metaOk = false;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/social-auth-exchange`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ code, type: 'meta' })
+    });
+    const data = await res.json();
+    if (data.success) {
+      metaOk = true;
+      let html = `<div class="card"><h2>✅ Facebook Connected</h2><p>${data.message}</p>`;
+      if (data.pages && data.pages.length) {
+        html += '<h3 style="color:#c9a84c;">Pages Found:</h3>';
+        data.pages.forEach(p => {
+          html += `<div class="acct"><strong>${p.name}</strong> (ID: ${p.id})<br>IG: ${p.instagram_business_account?.id || 'None'}</div>`;
+        });
+      }
+      if (data.ig_accounts && data.ig_accounts.length) {
+        html += '<h3 style="color:#c9a84c;">Instagram Accounts:</h3>';
+        data.ig_accounts.forEach(ig => {
+          html += `<div class="acct"><strong>@${ig.username}</strong> (ID: ${ig.id})<br>Page: ${ig.page_name} · Followers: ${ig.followers_count || '?'}</div>`;
+        });
+      }
+      html += '</div>';
+      resultsEl.innerHTML += html;
+    }
+  } catch (e) {
+    // Meta exchange failed
+  }
+
+  if (threadsOk || metaOk) {
+    statusEl.className = 'status status-success';
+    statusEl.textContent = 'Authorization successful! See details below.';
+  } else {
+    statusEl.className = 'status status-error';
+    statusEl.textContent = 'Auto-exchange failed for both Threads and Facebook. The code might be expired. Please try again from the auth page.';
+  }
 }
+
+init();
 </script>
 </body>
 </html>
