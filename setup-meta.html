@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Настройка Meta API — EuroPath Education</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔑</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root { --navy:#0b1e3f; --ink:#080a14; --blue:#2E86C1; --electric:#3ddfff; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; --green:#22c55e; --red:#ef4444; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', -apple-system, sans-serif; background:var(--off); color:var(--ink); }
+
+  #loginOverlay { position:fixed; inset:0; background:linear-gradient(135deg,#0b1e3f,#16213e); display:flex; align-items:center; justify-content:center; z-index:100; }
+  .login-box { background:#fff; border-radius:16px; padding:40px; width:380px; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+  .login-box h1 { font-size:24px; margin-bottom:4px; }
+  .login-box .sub { color:var(--gray); margin-bottom:24px; font-size:14px; }
+  .login-box input { width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; margin-bottom:12px; }
+  .login-box button { width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; }
+  .login-box .login-error { color:var(--red); font-size:13px; margin-top:8px; display:none; }
+
+  .header { background:#fff; border-bottom:1px solid #e0e0e0; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+  .header h1 { font-size:18px; color:var(--blue); }
+  .header .user-info { font-size:13px; color:var(--gray); }
+  .container { max-width:800px; margin:0 auto; padding:40px 24px; }
+
+  .card { background:#fff; border-radius:14px; padding:28px; margin-bottom:24px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .card h2 { font-size:18px; font-weight:700; margin-bottom:6px; }
+  .card .sub { color:var(--gray); font-size:13px; margin-bottom:20px; }
+
+  .status-row { display:flex; gap:12px; margin-bottom:24px; }
+  .status-pill { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:600; background:#f0f0f0; color:var(--gray); }
+  .status-pill.ok { background:#e6f9ec; color:#155724; }
+  .status-pill.missing { background:#fff3cd; color:#856404; }
+
+  .field { margin-bottom:18px; }
+  .field label { font-size:13px; font-weight:600; display:block; margin-bottom:6px; }
+  .field input { width:100%; padding:11px 12px; border:1px solid #ddd; border-radius:8px; font-size:13px; outline:none; transition:border-color .2s; }
+  .field input:focus { border-color:var(--blue); }
+  .field .hint { font-size:11px; color:var(--gray); margin-top:4px; line-height:1.5; }
+  .field .hint a { color:var(--blue); text-decoration:none; }
+  .field .hint a:hover { text-decoration:underline; }
+
+  .btn-row { display:flex; gap:12px; margin-top:24px; }
+  .btn { padding:12px 24px; border:none; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .btn-save { background:var(--blue); color:#fff; }
+  .btn-save:hover { background:#1a6ba8; }
+  .btn-save:disabled { opacity:.5; cursor:wait; }
+  .btn-test { background:#f0f0f0; color:var(--ink); }
+  .btn-test:hover { background:#e0e0e0; }
+  .btn-test:disabled { opacity:.5; cursor:wait; }
+
+  .result { margin-top:16px; padding:14px; border-radius:10px; font-size:13px; display:none; }
+  .result.success { background:#e6f9ec; color:#155724; display:block; }
+  .result.error { background:#fde8e8; color:#721c1c; display:block; }
+  .result.partial { background:#fff8e1; color:#856404; display:block; }
+
+  .instructions { background:#f8f9fa; border-radius:10px; padding:16px; font-size:13px; line-height:1.7; }
+  .instructions h3 { font-size:14px; margin-bottom:10px; }
+  .instructions ol { padding-left:20px; }
+  .instructions li { margin-bottom:6px; }
+  .instructions code { background:#e0e0e0; padding:2px 6px; border-radius:4px; font-size:12px; }
+
+  .toast { position:fixed; bottom:30px; right:30px; background:var(--ink); color:#fff; padding:14px 24px; border-radius:12px; font-size:14px; display:none; z-index:200; }
+  .toast.show { display:block; }
+</style>
+</head>
+<body>
+
+<div id="loginOverlay">
+  <div class="login-box">
+    <h1>🔑 Настройка Meta API</h1>
+    <div class="sub">Вход только для администратора</div>
+    <input type="email" id="loginEmail" placeholder="Email" autocomplete="email">
+    <input type="password" id="loginPassword" placeholder="Пароль" autocomplete="current-password">
+    <button onclick="doLogin()">Войти</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none;">
+  <div class="header">
+    <h1>🔑 Настройка Meta API</h1>
+    <div class="user-info" id="userInfo"></div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2>Токены доступа</h2>
+      <div class="sub">Введите токены Facebook, Instagram и Threads для публикации постов</div>
+
+      <div class="status-row" id="statusRow">
+        <div class="status-pill missing" id="status-fb">Facebook</div>
+        <div class="status-pill missing" id="status-ig">Instagram</div>
+        <div class="status-pill missing" id="status-threads">Threads</div>
+      </div>
+
+      <div class="field">
+        <label>Facebook Page ID</label>
+        <input type="text" id="page_id" placeholder="1234567890123456">
+        <div class="hint">ID вашей Facebook страницы. Найдите его в <a href="https://business.facebook.com/" target="_blank">Business Manager</a> или в настройках страницы.</div>
+      </div>
+
+      <div class="field">
+        <label>Facebook Page Access Token</label>
+        <input type="password" id="page_token" placeholder="EAA...">
+        <div class="hint">Получите в <a href="https://developers.facebook.com/tools/explorer/" target="_blank">Graph API Explorer</a> → Get Token → Get Page Access Token.</div>
+      </div>
+
+      <div class="field">
+        <label>Instagram Business Account ID</label>
+        <input type="text" id="ig_business_id" placeholder="178414...">
+        <div class="hint">ID Instagram Business аккаунта, привязанного к Facebook странице. В Graph API Explorer выполните: <code>{page-id}?fields=instagram_business_account</code></div>
+      </div>
+
+      <div class="field">
+        <label>Threads User ID</label>
+        <input type="text" id="threads_user_id" placeholder="1234567890">
+        <div class="hint">ID вашего профессионального аккаунта Threads. <a href="https://developers.facebook.com/apps/959105600544977/threads-api/" target="_blank">Подключите Threads API</a> и получите токен.</div>
+      </div>
+
+      <div class="field">
+        <label>Threads Access Token</label>
+        <input type="password" id="threads_token" placeholder="THR...">
+        <div class="hint">Токен Threads. Действителен 60 дней; потом нужно обновить.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-save" id="saveBtn" onclick="saveSettings()">💾 Сохранить токены</button>
+        <button class="btn btn-test" id="testBtn" onclick="testTokens()">🧪 Проверить</button>
+      </div>
+
+      <div class="result" id="resultBox"></div>
+    </div>
+
+    <div class="card">
+      <h2>Как получить токены</h2>
+      <div class="sub">Пошаговая инструкция</div>
+      <div class="instructions">
+        <h3>Facebook + Instagram</h3>
+        <ol>
+          <li>Откройте <a href="https://developers.facebook.com/tools/explorer/" target="_blank">Graph API Explorer</a></li>
+          <li>Выберите приложение <strong>EuroPath Education</strong></li>
+          <li>Нажмите <strong>Get Token</strong> → <strong>Get User Access Token</strong></li>
+          <li>Выберите права: <code>pages_manage_posts</code>, <code>pages_read_engagement</code>, <code>instagram_content_publish</code></li>
+          <li>Нажмите <strong>Get Access Token</strong> и авторизуйтесь</li>
+          <li>Снова нажмите <strong>Get Token</strong> → <strong>Get Page Access Token</strong></li>
+          <li>Выберите страницу <strong>EuroPath Education</strong> и скопируйте токен в поле выше</li>
+          <li>Для Instagram: в Graph API Explorer выполните <code>/{page-id}?fields=instagram_business_account</code></li>
+          <li>Скопируйте значение <code>id</code> из ответа в поле Instagram Business ID</li>
+        </ol>
+
+        <h3 style="margin-top:18px;">Threads</h3>
+        <ol>
+          <li>Откройте <a href="https://developers.facebook.com/apps/959105600544977/threads-api/" target="_blank">Threads API в вашем Meta приложении</a></li>
+          <li>Настройте Threads API и получите User ID и Access Token</li>
+          <li>Вставьте их в соответствующие поля выше</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
+const EDGE_BASE = 'https://glfizcgayqecnvtfihgy.supabase.co/functions/v1';
+let sb;
+
+(function loadSB() {
+  if (window.supabase) { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); checkSession(); }
+  else { setTimeout(loadSB, 100); }
+})();
+
+async function checkSession() {
+  const { data } = await sb.auth.getSession();
+  if (data.session) { showApp(data.session.user); loadSettings(); }
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { err.textContent = error.message; err.style.display = 'block'; }
+  else { showApp(data.user); loadSettings(); }
+}
+
+function showApp(user) {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('userInfo').textContent = user.email;
+}
+
+async function loadSettings() {
+  const { data, error } = await sb.from('meta_settings').select('setting_key, setting_value');
+  if (error || !data) return;
+  const settings = {};
+  data.forEach(s => settings[s.setting_key] = s.setting_value);
+
+  const keys = ['page_id', 'page_token', 'ig_business_id', 'threads_user_id', 'threads_token'];
+  keys.forEach(k => {
+    if (settings[k]) document.getElementById(k).value = settings[k];
+  });
+  updateStatusPills(settings);
+}
+
+function updateStatusPills(settings) {
+  const fbOk = settings.page_id && settings.page_token;
+  const igOk = settings.ig_business_id && settings.page_token;
+  const threadsOk = settings.threads_user_id && settings.threads_token;
+
+  document.getElementById('status-fb').className = 'status-pill ' + (fbOk ? 'ok' : 'missing');
+  document.getElementById('status-ig').className = 'status-pill ' + (igOk ? 'ok' : 'missing');
+  document.getElementById('status-threads').className = 'status-pill ' + (threadsOk ? 'ok' : 'missing');
+}
+
+async function saveSettings() {
+  const settings = {
+    page_id: document.getElementById('page_id').value.trim(),
+    page_token: document.getElementById('page_token').value.trim(),
+    ig_business_id: document.getElementById('ig_business_id').value.trim(),
+    threads_user_id: document.getElementById('threads_user_id').value.trim(),
+    threads_token: document.getElementById('threads_token').value.trim(),
+  };
+
+  const btn = document.getElementById('saveBtn');
+  const result = document.getElementById('resultBox');
+  btn.disabled = true; btn.textContent = 'Сохранение...';
+  result.className = 'result';
+  result.innerHTML = '';
+
+  try {
+    const session = await sb.auth.getSession();
+    const token = session.data.session?.access_token;
+    const res = await fetch(EDGE_BASE + '/save-meta-settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ settings }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      result.className = 'result success';
+      result.innerHTML = '✅ Токены сохранены. Обновите страницу, чтобы проверить статус.';
+      updateStatusPills(settings);
+    } else {
+      result.className = 'result error';
+      result.innerHTML = '❌ Ошибка: ' + (data.error || 'неизвестно');
+    }
+  } catch (err) {
+    result.className = 'result error';
+    result.innerHTML = '❌ Ошибка сети: ' + err.message;
+  }
+  btn.disabled = false; btn.textContent = '💾 Сохранить токены';
+}
+
+async function testTokens() {
+  const btn = document.getElementById('testBtn');
+  const result = document.getElementById('resultBox');
+  btn.disabled = true; btn.textContent = 'Проверка...';
+  result.className = 'result';
+  result.innerHTML = '';
+
+  const settings = {
+    page_id: document.getElementById('page_id').value.trim(),
+    page_token: document.getElementById('page_token').value.trim(),
+    ig_business_id: document.getElementById('ig_business_id').value.trim(),
+    threads_user_id: document.getElementById('threads_user_id').value.trim(),
+    threads_token: document.getElementById('threads_token').value.trim(),
+  };
+
+  let messages = [];
+  if (settings.page_id && settings.page_token) {
+    try {
+      const res = await fetch(`https://graph.facebook.com/v21.0/${settings.page_id}?fields=name&access_token=${settings.page_token}`);
+      const data = await res.json();
+      if (data.error) messages.push(`📘 Facebook: ❌ ${data.error.message}`);
+      else messages.push(`📘 Facebook: ✅ ${data.name}`);
+    } catch (e) { messages.push(`📘 Facebook: ❌ ${e.message}`); }
+  } else { messages.push(`📘 Facebook: ⚠️ не настроен`); }
+
+  if (settings.ig_business_id && settings.page_token) {
+    try {
+      const res = await fetch(`https://graph.facebook.com/v21.0/${settings.ig_business_id}?fields=username&access_token=${settings.page_token}`);
+      const data = await res.json();
+      if (data.error) messages.push(`📷 Instagram: ❌ ${data.error.message}`);
+      else messages.push(`📷 Instagram: ✅ @${data.username}`);
+    } catch (e) { messages.push(`📷 Instagram: ❌ ${e.message}`); }
+  } else { messages.push(`📷 Instagram: ⚠️ не настроен`); }
+
+  if (settings.threads_user_id && settings.threads_token) {
+    try {
+      const res = await fetch(`https://graph.threads.net/v1.0/${settings.threads_user_id}?fields=username&access_token=${settings.threads_token}`);
+      const data = await res.json();
+      if (data.error) messages.push(`🧵 Threads: ❌ ${data.error.message}`);
+      else messages.push(`🧵 Threads: ✅ @${data.username}`);
+    } catch (e) { messages.push(`🧵 Threads: ❌ ${e.message}`); }
+  } else { messages.push(`🧵 Threads: ⚠️ не настроен`); }
+
+  const ok = messages.some(m => m.includes('✅'));
+  const fail = messages.some(m => m.includes('❌'));
+  result.className = 'result ' + (fail ? (ok ? 'partial' : 'error') : 'success');
+  result.innerHTML = messages.map(m => `<div>${m}</div>`).join('');
+  btn.disabled = false; btn.textContent = '🧪 Проверить';
+}
+
+// Enter key login
+document.getElementById('loginPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>
