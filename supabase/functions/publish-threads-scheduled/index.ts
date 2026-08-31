@@ -364,9 +364,9 @@ Deno.serve(async (_req: Request) => {
     // === ALSO PUBLISH AS STORY (Instagram + Facebook) ===
     // Every post with media also gets published as a 24h story
     if (hasMedia && postType !== 'story') {
-      // Instagram Story
+      // Instagram Story (two-step: create container → publish)
       try {
-        const igStoryBody: any = { media_type: 'STORY', access_token: PAGE_TOKEN };
+        const igStoryBody: any = { media_type: 'STORIES', access_token: PAGE_TOKEN };
         if (isVideoMedia) {
           igStoryBody.video_url = post.image_url;
         } else {
@@ -381,7 +381,8 @@ Deno.serve(async (_req: Request) => {
         if (igStoryCreateData.error) {
           platformResults.ig_story = { success: false, error: igStoryCreateData.error.message };
         } else {
-          await new Promise(r => setTimeout(r, isVideoMedia ? 10000 : 5000));
+          // Wait for processing
+          await new Promise(r => setTimeout(r, isVideoMedia ? 12000 : 6000));
           const igStoryPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -398,27 +399,57 @@ Deno.serve(async (_req: Request) => {
         platformResults.ig_story = { success: false, error: String(err) };
       }
 
-      // Facebook Story
+      // Facebook Story (two-step: upload unpublished photo → create story with photo_id)
       try {
-        let fbStoryRes;
         if (isVideoMedia) {
-          fbStoryRes = await fetch(`${FB_API}/${PAGE_ID}/video_stories`, {
+          // Video story: upload video first, then publish as story
+          const fbVideoUploadRes = await fetch(`${FB_API}/${PAGE_ID}/videos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ file_url: post.image_url, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ file_url: post.image_url, published: false, access_token: PAGE_TOKEN }),
           });
+          const fbVideoData = await fbVideoUploadRes.json();
+          if (fbVideoData.error) {
+            platformResults.fb_story = { success: false, error: fbVideoData.error.message };
+          } else {
+            await new Promise(r => setTimeout(r, 10000));
+            const fbStoryRes = await fetch(`${FB_API}/${PAGE_ID}/video_stories`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ video_id: fbVideoData.id, access_token: PAGE_TOKEN }),
+            });
+            const fbStoryData = await fbStoryRes.json();
+            if (fbStoryData.error) {
+              platformResults.fb_story = { success: false, error: fbStoryData.error.message };
+            } else {
+              platformResults.fb_story = { success: true, post_id: fbStoryData.post_id || fbStoryData.id };
+            }
+          }
         } else {
-          fbStoryRes = await fetch(`${FB_API}/${PAGE_ID}/photo_stories`, {
+          // Photo story: Step 1 — upload unpublished photo
+          const fbPhotoUploadRes = await fetch(`${FB_API}/${PAGE_ID}/photos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ photo_url: post.image_url, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ url: post.image_url, published: false, access_token: PAGE_TOKEN }),
           });
-        }
-        const fbStoryData = await fbStoryRes.json();
-        if (fbStoryData.error) {
-          platformResults.fb_story = { success: false, error: fbStoryData.error.message };
-        } else {
-          platformResults.fb_story = { success: true, post_id: fbStoryData.id || fbStoryData.story_id };
+          const fbPhotoData = await fbPhotoUploadRes.json();
+          if (fbPhotoData.error) {
+            platformResults.fb_story = { success: false, error: fbPhotoData.error.message };
+          } else {
+            const photoId = fbPhotoData.id;
+            // Step 2 — publish as story using photo_id
+            const fbStoryRes = await fetch(`${FB_API}/${PAGE_ID}/photo_stories`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ photo_id: photoId, access_token: PAGE_TOKEN }),
+            });
+            const fbStoryData = await fbStoryRes.json();
+            if (fbStoryData.error) {
+              platformResults.fb_story = { success: false, error: fbStoryData.error.message };
+            } else {
+              platformResults.fb_story = { success: true, post_id: fbStoryData.post_id || fbStoryData.id };
+            }
+          }
         }
       } catch (err) {
         platformResults.fb_story = { success: false, error: String(err) };
