@@ -351,6 +351,98 @@
   .step:nth-child(3) .pct { color: var(--coral); }
   .step:nth-child(4) .pct { color: var(--amber); }
 
+  /* ─── Journey / Dream Job ─── */
+  .journey-section {
+    background: linear-gradient(180deg, var(--off-white) 0%, #eef2f9 100%);
+    border-radius: 20px; padding: 60px 48px; margin: 0 auto;
+    max-width: 1200px;
+  }
+  .journey-path {
+    display: flex; align-items: stretch; justify-content: space-between;
+    position: relative; margin-top: 48px; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .journey-path::before {
+    content: ''; position: absolute;
+    top: 40px; left: 4%; right: 4%; height: 4px;
+    background: linear-gradient(90deg, var(--electric), var(--lime-d), var(--amber), var(--coral), var(--magenta));
+    border-radius: 2px; z-index: 0;
+  }
+  .journey-step {
+    flex: 1; min-width: 160px; text-align: center;
+    position: relative; z-index: 1;
+  }
+  .journey-circle {
+    width: 80px; height: 80px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 32px;
+    background: #fff; border: 4px solid var(--electric);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .journey-step:nth-child(1) .journey-circle { border-color: var(--electric); }
+  .journey-step:nth-child(2) .journey-circle { border-color: var(--lime-d); }
+  .journey-step:nth-child(3) .journey-circle { border-color: var(--amber); }
+  .journey-step:nth-child(4) .journey-circle { border-color: var(--coral); }
+  .journey-step:nth-child(5) .journey-circle {
+    border-color: var(--magenta);
+    background: linear-gradient(135deg, var(--magenta), var(--coral));
+    color: #fff; font-size: 36px;
+  }
+  .journey-step h4 {
+    font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .journey-step p {
+    font-size: 12px; color: var(--gray); line-height: 1.5;
+  }
+  .journey-step .step-num {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    color: var(--electric); letter-spacing: 1px; margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .journey-step:nth-child(2) .step-num { color: var(--lime-d); }
+  .journey-step:nth-child(3) .step-num { color: var(--amber); }
+  .journey-step:nth-child(4) .step-num { color: var(--coral); }
+  .journey-step:nth-child(5) .step-num { color: var(--magenta); }
+  .journey-final {
+    margin-top: 48px; text-align: center;
+    background: linear-gradient(135deg, var(--navy), var(--ink));
+    border-radius: 16px; padding: 36px 40px;
+    position: relative; overflow: hidden;
+  }
+  .journey-final::before {
+    content: ''; position: absolute;
+    top: -50px; right: -50px; width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(61,223,255,0.1) 0%, transparent 70%);
+  }
+  .journey-final h3 {
+    font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 12px;
+  }
+  .journey-final h3 .highlight {
+    background: linear-gradient(135deg, var(--electric), var(--lime));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .journey-final p {
+    font-size: 14px; color: var(--gray); line-height: 1.6;
+    max-width: 700px; margin: 0 auto;
+  }
+  .journey-final .tags {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    margin-top: 20px;
+  }
+  .journey-final .tag {
+    font-size: 11px; font-weight: 600; padding: 6px 14px;
+    border-radius: 20px; background: rgba(61,223,255,0.1);
+    color: var(--electric); border: 1px solid rgba(61,223,255,0.2);
+  }
+  @media (max-width: 900px) {
+    .journey-path { flex-direction: column; }
+    .journey-path::before { display: none; }
+    .journey-section { padding: 40px 20px; }
+  }
+
   /* ─── What We Provide ─── */
   .provide-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
@@ -745,6 +837,7 @@
   <ul>
     <li><a href="#mission">Миссия</a></li>
     <li><a href="#why-italy">Почему Италия</a></li>
+    <li><a href="#journey">Карьерный путь</a></li>
     <li><a href="#packages">Пакеты</a></li>
     <li><a href="#process">Процесс</a></li>
     <li><a href="#location">Локация</a></li>
@@ -843,6 +936,62 @@
     <div class="why-banner-content">
       <h4>Итог: студент получает не просто диплом — он получает карьерный капитал</h4>
       <p>Второй язык · Европейский диплом · Международная сеть · Опыт работы в ЕС · Возможность обмена в США/Канаду · Публикации · Менторство от топовых профессоров</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Journey: From Student to International Specialist ─── -->
+<section id="journey" class="fade-in">
+  <div class="journey-section">
+    <div class="section-tag">Карьерный путь</div>
+    <div class="section-title">От студента — к международному специалисту</div>
+    <div class="section-sub">Учёба в Италии — это не конечная точка, а запускатель карьеры. Вот путь, по которому проходят наши студенты.</div>
+
+    <div class="journey-path">
+      <div class="journey-step">
+        <div class="journey-circle">🎓</div>
+        <span class="step-num">Шаг 1</span>
+        <h4>Поступление в Италию</h4>
+        <p>Подача документов, зачисление в университет, получение визы и стипендии DSU/EDISU. Студент начинает учёбу в Италии.</p>
+      </div>
+      <div class="journey-step">
+        <div class="journey-circle">📖</div>
+        <span class="step-num">Шаг 2</span>
+        <h4>Учёба + язык + стажировка</h4>
+        <p>Изучает итальянский, проходит стажировку в компании, участвует в исследовательских проектах. Накапливает европейский опыт.</p>
+      </div>
+      <div class="journey-step">
+        <div class="journey-circle">🌍</div>
+        <span class="step-num">Шаг 3</span>
+        <h4>Erasmus+ или обмен</h4>
+        <p>Семестр в другой стране ЕС — Германия, Франция, Нидерланды. Расширяет географию, язык и профессиональную сеть.</p>
+      </div>
+      <div class="journey-step">
+        <div class="journey-circle">📜</div>
+        <span class="step-num">Шаг 4</span>
+        <h4>Европейский диплом</h4>
+        <p>Выпуск с дипломом, признанным в 27 странах ЕС. Публикации в Scopus, рекомендательные письма, alumni-сеть 500K+.</p>
+      </div>
+      <div class="journey-step">
+        <div class="journey-circle">🏆</div>
+        <span class="step-num">Шаг 5</span>
+        <h4>Международный специалист</h4>
+        <p>2+ языка, европейский диплом, опыт работы в ЕС, международная сеть. Работает в любой стране мира.</p>
+      </div>
+    </div>
+
+    <div class="journey-final">
+      <h3>Результат: <span class="highlight">работа мечты</span> в международной компании</h3>
+      <p>Выпускник, прошедший этот путь, — не просто специалист с дипломом. Это профессионал с международным опытом, двумя языками, европейской сетью контактов и подтверждёнными навыками. Такой профиль открывает двери в топовые компании по всему миру.</p>
+      <div class="tags">
+        <span class="tag">2+ языка</span>
+        <span class="tag">Европейский диплом</span>
+        <span class="tag">Опыт работы в ЕС</span>
+        <span class="tag">Сеть в 50+ странах</span>
+        <span class="tag">Публикации в Scopus</span>
+        <span class="tag">Erasmus+ сертификат</span>
+        <span class="tag">Stay permit 12 мес</span>
+      </div>
     </div>
   </div>
 </section>
