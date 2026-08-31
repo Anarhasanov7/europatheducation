@@ -919,12 +919,64 @@
   /* ─── Responsive ─── */
   @media (max-width: 768px) {
     nav ul { display: none; }
-    .hero h1 { font-size: 36px; }
+    .hero h1 { font-size: 28px; }
+    .hero p { font-size: 15px; }
+    .hero-stats { flex-wrap: wrap; gap: 16px; }
+    .hero-stat .num { font-size: 28px; }
+    .section-title { font-size: 24px; }
+    .section-sub { font-size: 13px; }
     .pkg-grid, .location-grid, .corp-grid { grid-template-columns: 1fr; }
     .pay-grid, .provide-grid, .why-grid { grid-template-columns: 1fr; }
     .timeline { flex-direction: column; }
     .timeline::before { display: none; }
-    section { padding: 60px 20px; }
+    section { padding: 40px 16px; }
+    .pkg-price { font-size: 28px; }
+    .pkg-name { font-size: 17px; }
+    .journey-final h3 { font-size: 18px; }
+    .journey-final p { font-size: 13px; }
+    .journey-final { padding: 24px 20px; }
+    .why-banner h4 { font-size: 16px; }
+    .why-banner p { font-size: 12px; }
+    .why-card h4 { font-size: 13px; }
+    .why-card p { font-size: 12px; }
+    .provide-card h4 { font-size: 13px; }
+    .provide-card p { font-size: 12px; }
+    .step h4 { font-size: 13px; }
+    .step p { font-size: 12px; }
+    .step-circle { width: 36px; height: 36px; font-size: 16px; }
+    .review-text { font-size: 13px; }
+    .review-name { font-size: 12px; }
+    .review-from { font-size: 10px; }
+    .review-result { font-size: 12px; }
+    .cta h2 { font-size: 22px; }
+    .cta p { font-size: 14px; }
+    .corp-grid { gap: 12px; }
+    .corp-item .label { font-size: 11px; }
+    .corp-item .value { font-size: 13px; }
+    .partner-crest { width: 60px; height: 60px; }
+    .partner-logo { max-width: 52px; max-height: 52px; }
+    .partner-name { font-size: 12px; }
+    .partner-city { font-size: 10px; }
+    .partner-badge { font-size: 8px; }
+    .partner-desc { font-size: 11px; }
+    .partner-card.expanded { grid-column: span 2; }
+    .journey-circle { width: 48px; height: 48px; font-size: 18px; }
+    .journey-step h4 { font-size: 13px; }
+    .journey-step p { font-size: 12px; }
+    .journey-tags .tag { font-size: 10px; padding: 4px 10px; }
+    .ribbon { font-size: 9px; padding: 4px 14px 4px 10px; }
+    .lang-toggle { gap: 4px; }
+    .lang-btn { font-size: 16px; padding: 2px 4px; }
+    nav .brand { font-size: 16px; }
+    nav .brand span { font-size: 11px; }
+    nav .cta { padding: 6px 14px; font-size: 11px; }
+  }
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 24px; }
+    .section-title { font-size: 20px; }
+    .partners-grid { grid-template-columns: 1fr; }
+    .partner-card.expanded { grid-column: span 1; }
+    .pkg-price { font-size: 24px; }
   }
 </style>
 </head>
