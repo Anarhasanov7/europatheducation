@@ -190,20 +190,18 @@
 
   /* ─── Benefits ─── */
   .benefits-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 720px; margin: 0 auto;
   }
   .benefit-col h3 {
     font-size: 16px; font-weight: 700; margin-bottom: 20px;
     display: flex; align-items: center; gap: 10px;
   }
-  .benefit-col.univ h3 { color: var(--electric); }
   .benefit-col.stud h3 { color: var(--coral); }
   .benefit-col h3 .icon {
     width: 32px; height: 32px; border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
     font-size: 16px;
   }
-  .benefit-col.univ .icon { background: rgba(61,223,255,0.15); }
   .benefit-col.stud .icon { background: rgba(255,92,61,0.15); }
   .benefit-list {
     display: flex; flex-direction: column; gap: 12px;
@@ -219,7 +217,6 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
   }
-  .benefit-col.univ .benefit-item { border-color: var(--electric); }
   .benefit-col.stud .benefit-item { border-color: var(--coral); }
   .benefit-item h4 {
     font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px;
@@ -796,7 +793,7 @@
 <div class="hero">
   <div class="hero-content">
     <h1>Ваши студенты —<br>в <span class="grad">университеты Италии</span></h1>
-    <p>Edupath Education — консалтинговая компания в Италии. Мы сопровождаем студентов от подачи документов до получения диплома. Партнёрим с вузами-источниками по университетскому каналу.</p>
+    <p>Edupath Education — консалтинговая компания в Италии. Мы сопровождаем студентов от подачи документов до получения диплома: поступление, стипендия, жильё и адаптация.</p>
     <div class="hero-stats">
       <div class="hero-stat">
         <span class="num">30</span>
@@ -830,40 +827,10 @@
 <!-- ─── Benefits ─── -->
 <section id="benefits" class="fade-in">
   <div class="section-tag">Преимущества</div>
-  <div class="section-title">Что получают стороны</div>
-  <div class="section-sub">Партнёрство с Edupath выгодно всем — университету, студенту и партнёру.</div>
+  <div class="section-title">Что получают студенты</div>
+  <div class="section-sub">С Edupath вы поступаете в итальянский вуз со стипендией и сопровождением на весь срок обучения.</div>
 
   <div class="benefits-grid">
-    <div class="benefit-col univ">
-      <h3><span class="icon">🎓</span> Преимущества для университета-партнёра</h3>
-      <div class="benefit-list">
-        <div class="benefit-item">
-          <h4>Комиссия 15%</h4>
-          <p>От стоимости пакета за каждого зачисленного студента. Пример: 5 студентов × €2 340 × 15% = €1 755 за цикл.</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Дополнительный канал набора</h4>
-          <p>Ваши выпускники получают доступ к топовым итальянским университетам без необходимости разбираться в системе самостоятельно.</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Повышение престижа</h4>
-          <p>Студенты, поступившие в итальянские вузы — это показатель качества вашего обучения. Логотип партнёра на материалах Edupath.</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Обмен преподавателями</h4>
-          <p>1–2 преподавателя в год — гостевые лекции и стажировки в итальянских университетах-партнёрах.</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Летние школы в Италии</h4>
-          <p>Совместная летняя программа для ваших студентов (1–2 недели в Италии).</p>
-        </div>
-        <div class="benefit-item">
-          <h4>Ежеквартальные тренинги</h4>
-          <p>Тренинги для офиса международного сотрудничества по итальянской системе образования.</p>
-        </div>
-      </div>
-    </div>
-
     <div class="benefit-col stud">
       <h3><span class="icon">🇮🇹</span> Преимущества для студентов</h3>
       <div class="benefit-list">
@@ -931,7 +898,7 @@
     <div class="why-card">
       <span class="why-icon">🤝</span>
       <h4>Международная сеть контактов</h4>
-      <p>Однокурсники из 50+ стран. Нетворкинг, который остаётся на всю жизнь — будущие партнёры, коллеги, работодатели по всему миру.</p>
+      <p>Однокурсники из 50+ стран. Нетворкинг, который остаётся на всю жизнь — коллеги, работодатели и друзья по всему миру.</p>
     </div>
     <div class="why-card">
       <span class="why-icon">📜</span>
@@ -1098,7 +1065,7 @@
     <div class="addon-icon">🗄️</div>
     <div class="addon-content">
       <h4>База данных университетов и программ</h4>
-      <p>У нас есть собственная база данных итальянских университетов, программ, требований к поступлению, сроков и стипендий. Партнёр может получить доступ к базе для самостоятельной работы со студентами — как дополнительная услуга.</p>
+      <p>У нас есть собственная база данных итальянских университетов, программ, требований к поступлению, сроков и стипендий. Доступ к базе доступен как дополнительная услуга.</p>
       <span class="addon-badge">Опционально · По запросу</span>
     </div>
   </div>
@@ -1193,7 +1160,7 @@
         <div class="value">Стипендии DSU/EDISU, поступление, сопровождение</div>
       </div>
       <div class="corp-item">
-        <div class="label">Университеты-партнёры</div>
+        <div class="label">Итальянские университеты</div>
         <div class="value">Bologna, Padova, Sapienza, PoliMi, PoliTo, Iuav и др.</div>
       </div>
       <div class="corp-item">
