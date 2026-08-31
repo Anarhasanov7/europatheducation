@@ -69,6 +69,10 @@ Deno.serve(async (_req: Request) => {
     const isVideoMedia = hasMedia && isVideo(post.image_url);
     const postType = post.post_type || 'post'; // 'post', 'reel', 'story'
 
+    // Story image: use dedicated 9:16 version if available, otherwise fall back to main image
+    const storyImageUrl = post.story_image_url || post.image_url || '';
+    const hasStoryMedia = !!storyImageUrl;
+
     // Append organization tag + website to text (for all platforms that support captions)
     // @europath_education becomes a tappable mention on Threads & Instagram
     const ORG_TAG = '\n\n@europath_education\n🌐 https://europatheducation.eu';
@@ -363,14 +367,17 @@ Deno.serve(async (_req: Request) => {
 
     // === ALSO PUBLISH AS STORY (Instagram + Facebook) ===
     // Every post with media also gets published as a 24h story
-    if (hasMedia && postType !== 'story') {
+    // Uses 9:16 story_image_url if available (proper story aspect ratio)
+    if (hasStoryMedia && postType !== 'story') {
+      const storyIsVideo = storyImageUrl !== post.image_url ? false : isVideoMedia; // story version is always image (padded)
+
       // Instagram Story (two-step: create container → publish)
       try {
         const igStoryBody: any = { media_type: 'STORIES', access_token: PAGE_TOKEN };
-        if (isVideoMedia) {
-          igStoryBody.video_url = post.image_url;
+        if (storyIsVideo) {
+          igStoryBody.video_url = storyImageUrl;
         } else {
-          igStoryBody.image_url = post.image_url;
+          igStoryBody.image_url = storyImageUrl;
         }
         const igStoryCreateRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media`, {
           method: 'POST',
@@ -401,12 +408,12 @@ Deno.serve(async (_req: Request) => {
 
       // Facebook Story (two-step: upload unpublished photo → create story with photo_id)
       try {
-        if (isVideoMedia) {
+        if (storyIsVideo) {
           // Video story: upload video first, then publish as story
           const fbVideoUploadRes = await fetch(`${FB_API}/${PAGE_ID}/videos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ file_url: post.image_url, published: false, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ file_url: storyImageUrl, published: false, access_token: PAGE_TOKEN }),
           });
           const fbVideoData = await fbVideoUploadRes.json();
           if (fbVideoData.error) {
@@ -426,11 +433,11 @@ Deno.serve(async (_req: Request) => {
             }
           }
         } else {
-          // Photo story: Step 1 — upload unpublished photo
+          // Photo story: Step 1 — upload unpublished photo (use 9:16 story image)
           const fbPhotoUploadRes = await fetch(`${FB_API}/${PAGE_ID}/photos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: post.image_url, published: false, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ url: storyImageUrl, published: false, access_token: PAGE_TOKEN }),
           });
           const fbPhotoData = await fbPhotoUploadRes.json();
           if (fbPhotoData.error) {
@@ -481,18 +488,26 @@ Deno.serve(async (_req: Request) => {
       })
       .eq('id', post.id);
 
-    // Delete uploaded file from storage after publishing (cleanup)
+    // Delete uploaded files from storage after publishing (cleanup)
+    const filesToDelete = [];
     if (post.image_url && post.image_url.includes('social-uploads')) {
       try {
         const urlObj = new URL(post.image_url);
         const pathParts = urlObj.pathname.split('/social-uploads/');
-        if (pathParts.length > 1) {
-          const filePath = pathParts[1];
-          await sb.storage.from('social-uploads').remove([filePath]);
-        }
-      } catch (e) { /* best effort cleanup */ }
+        if (pathParts.length > 1) filesToDelete.push(pathParts[1]);
+      } catch (e) {}
+    }
+    if (post.story_image_url && post.story_image_url.includes('social-uploads')) {
+      try {
+        const urlObj = new URL(post.story_image_url);
+        const pathParts = urlObj.pathname.split('/social-uploads/');
+        if (pathParts.length > 1) filesToDelete.push(pathParts[1]);
+      } catch (e) {}
+    }
+    if (filesToDelete.length > 0) {
+      try { await sb.storage.from('social-uploads').remove(filesToDelete); } catch (e) {}
       await sb.from('threads_scheduled_posts')
-        .update({ image_url: null })
+        .update({ image_url: null, story_image_url: null })
         .eq('id', post.id);
     }
 

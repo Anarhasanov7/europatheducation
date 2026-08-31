@@ -907,6 +907,151 @@ async function generateBrandedImage(text) {
   });
 }
 
+// Generate a 9:16 (1080x1920) story version of the branded image
+async function generateBrandedStoryImage(text) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1920;
+  const ctx = canvas.getContext('2d');
+
+  // Background: dark navy gradient
+  const grad = ctx.createLinearGradient(0, 0, 1080, 1920);
+  grad.addColorStop(0, '#0b1e3f');
+  grad.addColorStop(1, '#16213e');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1080, 1920);
+
+  // Gold accent bar at top
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillRect(0, 0, 1080, 8);
+
+  // Gold accent bar at bottom
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillRect(0, 1912, 1080, 8);
+
+  // EuroPath logo text (top)
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = 'bold 40px Inter, Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('EUROPATH EDUCATION', 540, 120);
+
+  // Decorative line under logo
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(370, 145);
+  ctx.lineTo(710, 145);
+  ctx.stroke();
+
+  // Main text — word-wrap centered (more room in 9:16)
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '46px Inter, Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  const maxWidth = 920;
+  const lineHeight = 62;
+  const words = text.split(' ');
+  const lines = [];
+  let currentLine = '';
+
+  for (const word of words) {
+    const testLine = currentLine ? currentLine + ' ' + word : word;
+    if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+      lines.push(currentLine);
+      currentLine = word;
+    } else {
+      currentLine = testLine;
+    }
+  }
+  if (currentLine) lines.push(currentLine);
+
+  // Limit to 18 lines for 9:16
+  const displayLines = lines.slice(0, 18);
+  const totalHeight = displayLines.length * lineHeight;
+  const startY = 960 - totalHeight / 2;
+
+  displayLines.forEach((line, i) => {
+    ctx.fillText(line, 540, startY + i * lineHeight);
+  });
+
+  if (lines.length > 18) {
+    ctx.fillText('...', 540, startY + 18 * lineHeight);
+  }
+
+  // Handles at bottom
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = 'bold 34px Inter, Arial, sans-serif';
+  ctx.fillText('@study.with.anar  ·  @europath_education', 540, 1820);
+  ctx.font = '28px Inter, Arial, sans-serif';
+  ctx.fillText('🌐 europatheducation.eu', 540, 1870);
+
+  return new Promise(resolve => {
+    canvas.toBlob(blob => {
+      const file = new File([blob], 'branded_story.png', { type: 'image/png' });
+      resolve(file);
+    }, 'image/png', 0.95);
+  });
+}
+
+// Generate a 9:16 story version from an uploaded image (pad with brand colors)
+async function generateStoryFromImage(imageFileOrUrl) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1920;
+      const ctx = canvas.getContext('2d');
+
+      // Background: dark navy gradient
+      const grad = ctx.createLinearGradient(0, 0, 1080, 1920);
+      grad.addColorStop(0, '#0b1e3f');
+      grad.addColorStop(1, '#16213e');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // Gold accent bars
+      ctx.fillStyle = '#c9a84c';
+      ctx.fillRect(0, 0, 1080, 8);
+      ctx.fillRect(0, 1912, 1080, 8);
+
+      // Calculate scaled image to fit width (1080) with padding
+      const padding = 60;
+      const maxW = 1080 - padding * 2;
+      const maxH = 1920 - 280; // Leave room for branding top/bottom
+      const scale = Math.min(maxW / img.width, maxH / img.height);
+      const drawW = img.width * scale;
+      const drawH = img.height * scale;
+      const drawX = (1080 - drawW) / 2;
+      const drawY = (1920 - drawH) / 2;
+
+      ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+      // Branding at bottom
+      ctx.fillStyle = '#c9a84c';
+      ctx.font = 'bold 34px Inter, Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('@study.with.anar  ·  @europath_education', 540, 1820);
+      ctx.font = '28px Inter, Arial, sans-serif';
+      ctx.fillText('🌐 europatheducation.eu', 540, 1870);
+
+      canvas.toBlob(blob => {
+        const file = new File([blob], 'story_version.png', { type: 'image/png' });
+        resolve(file);
+      }, 'image/png', 0.95);
+    };
+    img.onerror = () => reject(new Error('Could not load image for story version'));
+
+    if (typeof imageFileOrUrl === 'string') {
+      img.src = imageFileOrUrl;
+    } else {
+      img.src = URL.createObjectURL(imageFileOrUrl);
+    }
+  });
+}
+
 async function savePost() {
   const id = document.getElementById('editPostId').value;
   const postType = document.getElementById('editPostType').value;
@@ -937,11 +1082,22 @@ async function savePost() {
 
   try {
     // Upload file if selected
+    let storyImageUrl = null;
     if (selectedFile) {
       btn.textContent = 'Uploading file...';
       const maxNum = id ? 0 : (allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0);
       imageUrl = await uploadFile(selectedFile, id || (maxNum + 1));
       toast('File uploaded', 'success');
+
+      // Generate 9:16 story version for images (not videos)
+      if (selectedFile.type.startsWith('image/')) {
+        try {
+          btn.textContent = 'Generating story version (9:16)...';
+          const storyFile = await generateStoryFromImage(selectedFile);
+          storyImageUrl = await uploadFile(storyFile, (id || (maxNum + 1)) + '_story');
+          toast('Story version generated', 'success');
+        } catch (e) { console.warn('Story image generation failed:', e); }
+      }
     } else if (postType === 'post' && !imageUrl && document.getElementById('autoImageToggle').checked && text) {
       // Auto-generate branded image from text
       btn.textContent = 'Generating branded image...';
@@ -949,6 +1105,23 @@ async function savePost() {
       const maxNum = id ? 0 : (allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0);
       imageUrl = await uploadFile(brandedFile, id || (maxNum + 1));
       toast('Branded image generated & uploaded', 'success');
+
+      // Also generate 9:16 story version
+      try {
+        btn.textContent = 'Generating story version (9:16)...';
+        const storyFile = await generateBrandedStoryImage(text);
+        storyImageUrl = await uploadFile(storyFile, (id || (maxNum + 1)) + '_story');
+        toast('Story version generated', 'success');
+      } catch (e) { console.warn('Story image generation failed:', e); }
+    } else if (imageUrl && imageUrl.match(/\.(jpg|jpeg|png|webp)$/i)) {
+      // Existing image URL — generate 9:16 story version from it
+      try {
+        btn.textContent = 'Generating story version (9:16)...';
+        const storyFile = await generateStoryFromImage(imageUrl);
+        const maxNum = id ? 0 : (allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0);
+        storyImageUrl = await uploadFile(storyFile, (id || (maxNum + 1)) + '_story');
+        toast('Story version generated', 'success');
+      } catch (e) { console.warn('Story image generation failed:', e); }
     }
 
     // Convert CEST (UTC+2) to UTC
@@ -960,13 +1133,13 @@ async function savePost() {
 
     if (id) {
       const { error } = await sb.from('threads_scheduled_posts')
-        .update({ text: text || null, post_type: postType, scheduled_utc: scheduledUtc, image_url: imageUrl || null }).eq('id', id);
+        .update({ text: text || null, post_type: postType, scheduled_utc: scheduledUtc, image_url: imageUrl || null, story_image_url: storyImageUrl || null }).eq('id', id);
       if (error) { toast('Error: ' + error.message, 'error'); btn.disabled = false; btn.textContent = 'Save Post'; return; }
       toast('Post updated', 'success');
     } else {
       const maxNum = allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0;
       const { error } = await sb.from('threads_scheduled_posts')
-        .insert({ post_number: maxNum + 1, text: text || null, post_type: postType, scheduled_utc: scheduledUtc, image_url: imageUrl || null, status: 'pending', attempts: 0, platforms_status: { threads: 'pending', facebook: 'pending', instagram: 'pending' } });
+        .insert({ post_number: maxNum + 1, text: text || null, post_type: postType, scheduled_utc: scheduledUtc, image_url: imageUrl || null, story_image_url: storyImageUrl || null, status: 'pending', attempts: 0, platforms_status: { threads: 'pending', facebook: 'pending', instagram: 'pending' } });
       if (error) { toast('Error: ' + error.message, 'error'); btn.disabled = false; btn.textContent = 'Save Post'; return; }
       toast(`${postType === 'reel' ? 'Reel' : postType === 'story' ? 'Story' : 'Post'} created`, 'success');
     }
