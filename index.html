@@ -387,31 +387,6 @@
   .step:nth-child(3) .pct { color: var(--coral); }
   .step:nth-child(4) .pct { color: var(--amber); }
 
-  /* ─── Payment Structure ─── */
-  .pay-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-  }
-  .pay-card {
-    border-radius: 14px; padding: 28px 24px; text-align: center;
-    transition: transform 0.2s;
-  }
-  .pay-card:hover { transform: translateY(-3px); }
-  .pay-card.p1 { background: linear-gradient(135deg, rgba(61,223,255,0.1), rgba(61,223,255,0.03)); border: 1px solid rgba(61,223,255,0.2); }
-  .pay-card.p2 { background: linear-gradient(135deg, rgba(198,255,61,0.1), rgba(198,255,61,0.03)); border: 1px solid rgba(198,255,61,0.2); }
-  .pay-card.p3 { background: linear-gradient(135deg, rgba(255,92,61,0.1), rgba(255,92,61,0.03)); border: 1px solid rgba(255,92,61,0.2); }
-  .pay-pct {
-    font-size: 48px; font-weight: 900; line-height: 1; margin-bottom: 8px;
-  }
-  .pay-card.p1 .pay-pct { color: var(--electric); }
-  .pay-card.p2 .pay-pct { color: var(--lime-d); }
-  .pay-card.p3 .pay-pct { color: var(--coral); }
-  .pay-when {
-    font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px;
-  }
-  .pay-desc {
-    font-size: 12px; color: var(--gray); line-height: 1.5;
-  }
-
   /* ─── What We Provide ─── */
   .provide-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
@@ -809,7 +784,6 @@
     <li><a href="#why-italy">Почему Италия</a></li>
     <li><a href="#packages">Пакеты</a></li>
     <li><a href="#process">Процесс</a></li>
-    <li><a href="#payment">Оплата</a></li>
     <li><a href="#location">Локация</a></li>
     <li><a href="#reviews">Отзывы</a></li>
     <li><a href="#contact-form">Контакты</a></li>
@@ -1113,35 +1087,6 @@
         <span class="pct">✓</span>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ─── Payment Structure ─── -->
-<section id="payment" class="fade-in">
-  <div class="section-tag">Оплата</div>
-  <div class="section-title">Прозрачная структура платежей</div>
-  <div class="section-sub">Студент платит поэтапно — по мере продвижения процесса. Комиссия партнёру выплачивается после зачисления.</div>
-
-  <div class="pay-grid">
-    <div class="pay-card p1">
-      <div class="pay-pct">30%</div>
-      <div class="pay-when">При подписании договора</div>
-      <div class="pay-desc">Старт работы: подбор программ, аудит документов, начало подготовки</div>
-    </div>
-    <div class="pay-card p2">
-      <div class="pay-pct">30%</div>
-      <div class="pay-when">После подтверждения зачисления</div>
-      <div class="pay-desc">Студент зачислен в университет — переходим к стипендии и визе</div>
-    </div>
-    <div class="pay-card p3">
-      <div class="pay-pct">40%</div>
-      <div class="pay-when">При подаче на визу</div>
-      <div class="pay-desc">Финальный этап: виза, Codice Fiscale, подготовка к прилёту</div>
-    </div>
-  </div>
-
-  <div style="margin-top: 24px; background: rgba(255,184,0,0.08); border-left: 3px solid var(--amber); border-radius: 8px; padding: 16px 20px; font-size: 13px; color: var(--dark); line-height: 1.6;">
-    <strong style="color: var(--amber);">Комиссия партнёру:</strong> 15% от стоимости пакета за каждого зачисленного студента. Выплата в течение 30 дней после зачисления. Оплата в евро, банковский перевод.
   </div>
 </section>
 
