@@ -228,6 +228,7 @@
       <thead>
         <tr>
           <th>#</th>
+          <th>Type</th>
           <th>Text</th>
           <th>Scheduled</th>
           <th>Status</th>
@@ -249,7 +250,16 @@
     <p class="sub" id="editModalSub">Schedule a post for Threads, Facebook & Instagram</p>
     <input type="hidden" id="editPostId">
     <div class="form-group">
-      <label>Post Text</label>
+      <label>Post Type</label>
+      <select id="editPostType" onchange="onPostTypeChange()">
+        <option value="post">📝 Feed Post (text/image/video — all platforms)</option>
+        <option value="reel">🎬 Reel (video — Instagram + Facebook video)</option>
+        <option value="story">⭕ Story (image/video — 24h, Instagram + Facebook, no text)</option>
+      </select>
+      <div class="hint" id="postTypeHint">Regular post: text + optional image/video. Works on all 3 platforms.</div>
+    </div>
+    <div class="form-group" id="textFieldGroup">
+      <label>Post Text / Caption</label>
       <textarea id="editText" oninput="updateCharCount()" placeholder="Write your post..."></textarea>
       <div class="char-count" id="charCount">0 / 500 (Threads limit)</div>
     </div>
@@ -269,7 +279,7 @@
       <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
         <div class="upload-icon" id="uploadIcon">📷</div>
         <div class="upload-text" id="uploadText">Click to select an image or video</div>
-        <div class="upload-hint">JPG, PNG, MP4 — will be deleted after publishing</div>
+        <div class="upload-hint" id="uploadHint">JPG, PNG, MP4 — will be deleted after publishing</div>
       </div>
       <input type="file" id="fileInput" accept="image/*,video/*" style="display:none" onchange="handleFileSelect(event)">
       <div class="upload-progress" id="uploadProgress" style="display:none;">
@@ -464,7 +474,7 @@ function renderTable() {
   document.getElementById('postsTable').style.display = 'table';
 
   const tbody = document.getElementById('postsBody');
-  if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="empty">No posts found</td></tr>'; return; }
+  if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="empty">No posts found</td></tr>'; return; }
 
   tbody.innerHTML = filtered.map(p => {
     const ps = p.platforms_status || {};
@@ -494,8 +504,12 @@ function renderTable() {
       statsHtml += `<div class="stat-mini"><span>📨 ${cs.total} comments</span><span>✅ ${cs.replied} replied</span></div>`;
     }
 
+    const typeIcons = { post: '📝', reel: '🎬', story: '⭕' };
+    const typeIcon = typeIcons[p.post_type || 'post'] || '📝';
+
     return `<tr>
       <td><strong>${p.post_number}</strong></td>
+      <td>${typeIcon}</td>
       <td><div class="post-text">${textPreview}${(p.text||'').length > 100 ? '...' : ''}</div></td>
       <td>${scheduled}</td>
       <td><span class="badge ${p.status}">${p.status}</span></td>
@@ -517,7 +531,8 @@ async function showDetail(id) {
   if (!p) return;
   currentDetailPost = p;
   document.getElementById('detailTitle').textContent = `Post #${p.post_number}`;
-  document.getElementById('detailSub').textContent = `Status: ${p.status} · Scheduled: ${p.scheduled_utc ? new Date(p.scheduled_utc).toLocaleString('en-GB', { timeZone:'Europe/Rome' }) : '—'}`;
+  const typeLabels = { post: '📝 Feed Post', reel: '🎬 Reel', story: '⭕ Story' };
+  document.getElementById('detailSub').textContent = `${typeLabels[p.post_type || 'post']} · Status: ${p.status} · Scheduled: ${p.scheduled_utc ? new Date(p.scheduled_utc).toLocaleString('en-GB', { timeZone:'Europe/Rome' }) : '—'}`;
 
   const ps = p.platforms_status || {};
   const s = p.stats_cache || {};
@@ -671,10 +686,43 @@ async function refreshStats() {
 }
 
 // ─── Create / Edit ───
+function onPostTypeChange() {
+  const type = document.getElementById('editPostType').value;
+  const textFieldGroup = document.getElementById('textFieldGroup');
+  const hint = document.getElementById('postTypeHint');
+  const uploadHint = document.getElementById('uploadHint');
+  const uploadText = document.getElementById('uploadText');
+  const uploadIcon = document.getElementById('uploadIcon');
+
+  if (type === 'story') {
+    // Stories: no text/caption, media required
+    textFieldGroup.style.display = 'none';
+    hint.textContent = 'Story: image or video. Disappears after 24h. Instagram + Facebook only (no Threads).';
+    uploadHint.textContent = 'Required: JPG, PNG, or MP4 — disappears after 24h';
+    uploadText.textContent = 'Click to select image or video (required)';
+    uploadIcon.textContent = '⭕';
+  } else if (type === 'reel') {
+    // Reels: caption optional, video required
+    textFieldGroup.style.display = 'block';
+    hint.textContent = 'Reel: video file required. Instagram Reels + Facebook video. No Threads.';
+    uploadHint.textContent = 'Required: MP4 or MOV video file';
+    uploadText.textContent = 'Click to select a video (required)';
+    uploadIcon.textContent = '🎬';
+  } else {
+    // Regular post
+    textFieldGroup.style.display = 'block';
+    hint.textContent = 'Regular post: text + optional image/video. Works on all 3 platforms.';
+    uploadHint.textContent = 'JPG, PNG, MP4 — will be deleted after publishing';
+    uploadText.textContent = 'Click to select an image or video';
+    uploadIcon.textContent = '📷';
+  }
+}
+
 function openCreateModal() {
   document.getElementById('editModalTitle').textContent = 'New Post';
   document.getElementById('editModalSub').textContent = 'Schedule a post for Threads, Facebook & Instagram';
   document.getElementById('editPostId').value = '';
+  document.getElementById('editPostType').value = 'post';
   document.getElementById('editText').value = '';
   document.getElementById('editDate').value = '';
   document.getElementById('editTime').value = '09:00';
@@ -687,6 +735,7 @@ function openCreateModal() {
   document.getElementById('uploadStatus').textContent = '';
   const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
   document.getElementById('editDate').value = tomorrow.toISOString().split('T')[0];
+  onPostTypeChange();
   updateCharCount();
   document.getElementById('editModal').classList.add('active');
 }
@@ -697,6 +746,7 @@ function openEditModal(id) {
   document.getElementById('editModalTitle').textContent = `Edit Post #${p.post_number}`;
   document.getElementById('editModalSub').textContent = `Status: ${p.status}`;
   document.getElementById('editPostId').value = p.id;
+  document.getElementById('editPostType').value = p.post_type || 'post';
   document.getElementById('editText').value = p.text || '';
   document.getElementById('editImageUrl').value = p.image_url || '';
   selectedFile = null;
@@ -720,6 +770,7 @@ function openEditModal(id) {
     document.getElementById('editDate').value = italyDate.toISOString().split('T')[0];
     document.getElementById('editTime').value = String(italyDate.getHours()).padStart(2,'0') + ':' + String(italyDate.getMinutes()).padStart(2,'0');
   }
+  onPostTypeChange();
   updateCharCount();
   document.getElementById('editModal').classList.add('active');
 }
@@ -736,14 +787,28 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 
 async function savePost() {
   const id = document.getElementById('editPostId').value;
+  const postType = document.getElementById('editPostType').value;
   const text = document.getElementById('editText').value.trim();
   const date = document.getElementById('editDate').value;
   const time = document.getElementById('editTime').value;
   let imageUrl = document.getElementById('editImageUrl').value.trim();
 
-  if (!text) { toast('Post text is required', 'error'); return; }
+  // Validation per post type
   if (!date || !time) { toast('Date and time are required', 'error'); return; }
-  if (text.length > 500) { toast('Text exceeds 500 char Threads limit', 'error'); return; }
+
+  if (postType === 'story') {
+    // Stories: no text needed, but media is required
+    if (!imageUrl && !selectedFile) { toast('Stories require an image or video', 'error'); return; }
+  } else if (postType === 'reel') {
+    // Reels: video required, caption optional
+    if (!imageUrl && !selectedFile) { toast('Reels require a video file', 'error'); return; }
+    if (selectedFile && !selectedFile.type.startsWith('video/')) { toast('Reels require a video file (MP4/MOV)', 'error'); return; }
+    if (!selectedFile && imageUrl && !imageUrl.match(/\.(mp4|mov|webm)$/i)) { toast('Reels require a video URL (MP4/MOV)', 'error'); return; }
+  } else {
+    // Regular post: text required
+    if (!text) { toast('Post text is required', 'error'); return; }
+    if (text.length > 500) { toast('Text exceeds 500 char Threads limit', 'error'); return; }
+  }
 
   const btn = document.getElementById('savePostBtn');
   btn.disabled = true; btn.textContent = 'Saving...';
@@ -766,15 +831,15 @@ async function savePost() {
 
     if (id) {
       const { error } = await sb.from('threads_scheduled_posts')
-        .update({ text, scheduled_utc: scheduledUtc, image_url: imageUrl || null }).eq('id', id);
+        .update({ text: text || null, post_type: postType, scheduled_utc: scheduledUtc, image_url: imageUrl || null }).eq('id', id);
       if (error) { toast('Error: ' + error.message, 'error'); btn.disabled = false; btn.textContent = 'Save Post'; return; }
       toast('Post updated', 'success');
     } else {
       const maxNum = allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0;
       const { error } = await sb.from('threads_scheduled_posts')
-        .insert({ post_number: maxNum + 1, text, scheduled_utc: scheduledUtc, image_url: imageUrl || null, status: 'pending', attempts: 0, platforms_status: { threads: 'pending', facebook: 'pending', instagram: 'pending' } });
+        .insert({ post_number: maxNum + 1, text: text || null, post_type: postType, scheduled_utc: scheduledUtc, image_url: imageUrl || null, status: 'pending', attempts: 0, platforms_status: { threads: 'pending', facebook: 'pending', instagram: 'pending' } });
       if (error) { toast('Error: ' + error.message, 'error'); btn.disabled = false; btn.textContent = 'Save Post'; return; }
-      toast('Post created', 'success');
+      toast(`${postType === 'reel' ? 'Reel' : postType === 'story' ? 'Story' : 'Post'} created`, 'success');
     }
 
     closeModal('editModal');

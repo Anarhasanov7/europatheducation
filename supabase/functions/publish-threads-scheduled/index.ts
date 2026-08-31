@@ -18,6 +18,12 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
 };
 
+// Detect if URL is a video based on extension
+function isVideo(url: string): boolean {
+  const lower = url.toLowerCase().split('?')[0];
+  return lower.endsWith('.mp4') || lower.endsWith('.mov') || lower.endsWith('.webm');
+}
+
 Deno.serve(async (_req: Request) => {
   if (_req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
@@ -52,99 +58,226 @@ Deno.serve(async (_req: Request) => {
 
     const platformResults: Record<string, any> = {};
     const postIds: Record<string, string> = {};
-    const hasImage = !!post.image_url;
+    const hasMedia = !!post.image_url;
+    const isVideoMedia = hasMedia && isVideo(post.image_url);
+    const postType = post.post_type || 'post'; // 'post', 'reel', 'story'
 
-    // === THREADS ===
-    try {
-      const threadsBody: any = { text: post.text, access_token: THREADS_TOKEN };
-      if (hasImage) {
-        threadsBody.media_type = 'IMAGE';
-        threadsBody.image_url = post.image_url;
-      } else {
-        threadsBody.media_type = 'TEXT';
-      }
-      const createRes = await fetch(`${THREADS_API}/${THREADS_USER_ID}/threads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(threadsBody),
-      });
-      const createData = await createRes.json();
-      if (createData.error) {
-        platformResults.threads = { success: false, error: createData.error.message };
-      } else {
-        // Wait for processing (3s for text, 10s for images)
-        await new Promise(r => setTimeout(r, hasImage ? 10000 : 3000));
-        const publishRes = await fetch(`${THREADS_API}/${THREADS_USER_ID}/threads_publish`, {
+    // === THREADS (supports: text, image, video — NO stories, NO reels) ===
+    // Threads doesn't have stories or reels, so skip for those types
+    if (postType === 'post') {
+      try {
+        const threadsBody: any = { text: post.text, access_token: THREADS_TOKEN };
+        if (hasMedia) {
+          if (isVideoMedia) {
+            threadsBody.media_type = 'VIDEO';
+            threadsBody.video_url = post.image_url;
+          } else {
+            threadsBody.media_type = 'IMAGE';
+            threadsBody.image_url = post.image_url;
+          }
+        } else {
+          threadsBody.media_type = 'TEXT';
+        }
+        const createRes = await fetch(`${THREADS_API}/${THREADS_USER_ID}/threads`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ creation_id: createData.id, access_token: THREADS_TOKEN }),
+          body: JSON.stringify(threadsBody),
         });
-        const publishData = await publishRes.json();
-        if (publishData.error) {
-          platformResults.threads = { success: false, error: publishData.error.message };
+        const createData = await createRes.json();
+        if (createData.error) {
+          platformResults.threads = { success: false, error: createData.error.message };
         } else {
-          platformResults.threads = { success: true, post_id: publishData.id };
-          postIds.threads_post_id = publishData.id;
+          // Wait for processing (3s text, 10s media)
+          await new Promise(r => setTimeout(r, hasMedia ? 10000 : 3000));
+          const publishRes = await fetch(`${THREADS_API}/${THREADS_USER_ID}/threads_publish`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ creation_id: createData.id, access_token: THREADS_TOKEN }),
+          });
+          const publishData = await publishRes.json();
+          if (publishData.error) {
+            platformResults.threads = { success: false, error: publishData.error.message };
+          } else {
+            platformResults.threads = { success: true, post_id: publishData.id };
+            postIds.threads_post_id = publishData.id;
+          }
         }
+      } catch (err) {
+        platformResults.threads = { success: false, error: String(err) };
       }
-    } catch (err) {
-      platformResults.threads = { success: false, error: String(err) };
+    } else {
+      platformResults.threads = { success: false, error: `Threads doesn't support ${postType}s` };
     }
 
     // === FACEBOOK PAGE ===
-    try {
-      const fbBody: any = { message: post.text, access_token: PAGE_TOKEN };
-      if (hasImage) {
-        // Post with photo
-        const fbRes = await fetch(`${FB_API}/${PAGE_ID}/photos`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: post.image_url, caption: post.text, access_token: PAGE_TOKEN }),
-        });
-        const fbData = await fbRes.json();
-        if (fbData.error) {
-          platformResults.facebook = { success: false, error: fbData.error.message };
-        } else {
-          // Get the post ID (not the photo ID)
-          const postIdRes = await fetch(`${FB_API}/${fbData.id}?fields=post_id&access_token=${PAGE_TOKEN}`);
-          const postIdData = await postIdRes.json();
-          const fbPostId = postIdData.post_id || fbData.id;
-          platformResults.facebook = { success: true, post_id: fbPostId };
-          postIds.fb_post_id = fbPostId;
-        }
+    // Supports: text post, photo post, video post, photo story, video story
+    if (postType === 'story') {
+      // Facebook Story
+      if (!hasMedia) {
+        platformResults.facebook = { success: false, error: 'Stories require media (image or video)' };
       } else {
-        // Text-only post
-        const fbRes = await fetch(`${FB_API}/${PAGE_ID}/feed`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: post.text, access_token: PAGE_TOKEN }),
-        });
-        const fbData = await fbRes.json();
-        if (fbData.error) {
-          platformResults.facebook = { success: false, error: fbData.error.message };
-        } else {
-          platformResults.facebook = { success: true, post_id: fbData.id };
-          postIds.fb_post_id = fbData.id;
+        try {
+          let fbRes;
+          if (isVideoMedia) {
+            // Video story
+            fbRes = await fetch(`${FB_API}/${PAGE_ID}/video_stories`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ file_url: post.image_url, access_token: PAGE_TOKEN }),
+            });
+          } else {
+            // Photo story
+            fbRes = await fetch(`${FB_API}/${PAGE_ID}/photo_stories`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ photo_url: post.image_url, access_token: PAGE_TOKEN }),
+            });
+          }
+          const fbData = await fbRes.json();
+          if (fbData.error) {
+            platformResults.facebook = { success: false, error: fbData.error.message };
+          } else {
+            platformResults.facebook = { success: true, post_id: fbData.id || fbData.story_id };
+            postIds.fb_post_id = fbData.id || fbData.story_id;
+          }
+        } catch (err) {
+          platformResults.facebook = { success: false, error: String(err) };
         }
       }
-    } catch (err) {
-      platformResults.facebook = { success: false, error: String(err) };
+    } else if (postType === 'reel') {
+      // Facebook doesn't have a separate "reel" concept via API — post as video
+      if (!hasMedia || !isVideoMedia) {
+        platformResults.facebook = { success: false, error: 'Reels require a video file' };
+      } else {
+        try {
+          const fbRes = await fetch(`${FB_API}/${PAGE_ID}/videos`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ file_url: post.image_url, description: post.text, access_token: PAGE_TOKEN }),
+          });
+          const fbData = await fbRes.json();
+          if (fbData.error) {
+            platformResults.facebook = { success: false, error: fbData.error.message };
+          } else {
+            platformResults.facebook = { success: true, post_id: fbData.id };
+            postIds.fb_post_id = fbData.id;
+          }
+        } catch (err) {
+          platformResults.facebook = { success: false, error: String(err) };
+        }
+      }
+    } else {
+      // Regular post: text, photo, or video
+      try {
+        if (hasMedia && isVideoMedia) {
+          // Video post
+          const fbRes = await fetch(`${FB_API}/${PAGE_ID}/videos`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ file_url: post.image_url, description: post.text, access_token: PAGE_TOKEN }),
+          });
+          const fbData = await fbRes.json();
+          if (fbData.error) {
+            platformResults.facebook = { success: false, error: fbData.error.message };
+          } else {
+            platformResults.facebook = { success: true, post_id: fbData.id };
+            postIds.fb_post_id = fbData.id;
+          }
+        } else if (hasMedia) {
+          // Photo post
+          const fbRes = await fetch(`${FB_API}/${PAGE_ID}/photos`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: post.image_url, caption: post.text, access_token: PAGE_TOKEN }),
+          });
+          const fbData = await fbRes.json();
+          if (fbData.error) {
+            platformResults.facebook = { success: false, error: fbData.error.message };
+          } else {
+            // Get the post ID (not the photo ID)
+            const postIdRes = await fetch(`${FB_API}/${fbData.id}?fields=post_id&access_token=${PAGE_TOKEN}`);
+            const postIdData = await postIdRes.json();
+            const fbPostId = postIdData.post_id || fbData.id;
+            platformResults.facebook = { success: true, post_id: fbPostId };
+            postIds.fb_post_id = fbPostId;
+          }
+        } else {
+          // Text-only post
+          const fbRes = await fetch(`${FB_API}/${PAGE_ID}/feed`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: post.text, access_token: PAGE_TOKEN }),
+          });
+          const fbData = await fbRes.json();
+          if (fbData.error) {
+            platformResults.facebook = { success: false, error: fbData.error.message };
+          } else {
+            platformResults.facebook = { success: true, post_id: fbData.id };
+            postIds.fb_post_id = fbData.id;
+          }
+        }
+      } catch (err) {
+        platformResults.facebook = { success: false, error: String(err) };
+      }
     }
 
-    // === INSTAGRAM (image + caption) ===
-    if (hasImage) {
+    // === INSTAGRAM ===
+    // Supports: image/video feed post, reel, story
+    // Instagram ALWAYS requires media
+    if (!hasMedia) {
+      platformResults.instagram = { success: false, error: 'Instagram requires media (image or video)' };
+    } else if (postType === 'reel') {
+      // Instagram Reel — requires video
+      if (!isVideoMedia) {
+        platformResults.instagram = { success: false, error: 'Reels require a video file' };
+      } else {
+        try {
+          const igCreateRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ media_type: 'REELS', video_url: post.image_url, caption: post.text, access_token: PAGE_TOKEN }),
+          });
+          const igCreateData = await igCreateRes.json();
+          if (igCreateData.error) {
+            platformResults.instagram = { success: false, error: igCreateData.error.message };
+          } else {
+            await new Promise(r => setTimeout(r, 10000)); // Reels need more processing time
+            const igPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ creation_id: igCreateData.id, access_token: PAGE_TOKEN }),
+            });
+            const igPublishData = await igPublishRes.json();
+            if (igPublishData.error) {
+              platformResults.instagram = { success: false, error: igPublishData.error.message };
+            } else {
+              platformResults.instagram = { success: true, post_id: igPublishData.id };
+              postIds.ig_media_id = igPublishData.id;
+            }
+          }
+        } catch (err) {
+          platformResults.instagram = { success: false, error: String(err) };
+        }
+      }
+    } else if (postType === 'story') {
+      // Instagram Story — no caption
       try {
+        const igBody: any = { media_type: 'STORY', access_token: PAGE_TOKEN };
+        if (isVideoMedia) {
+          igBody.video_url = post.image_url;
+        } else {
+          igBody.image_url = post.image_url;
+        }
         const igCreateRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image_url: post.image_url, caption: post.text, access_token: PAGE_TOKEN }),
+          body: JSON.stringify(igBody),
         });
         const igCreateData = await igCreateRes.json();
         if (igCreateData.error) {
           platformResults.instagram = { success: false, error: igCreateData.error.message };
         } else {
-          // Wait for processing
-          await new Promise(r => setTimeout(r, 5000));
+          await new Promise(r => setTimeout(r, 8000));
           const igPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -162,7 +295,41 @@ Deno.serve(async (_req: Request) => {
         platformResults.instagram = { success: false, error: String(err) };
       }
     } else {
-      platformResults.instagram = { success: false, error: 'No image — Instagram requires an image' };
+      // Regular Instagram feed post: image or video
+      try {
+        const igBody: any = { caption: post.text, access_token: PAGE_TOKEN };
+        if (isVideoMedia) {
+          igBody.media_type = 'VIDEO';
+          igBody.video_url = post.image_url;
+        } else {
+          igBody.image_url = post.image_url;
+        }
+        const igCreateRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(igBody),
+        });
+        const igCreateData = await igCreateRes.json();
+        if (igCreateData.error) {
+          platformResults.instagram = { success: false, error: igCreateData.error.message };
+        } else {
+          await new Promise(r => setTimeout(r, isVideoMedia ? 10000 : 5000));
+          const igPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ creation_id: igCreateData.id, access_token: PAGE_TOKEN }),
+          });
+          const igPublishData = await igPublishRes.json();
+          if (igPublishData.error) {
+            platformResults.instagram = { success: false, error: igPublishData.error.message };
+          } else {
+            platformResults.instagram = { success: true, post_id: igPublishData.id };
+            postIds.ig_media_id = igPublishData.id;
+          }
+        }
+      } catch (err) {
+        platformResults.instagram = { success: false, error: String(err) };
+      }
     }
 
     // Determine overall status
@@ -193,7 +360,6 @@ Deno.serve(async (_req: Request) => {
     // Delete uploaded file from storage after publishing (cleanup)
     if (post.image_url && post.image_url.includes('social-uploads')) {
       try {
-        // Extract file path from URL
         const urlObj = new URL(post.image_url);
         const pathParts = urlObj.pathname.split('/social-uploads/');
         if (pathParts.length > 1) {
@@ -201,13 +367,12 @@ Deno.serve(async (_req: Request) => {
           await sb.storage.from('social-uploads').remove([filePath]);
         }
       } catch (e) { /* best effort cleanup */ }
-      // Clear image_url from DB since file is deleted
       await sb.from('threads_scheduled_posts')
         .update({ image_url: null })
         .eq('id', post.id);
     }
 
-    results.push({ post_number: post.post_number, status, platformResults });
+    results.push({ post_number: post.post_number, post_type: postType, status, platformResults });
 
     await new Promise(r => setTimeout(r, 5000));
   }
