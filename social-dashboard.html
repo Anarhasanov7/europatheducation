@@ -370,18 +370,6 @@
 
       <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
         <input type="text" id="autoVideoTopic" placeholder="или введите свою тему..." style="flex:1; min-width:200px; padding:8px 12px; border:none; border-radius:6px; font-size:14px;">
-        <select id="autoVideoMusic" style="padding:8px 12px; border:none; border-radius:6px; font-size:14px; background:#fff; color:#333;">
-          <option value="0">🟣 Lo-Fi — Crinoline Dreams</option>
-          <option value="1">🟣 Lo-Fi — Relaxing Piano</option>
-          <option value="2">🟣 Lo-Fi — Bedtime Story</option>
-          <option value="3" selected>🟢 Upbeat — Carefree</option>
-          <option value="4">🟢 Upbeat — Sunshine</option>
-          <option value="5">🟢 Upbeat — Happy Rock</option>
-          <option value="6">🟢 Upbeat — The Builder</option>
-          <option value="7">🎬 Cinematic — Inspired</option>
-          <option value="8">🎬 Cinematic — Eternal Hope</option>
-          <option value="9">🎬 Cinematic — Past the Edge</option>
-        </select>
         <button class="btn" style="background:#fff; color:#764ba2; font-weight:600;" onclick="generateAutoVideo()" id="autoVideoBtn">🚀 Generate & Schedule</button>
       </div>
       <div id="autoVideoStatus" style="margin-top:10px; font-size:13px; display:none;"></div>
@@ -1907,7 +1895,7 @@ async function generateAutoVideo() {
     const resp = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/auto-video', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic, musicTrackIndex: parseInt(document.getElementById('autoVideoMusic').value) }),
+      body: JSON.stringify({ topic }),
     });
     const data = await resp.json();
 
