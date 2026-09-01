@@ -63,7 +63,9 @@ async function publishToThreads(
     if (createData.error) {
       return { success: false, error: createData.error.message };
     }
-    await new Promise(r => setTimeout(r, imageUrl ? 10000 : 3000));
+    // Videos need ~30s to process on Threads; images need ~5s; text needs ~3s
+    const waitMs = isVideoMedia ? 30000 : (imageUrl ? 5000 : 3000);
+    await new Promise(r => setTimeout(r, waitMs));
     const publishRes = await fetch(`${THREADS_API}/${userId}/threads_publish`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
