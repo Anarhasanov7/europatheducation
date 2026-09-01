@@ -351,6 +351,20 @@
     <h2>🎬 Video Studio</h2>
     <p class="sub">Create a slideshow video with music — then schedule it as a reel post</p>
 
+    <!-- ─── AI Auto-Video (one-click) ─── -->
+    <div style="background:linear-gradient(135deg,#667eea,#764ba2); border-radius:12px; padding:16px; margin-bottom:16px; color:#fff;">
+      <h3 style="margin:0 0 8px 0; color:#fff;">✨ AI Auto-Video (Russian voiceover)</h3>
+      <p style="margin:0 0 10px 0; font-size:13px; opacity:0.9;">Type a topic — AI writes the script, generates a Russian female voiceover, creates the video with Italy images + music, and schedules it as a reel post. Fully automatic.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input type="text" id="autoVideoTopic" placeholder="e.g. преимущества обучения в Италии, стипендии DSU, ВНЖ..." style="flex:1; min-width:200px; padding:8px 12px; border:none; border-radius:6px; font-size:14px;">
+        <button class="btn" style="background:#fff; color:#764ba2; font-weight:600;" onclick="generateAutoVideo()" id="autoVideoBtn">🚀 Generate & Schedule</button>
+      </div>
+      <div id="autoVideoStatus" style="margin-top:10px; font-size:13px; display:none;"></div>
+    </div>
+
+    <!-- Manual mode divider -->
+    <div style="text-align:center; margin:16px 0; color:#999; font-size:13px;">— or create manually —</div>
+
     <!-- Step 1: Images -->
     <div class="form-group">
       <label>1. Select Images (from Italy gallery or upload your own)</label>
@@ -1854,6 +1868,44 @@ async function vsGenerateVideo() {
 }
 
 // ─── Shotstack HD video generation ───
+// ─── AI Auto-Video (one-click: topic → script → voiceover → video → schedule) ───
+async function generateAutoVideo() {
+  const topic = document.getElementById('autoVideoTopic').value.trim();
+  if (!topic) { toast('Enter a topic first', 'error'); return; }
+  const btn = document.getElementById('autoVideoBtn');
+  const status = document.getElementById('autoVideoStatus');
+  btn.disabled = true;
+  status.style.display = 'block';
+  status.innerHTML = '🚀 Generating video... Writing script, creating Russian voiceover, rendering video, and scheduling. This takes ~1-2 minutes.';
+
+  try {
+    const resp = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/auto-video', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic }),
+    });
+    const data = await resp.json();
+
+    if (data.error) {
+      status.innerHTML = `❌ Error: ${data.error}`;
+      toast('Error: ' + data.error, 'error');
+    } else if (data.success) {
+      status.innerHTML = `✅ <strong>Video created and scheduled!</strong><br>
+        <strong>Script:</strong> ${data.script}<br>
+        <strong>Scheduled:</strong> ${new Date(data.scheduledAt).toLocaleString()}<br>
+        <strong>Video URL:</strong> <a href="${data.videoUrl}" target="_blank" style="color:#fff;text-decoration:underline;">Watch MP4</a>`;
+      toast('Video generated and scheduled!', 'success');
+      document.getElementById('autoVideoTopic').value = '';
+      // Reload posts list
+      if (typeof loadPosts === 'function') loadPosts();
+    }
+  } catch (e) {
+    status.innerHTML = `❌ Error: ${e.message}`;
+    toast('Error: ' + e.message, 'error');
+  }
+  btn.disabled = false;
+}
+
 async function vsGenerateShotstack() {
   if (vsSelectedImages.length === 0) { toast('Select at least one image', 'error'); return; }
   const btn = document.getElementById('vsShotstackBtn');
