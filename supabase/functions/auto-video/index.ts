@@ -62,47 +62,41 @@ function getScriptTemplate(topic: string) {
   return SCRIPT_TEMPLATES['default'];
 }
 
-// ─── Google Translate TTS (free, no API key, supports Russian) ───
-// Splits text into ~180 char chunks, fetches audio for each, concatenates.
+// ─── ElevenLabs TTS (natural Russian voice, free tier 10K chars/month) ───
 async function generateVoiceover(text: string): Promise<{ audioBuffer: ArrayBuffer; contentType: string }> {
-  // Split text into chunks of ~180 chars (Google TTS limit is ~200)
-  const sentences = text.split(/(?<=[.!?])\s+/);
-  const chunks: string[] = [];
-  let current = '';
-  for (const s of sentences) {
-    if ((current + ' ' + s).length <= 180) {
-      current = (current + ' ' + s).trim();
-    } else {
-      if (current) chunks.push(current);
-      current = s;
-    }
-  }
-  if (current) chunks.push(current);
+  const apiKey = Deno.env.get('ELEVENLABS_API_KEY');
+  if (!apiKey) throw new Error('ElevenLabs API key not configured');
 
-  // Fetch audio for each chunk
-  const audioParts: ArrayBuffer[] = [];
-  for (const chunk of chunks) {
-    const encoded = encodeURIComponent(chunk);
-    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=ru&client=tw-ob`;
-    const resp = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-    });
-    if (!resp.ok) {
-      throw new Error(`Google TTS error: ${resp.status}`);
-    }
-    audioParts.push(await resp.arrayBuffer());
-  }
+  // Use Multilingual v2 model for best Russian quality
+  // Voice: "Sarah" — mature, reassuring, confident female (premade, free tier)
+  const voiceId = 'EXAVITQu4vr4xnSDxMaL'; // Sarah
 
-  // Concatenate audio buffers (MP3 frames can be directly concatenated)
-  const totalLength = audioParts.reduce((sum, buf) => sum + buf.byteLength, 0);
-  const combined = new Uint8Array(totalLength);
-  let offset = 0;
-  for (const buf of audioParts) {
-    combined.set(new Uint8Array(buf), offset);
-    offset += buf.byteLength;
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg',
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_multilingual_v2',
+      voice_settings: {
+        stability: 0.5,
+        similarity_boost: 0.75,
+        style: 0.0,
+        use_speaker_boost: true,
+      },
+    }),
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text();
+    throw new Error(`ElevenLabs error: ${resp.status} ${errText}`);
   }
 
-  return { audioBuffer: combined.buffer, contentType: 'audio/mpeg' };
+  const audioBuffer = await resp.arrayBuffer();
+  return { audioBuffer, contentType: 'audio/mpeg' };
 }
 
 // ─── Upload to Supabase Storage (using supabase-js client) ───

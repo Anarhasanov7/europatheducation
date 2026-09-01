@@ -6,7 +6,14 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const SHOTSTACK_API = 'https://api.shotstack.io/v1/render';
+// Shotstack Edit API — sandbox (stage) for testing, v1 for production
+// Sandbox: https://api.shotstack.io/edit/stage/render (watermarked, free, no credits used)
+// Production: https://api.shotstack.io/edit/v1/render (uses credits)
+// Default to sandbox since the current key is a sandbox key.
+// Set SHOTSTACK_SANDBOX=false secret to switch to production.
+const SHOTSTACK_BASE = Deno.env.get('SHOTSTACK_SANDBOX') === 'false'
+  ? 'https://api.shotstack.io/edit/v1/render'
+  : 'https://api.shotstack.io/edit/stage/render';
 
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -23,7 +30,7 @@ Deno.serve(async (req: Request) => {
 
     // If action is "poll", just check the status of an existing render
     if (action === 'poll' && body.renderId) {
-      const statusRes = await fetch(`${SHOTSTACK_API}/${body.renderId}`, {
+      const statusRes = await fetch(`${SHOTSTACK_BASE}/${body.renderId}`, {
         headers: { 'x-api-key': apiKey },
       });
       const statusData = await statusRes.json();
@@ -119,7 +126,7 @@ Deno.serve(async (req: Request) => {
     }
 
     // Submit render to Shotstack
-    const renderRes = await fetch(SHOTSTACK_API, {
+    const renderRes = await fetch(SHOTSTACK_BASE, {
       method: 'POST',
       headers: {
         'x-api-key': apiKey,
@@ -144,7 +151,7 @@ Deno.serve(async (req: Request) => {
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       await new Promise(r => setTimeout(r, pollInterval));
-      const statusRes = await fetch(`${SHOTSTACK_API}/${renderId}`, {
+      const statusRes = await fetch(`${SHOTSTACK_BASE}/${renderId}`, {
         headers: { 'x-api-key': apiKey },
       });
       const statusData = await statusRes.json();

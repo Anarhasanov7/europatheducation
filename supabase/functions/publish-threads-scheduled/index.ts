@@ -63,8 +63,8 @@ async function publishToThreads(
     if (createData.error) {
       return { success: false, error: createData.error.message };
     }
-    // Videos need ~30s to process on Threads; images need ~5s; text needs ~3s
-    const waitMs = isVideoMedia ? 30000 : (imageUrl ? 5000 : 3000);
+    // Videos need ~20-30s to process on Threads; images need ~5s; text needs ~3s
+    const waitMs = isVideoMedia ? 20000 : (imageUrl ? 5000 : 3000);
     await new Promise(r => setTimeout(r, waitMs));
     const publishRes = await fetch(`${THREADS_API}/${userId}/threads_publish`, {
       method: 'POST',
@@ -101,7 +101,7 @@ Deno.serve(async (_req: Request) => {
     .eq('status', 'pending')
     .lte('scheduled_utc', new Date().toISOString())
     .order('scheduled_utc', { ascending: true })
-    .limit(5);
+    .limit(1); // Process 1 post per invocation (video posts need lots of time for processing)
 
   if (fetchErr) {
     return new Response(JSON.stringify({ error: fetchErr.message }), {
@@ -368,10 +368,12 @@ Deno.serve(async (_req: Request) => {
       }
     } else {
       // Regular Instagram feed post: image or video
+      // Note: Instagram requires videos to be published as REELS
       try {
         const igBody: any = { caption: taggedText, access_token: PAGE_TOKEN };
         if (isVideoMedia) {
-          igBody.media_type = 'VIDEO';
+          // Videos must use REELS media_type on Instagram
+          igBody.media_type = 'REELS';
           igBody.video_url = post.image_url;
         } else {
           igBody.image_url = post.image_url;
@@ -384,8 +386,41 @@ Deno.serve(async (_req: Request) => {
         const igCreateData = await igCreateRes.json();
         if (igCreateData.error) {
           platformResults.instagram = { success: false, error: igCreateData.error.message };
+        } else if (isVideoMedia) {
+          // For videos: poll the container status until processing is finished
+          let published = false;
+          let lastError = '';
+          for (let attempt = 0; attempt < 8; attempt++) {
+            await new Promise(r => setTimeout(r, 5000)); // Check every 5s, max 30s
+            const statusRes = await fetch(`${FB_API}/${igCreateData.id}?fields=status&access_token=${PAGE_TOKEN}`);
+            const statusData = await statusRes.json();
+            if (statusData.status && statusData.status.toUpperCase().includes('FINISHED')) {
+              const igPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ creation_id: igCreateData.id, access_token: PAGE_TOKEN }),
+              });
+              const igPublishData = await igPublishRes.json();
+              if (igPublishData.error) {
+                lastError = igPublishData.error.message;
+              } else {
+                platformResults.instagram = { success: true, post_id: igPublishData.id };
+                postIds.ig_media_id = igPublishData.id;
+                published = true;
+                break;
+              }
+            } else if (statusData.status && statusData.status.toUpperCase().includes('ERROR')) {
+              lastError = 'Instagram video processing failed';
+              break;
+            }
+            // status === 'IN_PROGRESS' → keep polling
+          }
+          if (!published) {
+            platformResults.instagram = { success: false, error: lastError || 'Instagram video processing timeout (40s)' };
+          }
         } else {
-          await new Promise(r => setTimeout(r, isVideoMedia ? 10000 : 5000));
+          // Image: short wait then publish
+          await new Promise(r => setTimeout(r, 5000));
           const igPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -408,7 +443,8 @@ Deno.serve(async (_req: Request) => {
     // Every post with media also gets published as a 24h story
     // Uses 9:16 story_image_url if available (proper story aspect ratio)
     if (hasStoryMedia && postType !== 'story') {
-      const storyIsVideo = storyImageUrl !== post.image_url ? false : isVideoMedia; // story version is always image (padded)
+      // Check if the story media itself is a video (by file extension)
+      const storyIsVideo = isVideo(storyImageUrl);
 
       // Instagram Story (two-step: create container → publish)
       try {
@@ -426,9 +462,39 @@ Deno.serve(async (_req: Request) => {
         const igStoryCreateData = await igStoryCreateRes.json();
         if (igStoryCreateData.error) {
           platformResults.ig_story = { success: false, error: igStoryCreateData.error.message };
+        } else if (storyIsVideo) {
+          // Video story: poll for processing completion
+          let published = false;
+          let lastError = '';
+          for (let attempt = 0; attempt < 8; attempt++) {
+            await new Promise(r => setTimeout(r, 5000));
+            const statusRes = await fetch(`${FB_API}/${igStoryCreateData.id}?fields=status&access_token=${PAGE_TOKEN}`);
+            const statusData = await statusRes.json();
+            if (statusData.status && statusData.status.toUpperCase().includes('FINISHED')) {
+              const igStoryPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ creation_id: igStoryCreateData.id, access_token: PAGE_TOKEN }),
+              });
+              const igStoryPublishData = await igStoryPublishRes.json();
+              if (igStoryPublishData.error) {
+                lastError = igStoryPublishData.error.message;
+              } else {
+                platformResults.ig_story = { success: true, post_id: igStoryPublishData.id };
+                published = true;
+                break;
+              }
+            } else if (statusData.status && statusData.status.toUpperCase().includes('ERROR')) {
+              lastError = 'IG story video processing failed';
+              break;
+            }
+          }
+          if (!published) {
+            platformResults.ig_story = { success: false, error: lastError || 'IG story video processing timeout (40s)' };
+          }
         } else {
-          // Wait for processing
-          await new Promise(r => setTimeout(r, isVideoMedia ? 12000 : 6000));
+          // Image story: short wait then publish
+          await new Promise(r => setTimeout(r, 6000));
           const igStoryPublishRes = await fetch(`${FB_API}/${IG_BUSINESS_ID}/media_publish`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -445,31 +511,20 @@ Deno.serve(async (_req: Request) => {
         platformResults.ig_story = { success: false, error: String(err) };
       }
 
-      // Facebook Story (two-step: upload unpublished photo → create story with photo_id)
+      // Facebook Story
       try {
         if (storyIsVideo) {
-          // Video story: upload video first, then publish as story
-          const fbVideoUploadRes = await fetch(`${FB_API}/${PAGE_ID}/videos`, {
+          // Video story: use file_url directly with video_stories endpoint
+          const fbStoryRes = await fetch(`${FB_API}/${PAGE_ID}/video_stories`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ file_url: storyImageUrl, published: false, access_token: PAGE_TOKEN }),
+            body: JSON.stringify({ file_url: storyImageUrl, access_token: PAGE_TOKEN }),
           });
-          const fbVideoData = await fbVideoUploadRes.json();
-          if (fbVideoData.error) {
-            platformResults.fb_story = { success: false, error: fbVideoData.error.message };
+          const fbStoryData = await fbStoryRes.json();
+          if (fbStoryData.error) {
+            platformResults.fb_story = { success: false, error: fbStoryData.error.message };
           } else {
-            await new Promise(r => setTimeout(r, 10000));
-            const fbStoryRes = await fetch(`${FB_API}/${PAGE_ID}/video_stories`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ video_id: fbVideoData.id, access_token: PAGE_TOKEN }),
-            });
-            const fbStoryData = await fbStoryRes.json();
-            if (fbStoryData.error) {
-              platformResults.fb_story = { success: false, error: fbStoryData.error.message };
-            } else {
-              platformResults.fb_story = { success: true, post_id: fbStoryData.post_id || fbStoryData.id };
-            }
+            platformResults.fb_story = { success: true, post_id: fbStoryData.post_id || fbStoryData.id || fbStoryData.story_id };
           }
         } else {
           // Photo story: Step 1 — upload unpublished photo (use 9:16 story image)
