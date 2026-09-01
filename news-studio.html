@@ -161,7 +161,10 @@
 <!-- Main App -->
 <div id="app" style="display:none;">
   <div class="header">
-    <h1>📰 News Studio</h1>
+    <div style="display:flex; align-items:center; gap:16px;">
+      <a href="portal.html" style="text-decoration:none; font-size:13px; color:#2E86C1; font-weight:600;">← Portal</a>
+      <h1>📰 News Studio</h1>
+    </div>
     <div class="actions">
       <button class="btn btn-fetch" id="fetchBtn" onclick="fetchNews()">↻ Обновить новости</button>
       <span class="user-info" id="userInfo"></span>

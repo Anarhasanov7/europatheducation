@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233ddfff'/><stop offset='1' stop-color='%23c6ff3d'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='72' font-size='62' font-weight='900' text-anchor='middle' fill='%23080a14' font-family='Arial,sans-serif'>E</text></svg>">
+<title>Portal — EuroPath Education</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root { --navy:#0b1e3f; --ink:#080a14; --electric:#3ddfff; --blue:#2E86C1; --lime:#c6ff3d; --gray:#6b7280; --light:#e8ecf1; --off:#f4f5f7; --green:#22c55e; --red:#ef4444; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', -apple-system, sans-serif; background:var(--off); color:var(--ink); min-height:100vh; }
+
+  /* Login */
+  #loginOverlay { position:fixed; inset:0; background:linear-gradient(135deg,#0b1e3f,#16213e); display:flex; align-items:center; justify-content:center; z-index:100; }
+  .login-box { background:#fff; border-radius:16px; padding:40px; width:380px; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+  .login-box h1 { font-size:24px; margin-bottom:4px; }
+  .login-box .sub { color:var(--gray); margin-bottom:24px; font-size:14px; }
+  .login-box input { width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:14px; margin-bottom:12px; }
+  .login-box button { width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; }
+  .login-box button:hover { background:#1a6ba8; }
+  .login-box button:disabled { opacity:.6; cursor:wait; }
+  .login-error { color:var(--red); font-size:13px; margin-top:8px; display:none; }
+  .login-divider { display:flex; align-items:center; gap:12px; margin:16px 0; }
+  .login-divider::before, .login-divider::after { content:''; flex:1; height:1px; background:#e0e0e0; }
+  .login-divider span { font-size:12px; color:#888; }
+  .login-github { width:100%; padding:12px 14px; border:1px solid #ddd; border-radius:8px; background:#24292f; color:#fff; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:background .2s; font-family:'Inter',sans-serif; }
+  .login-github:hover { background:#1c2025; }
+  .login-github:disabled { opacity:0.5; cursor:wait; }
+  .login-github svg { width:20px; height:20px; }
+
+  /* Language toggle */
+  .lang-toggle { display:flex; align-items:center; gap:4px; position:fixed; top:16px; right:20px; z-index:999; }
+  .lang-btn { font-size:18px; line-height:1; cursor:pointer; border:2px solid transparent; border-radius:6px; padding:4px 6px; background:transparent; transition:all .2s; opacity:.5; }
+  .lang-btn:hover { opacity:.8; }
+  .lang-btn.active { opacity:1; border-color:#1a73e8; background:rgba(26,115,232,.1); }
+
+  /* Portal */
+  .portal-header { background:#fff; border-bottom:1px solid #e0e0e0; padding:20px 24px; display:flex; align-items:center; justify-content:space-between; }
+  .portal-header .logo { display:flex; align-items:center; gap:12px; }
+  .portal-header .logo-icon { width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--electric),var(--lime)); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; color:var(--ink); }
+  .portal-header h1 { font-size:20px; color:var(--navy); }
+  .portal-header .user-area { display:flex; align-items:center; gap:16px; }
+  .portal-header .user-info { font-size:13px; color:var(--gray); }
+  .logout-btn { background:none; border:1px solid #ddd; padding:6px 16px; border-radius:6px; cursor:pointer; font-size:13px; color:#666; }
+  .logout-btn:hover { background:#f5f5f5; }
+
+  .portal-main { max-width:1100px; margin:0 auto; padding:40px 24px; }
+  .portal-main h2 { font-size:15px; color:var(--gray); text-transform:uppercase; letter-spacing:.5px; margin-bottom:24px; font-weight:600; }
+
+  .cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px; }
+  .card { background:#fff; border-radius:16px; padding:28px; box-shadow:0 1px 3px rgba(0,0,0,.08); text-decoration:none; color:inherit; transition:all .2s; border:2px solid transparent; display:flex; flex-direction:column; gap:12px; }
+  .card:hover { box-shadow:0 8px 24px rgba(0,0,0,.12); transform:translateY(-2px); border-color:var(--blue); }
+  .card .card-icon { width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:26px; }
+  .card .card-icon.blue { background:#e8f0fe; }
+  .card .card-icon.green { background:#e6f4ea; }
+  .card .card-icon.purple { background:#f3e8fd; }
+  .card .card-icon.orange { background:#fef7e0; }
+  .card .card-icon.cyan { background:#e0f7fa; }
+  .card .card-icon.pink { background:#fce4ec; }
+  .card h3 { font-size:18px; font-weight:700; }
+  .card p { font-size:14px; color:var(--gray); line-height:1.5; }
+  .card .card-arrow { font-size:18px; color:var(--blue); margin-top:auto; font-weight:600; }
+
+  @media (max-width:640px) {
+    .cards { grid-template-columns:1fr; }
+    .portal-main { padding:24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn" id="lang-ru" onclick="edupathI18n.setLang('ru')" title="Русский">🇷🇺</button>
+  <button class="lang-btn" id="lang-en" onclick="edupathI18n.setLang('en')" title="English">🇬🇧</button>
+</div>
+<script src="i18n.js"></script>
+
+<div id="loginOverlay">
+  <div class="login-box">
+    <h1 data-en="Admin Portal">Портал администратора</h1>
+    <p class="sub" data-en="EuroPath Education — Sign in to access all dashboards">EuroPath Education — Войдите для доступа ко всем панелям</p>
+    <input type="email" id="adminEmail" placeholder="Email администратора" data-en-placeholder="Admin email" value="hasanov.anar.2023@gmail.com">
+    <input type="password" id="adminPassword" placeholder="Пароль" data-en-placeholder="Password">
+    <button id="loginBtn" onclick="portalLogin()" data-en="Sign In">Войти</button>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-divider"><span data-en="or">или</span></div>
+    <button class="login-github" id="githubLoginBtn" onclick="portalGitHubLogin()">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span data-en="Continue with GitHub">Продолжить с GitHub</span>
+    </button>
+  </div>
+</div>
+
+<div id="portalContent" style="display:none;">
+  <div class="portal-header">
+    <div class="logo">
+      <div class="logo-icon">E</div>
+      <h1 data-en="EuroPath Education — Portal">EuroPath Education — Портал</h1>
+    </div>
+    <div class="user-area">
+      <span class="user-info" id="userInfo"></span>
+      <button class="logout-btn" onclick="portalLogout()" data-en="Logout">Выход</button>
+    </div>
+  </div>
+
+  <div class="portal-main">
+    <h2 data-en="Dashboards">Панели управления</h2>
+    <div class="cards">
+      <a href="admin.html" class="card">
+        <div class="card-icon blue">📋</div>
+        <h3 data-en="Admin Dashboard">Админ-панель</h3>
+        <p data-en="Student applications, support tickets, consultation bookings, and visitor analytics.">Заявки студентов, тикеты поддержки, записи на консультации и аналитика посещений.</p>
+        <span class="card-arrow">→</span>
+      </a>
+      <a href="social-dashboard.html" class="card">
+        <div class="card-icon purple">📱</div>
+        <h3 data-en="Social Media Dashboard">Соцсети</h3>
+        <p data-en="Schedule and publish posts to Threads, Facebook, and Instagram. Manage comments and auto-replies. View engagement stats.">Планирование и публикация постов в Threads, Facebook и Instagram. Управление комментариями и автo-ответами. Статистика.</p>
+        <span class="card-arrow">→</span>
+      </a>
+      <a href="news-studio.html" class="card">
+        <div class="card-icon green">📰</div>
+        <h3 data-en="News Studio">Новости</h3>
+        <p data-en="Manage Italian education news content fetched from sources.">Управление новостями об итальянском образовании, собранными из источников.</p>
+        <span class="card-arrow">→</span>
+      </a>
+      <a href="dashboard.html" class="card">
+        <div class="card-icon orange">🎓</div>
+        <h3 data-en="Student Dashboard">Студенческая панель</h3>
+        <p data-en="Student-facing portal for application status and documents.">Студенческий портал для статуса заявки и документов.</p>
+        <span class="card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+function lang() { return localStorage.getItem('edupath_lang') || 'ru'; }
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
+let sb;
+let currentUser = null;
+
+(function loadSB() {
+  if (window.supabase) { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); checkSession(); }
+  else { setTimeout(loadSB, 100); }
+})();
+
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) { currentUser = session.user; showPortal(); }
+}
+
+async function portalGitHubLogin() {
+  const btn = document.getElementById('githubLoginBtn');
+  const err = document.getElementById('loginError');
+  btn.disabled = true;
+  btn.textContent = lang() === 'en' ? 'Redirecting...' : 'Перенаправление...';
+  err.style.display = 'none';
+  try {
+    const { error: e } = await sb.auth.signInWithOAuth({
+      provider: 'github',
+      options: { redirectTo: window.location.origin + '/portal.html' }
+    });
+    if (e) throw e;
+  } catch (e) {
+    err.textContent = e.message || (lang() === 'en' ? 'GitHub sign-in failed.' : 'Ошибка входа через GitHub.');
+    err.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> ' + (lang() === 'en' ? 'Continue with GitHub' : 'Продолжить с GitHub');
+  }
+}
+
+async function portalLogin() {
+  const email = document.getElementById('adminEmail').value;
+  const password = document.getElementById('adminPassword').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  btn.disabled = true; btn.textContent = lang() === 'en' ? 'Signing in...' : 'Вход...'; err.style.display = 'none';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    err.textContent = error.message;
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = lang() === 'en' ? 'Sign In' : 'Войти';
+  } else {
+    currentUser = data.user;
+    showPortal();
+  }
+}
+
+function showPortal() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('portalContent').style.display = 'block';
+  document.getElementById('userInfo').textContent = currentUser.email;
+}
+
+function portalLogout() {
+  sb.auth.signOut();
+  currentUser = null;
+  document.getElementById('loginOverlay').style.display = 'flex';
+  document.getElementById('portalContent').style.display = 'none';
+}
+</script>
+</body>
+</html>
