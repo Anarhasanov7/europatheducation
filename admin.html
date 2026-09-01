@@ -95,6 +95,7 @@
     table { font-size:12px; }
     th, td { padding:8px; }
     .hide-mobile { display:none; }
+    .an-grid { grid-template-columns:1fr !important; }
   }
 
   /* ─── Tab navigation ─── */
@@ -188,6 +189,7 @@
 <div class="tab-bar" id="tabBar" style="display:none;">
   <button class="tab-btn active" id="tabApps" onclick="switchTab('apps')" data-en="📋 Applications">📋 Заявки</button>
   <button class="tab-btn" id="tabTickets" onclick="switchTab('tickets')">🎫 <span data-en="Tickets">Тикеты</span> <span class="tab-badge zero" id="ticketBadge">0</span></button>
+  <button class="tab-btn" id="tabAnalytics" onclick="switchTab('analytics')">📊 <span data-en="Analytics">Аналитика</span></button>
 </div>
 
 <div class="filter-bar" id="filterBar" style="display:none;">
@@ -238,6 +240,61 @@
     </table>
   </div>
   <div class="pagination" id="ticketPaginationControls"></div>
+</div>
+
+<!-- ─── Analytics section ─── -->
+<div class="table-container" id="analyticsSection" style="display:none;">
+  <div class="stats" style="padding:0 0 16px; max-width:none;">
+    <div class="stat-card"><div class="label" data-en="Total views">Всего просмотров</div><div class="value blue" id="anTotal">0</div></div>
+    <div class="stat-card"><div class="label" data-en="Unique visitors">Уникальные</div><div class="value green" id="anUnique">0</div></div>
+    <div class="stat-card"><div class="label" data-en="Views today">Сегодня</div><div class="value orange" id="anToday">0</div></div>
+    <div class="stat-card"><div class="label" data-en="Views (7d)">За 7 дней</div><div class="value" id="an7d">0</div></div>
+    <div class="stat-card"><div class="label" data-en="Views (30d)">За 30 дней</div><div class="value" id="an30d">0</div></div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:none;" class="an-grid">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th colspan="2" data-en="Top pages">Топ страниц</th></tr></thead>
+        <thead><tr><th data-en="Page">Страница</th><th data-en="Views">Просмотры</th></tr></thead>
+        <tbody id="anTopPages"></tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th colspan="2" data-en="Top referrers">Топ источников</th></tr></thead>
+        <thead><tr><th data-en="Referrer">Источник</th><th data-en="Views">Просмотры</th></tr></thead>
+        <tbody id="anTopReferrers"></tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th colspan="2" data-en="Top countries">Топ стран</th></tr></thead>
+        <thead><tr><th data-en="Country">Страна</th><th data-en="Views">Просмотры</th></tr></thead>
+        <tbody id="anTopCountries"></tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th colspan="2" data-en="Devices">Устройства</th></tr></thead>
+        <thead><tr><th data-en="Device">Устройство</th><th data-en="Views">Просмотры</th></tr></thead>
+        <tbody id="anDevices"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="table-wrap" style="margin-top:16px;">
+    <table>
+      <thead><tr>
+        <th data-en="Recent visits">Недавние посещения</th>
+        <th class="hide-mobile" data-en="Country">Страна</th>
+        <th class="hide-mobile" data-en="Device">Устройство</th>
+        <th class="hide-mobile" data-en="Referrer">Источник</th>
+        <th data-en="Time">Время</th>
+      </tr></thead>
+      <tbody id="anRecent"></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
@@ -588,9 +645,110 @@ function switchTab(tab) {
   currentTab = tab;
   document.getElementById('tabApps').classList.toggle('active', tab === 'apps');
   document.getElementById('tabTickets').classList.toggle('active', tab === 'tickets');
+  document.getElementById('tabAnalytics').classList.toggle('active', tab === 'analytics');
   document.getElementById('tableSection').style.display = tab === 'apps' ? 'block' : 'none';
   document.getElementById('ticketsSection').style.display = tab === 'tickets' ? 'block' : 'none';
+  document.getElementById('analyticsSection').style.display = tab === 'analytics' ? 'block' : 'none';
   document.getElementById('filterBar').style.display = tab === 'apps' ? 'flex' : 'none';
+  if (tab === 'analytics') loadAnalytics();
+}
+
+// ─── Analytics ───
+const COUNTRY_FLAGS = {RU:'🇷🇺',IT:'🇮🇹',AZ:'🇦🇿',US:'🇺🇸',DE:'🇩🇪',FR:'🇫🇷',GB:'🇬🇧',UA:'🇺🇦',TR:'🇹🇷',IN:'🇮🇳',CN:'🇨🇳',PL:'🇵🇱',ES:'🇪🇸',NL:'🇳🇱',GE:'🇬🇪',KZ:'🇰🇿',UZ:'🇺🇿',BY:'🇧🇾',MD:'🇲🇩',RO:'🇷🇴',AM:'🇦🇲',IR:'🇮🇷',AE:'🇦🇪',EG:'🇪🇬',MA:'🇲🇦',NG:'🇳🇬',BR:'🇧🇷',MX:'🇲🇽',CA:'🇨🇦',AU:'🇦🇺',JP:'🇯🇵',KR:'🇰🇷',PK:'🇵🇰',BD:'🇧🇩',ID:'🇮🇩',PH:'🇵🇭',VN:'🇻🇳',TH:'🇹🇭',MY:'🇲🇾',SG:'🇸🇬',RS:'🇷🇸',HR:'🇭🇷',SI:'🇸🇮',CZ:'🇨🇿',SK:'🇸🇰',HU:'🇭🇺',AT:'🇦🇹',CH:'🇨🇭',BE:'🇧🇪',SE:'🇸🇪',NO:'🇳🇴',FI:'🇫🇮',DK:'🇩🇰',PT:'🇵🇹',GR:'🇬🇷',BG:'🇧🇬',EE:'🇪🇪',LV:'🇱🇻',LT:'🇱🇹',IE:'🇮🇪',IL:'🇮🇱',SA:'🇸🇦',IQ:'🇮🇶',SY:'🇸🇾',LY:'🇱🇾',TN:'🇹🇳',DZ:'🇩🇿',GH:'🇬🇭',KE:'🇰🇪',TZ:'🇹🇿',ZA:'🇿🇦',AR:'🇦🇷',CL:'🇨🇱',CO:'🇨🇴',PE:'🇵🇪',VE:'🇻🇪',EC:'🇪🇨',UY:'🇺🇾',PY:'🇵🇾',BO:'🇧🇴',DO:'🇩🇴',CU:'🇨🇺',GT:'🇬🇹',HN:'🇭🇳',NI:'🇳🇮',SV:'🇸🇻',CR:'🇨🇷',PA:'🇵🇦',JM:'🇯🇲',KN:'🇰🇳',TT:'🇹🇹'};
+const DEVICE_LABELS = {desktop:'💻 Desktop',mobile:'📱 Mobile',tablet:'📲 Tablet'};
+let analyticsLoaded = false;
+
+async function loadAnalytics() {
+  if (analyticsLoaded) return; // load once per session
+  const en = lang() === 'en';
+  const setEmpty = (id, label) => { document.getElementById(id).innerHTML = `<tr><td colspan="2" class="empty">${label}</td></tr>`; };
+  try {
+    const { data, error } = await sb.from('page_views').select('path,country,referrer,device,created_at').order('created_at', { ascending: false }).limit(2000);
+    if (error) throw error;
+    const rows = data || [];
+    if (rows.length === 0) {
+      ['anTotal','anUnique','anToday','an7d','an30d'].forEach(id => document.getElementById(id).textContent = '0');
+      setEmpty('anTopPages', en ? 'No data yet' : 'Пока нет данных');
+      setEmpty('anTopReferrers', en ? 'No data yet' : 'Пока нет данных');
+      setEmpty('anTopCountries', en ? 'No data yet' : 'Пока нет данных');
+      setEmpty('anDevices', en ? 'No data yet' : 'Пока нет данных');
+      document.getElementById('anRecent').innerHTML = `<tr><td colspan="5" class="empty">${en ? 'No visits recorded yet' : 'Посещений пока нет'}</td></tr>`;
+      return;
+    }
+    const now = Date.now();
+    const dayMs = 86400000;
+    const todayStart = new Date().setHours(0,0,0,0);
+    const countSince = (ms) => rows.filter(r => new Date(r.created_at).getTime() >= ms).length;
+    document.getElementById('anTotal').textContent = rows.length.toLocaleString();
+    // unique by visitor_hash not fetched (we only have 2000 recent); approximate unique via distinct path+day is not meaningful.
+    // Instead count unique visitors from the fetched set using a rough proxy: distinct (country+device+path) is wrong.
+    // We did not select visitor_hash; re-query for unique count.
+    const { count: uniqCount } = await sb.from('page_views').select('*', { count: 'exact', head: true });
+    // unique visitors: count distinct visitor_hash via RPC
+    let uniqueN = uniqCount || rows.length;
+    try {
+      const { data: u } = await sb.rpc('count_unique_visitors');
+      if (u !== null && u !== undefined) uniqueN = u;
+    } catch {}
+    document.getElementById('anUnique').textContent = Number(uniqueN).toLocaleString();
+    document.getElementById('anToday').textContent = countSince(todayStart).toLocaleString();
+    document.getElementById('an7d').textContent = countSince(now - 7*dayMs).toLocaleString();
+    document.getElementById('an30d').textContent = countSince(now - 30*dayMs).toLocaleString();
+
+    // Top pages
+    const topPages = aggregate(rows, r => r.path || '/', 10);
+    document.getElementById('anTopPages').innerHTML = topPages.map(([k,v]) =>
+      `<tr><td style="font-family:monospace;font-size:12px;word-break:break-all;">${esc(k)}</td><td><strong>${v}</strong></td></tr>`).join('') || `<tr><td colspan="2" class="empty">—</td></tr>`;
+
+    // Top referrers
+    const refMap = {};
+    rows.forEach(r => { const key = r.referrer ? hostOf(r.referrer) : (en ? '(Direct)' : '(Прямой)'); refMap[key] = (refMap[key]||0)+1; });
+    const topRef = Object.entries(refMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    document.getElementById('anTopReferrers').innerHTML = topRef.map(([k,v]) =>
+      `<tr><td style="word-break:break-all;">${esc(k)}</td><td><strong>${v}</strong></td></tr>`).join('') || `<tr><td colspan="2" class="empty">—</td></tr>`;
+
+    // Top countries
+    const cMap = {};
+    rows.forEach(r => { const key = r.country || '??'; cMap[key] = (cMap[key]||0)+1; });
+    const topC = Object.entries(cMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    document.getElementById('anTopCountries').innerHTML = topC.map(([k,v]) =>
+      `<tr><td>${COUNTRY_FLAGS[k]||'🏳️'} ${esc(k)}</td><td><strong>${v}</strong></td></tr>`).join('') || `<tr><td colspan="2" class="empty">—</td></tr>`;
+
+    // Devices
+    const dMap = {};
+    rows.forEach(r => { dMap[r.device||'desktop'] = (dMap[r.device||'desktop']||0)+1; });
+    const topD = Object.entries(dMap).sort((a,b)=>b[1]-a[1]);
+    document.getElementById('anDevices').innerHTML = topD.map(([k,v]) =>
+      `<tr><td>${DEVICE_LABELS[k]||esc(k)}</td><td><strong>${v}</strong></td></tr>`).join('') || `<tr><td colspan="2" class="empty">—</td></tr>`;
+
+    // Recent visits (latest 50)
+    const recent = rows.slice(0, 50);
+    document.getElementById('anRecent').innerHTML = recent.map(r => {
+      const d = new Date(r.created_at).toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+      const flag = COUNTRY_FLAGS[r.country] || '🏳️';
+      const dev = DEVICE_LABELS[r.device] || r.device;
+      const ref = r.referrer ? hostOf(r.referrer) : '—';
+      return `<tr>
+        <td style="font-family:monospace;font-size:12px;word-break:break-all;">${esc(r.path||'/')}</td>
+        <td class="hide-mobile">${flag} ${esc(r.country||'??')}</td>
+        <td class="hide-mobile">${dev}</td>
+        <td class="hide-mobile" style="font-size:12px;color:#666;">${esc(ref)}</td>
+        <td style="font-size:12px;color:#666;">${esc(d)}</td>
+      </tr>`;
+    }).join('');
+    analyticsLoaded = true;
+  } catch (e) {
+    console.error('loadAnalytics error', e);
+  }
+}
+
+function aggregate(arr, keyFn, n) {
+  const m = {};
+  arr.forEach(x => { const k = keyFn(x); m[k] = (m[k]||0)+1; });
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0, n);
+}
+function hostOf(url) {
+  try { return new URL(url).hostname.replace(/^www\./,''); } catch { return url.slice(0,40); }
 }
 
 // ─── Tickets ───
