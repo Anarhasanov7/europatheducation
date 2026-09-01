@@ -287,8 +287,35 @@
       </div>
       <input type="file" id="fileInput" accept="image/*,video/*" style="display:none" onchange="handleFileSelect(event)">
       <div style="margin-top:10px; display:flex; align-items:center; gap:8px;" id="autoImageRow">
-        <span style="font-size:13px; color:#c9a84c; font-weight:600;">✅ Auto-generate branded image from text (always on — navy bg + gold + text on image)</span>
+        <span style="font-size:13px; color:#c9a84c; font-weight:600;">✅ Auto-generate branded image from text (always on — text on selected background)</span>
         <button type="button" class="btn btn-gray btn-sm" onclick="previewBrandedImage()" style="margin-left:8px;">Preview</button>
+      </div>
+
+      <!-- Background picker -->
+      <div id="bgPicker" style="margin-top:12px; padding:12px; background:#f8f9fa; border-radius:8px; border:1px solid #e0e0e0;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:8px; color:#333;">🎨 Background for branded image</div>
+        <div style="display:flex; gap:8px; margin-bottom:10px;">
+          <button type="button" class="btn btn-sm" id="bgTabColor" onclick="bgSwitchTab('color')" style="background:#2E86C1;color:#fff;">Solid Color</button>
+          <button type="button" class="btn btn-sm" id="bgTabGallery" onclick="bgSwitchTab('gallery')" style="background:#fff;color:#333;border:1px solid #ddd;">Italy Gallery</button>
+        </div>
+        <!-- Color tab -->
+        <div id="bgColorTab">
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;" id="bgColorPresets"></div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label style="font-size:12px; color:#666;">Custom:</label>
+            <input type="color" id="bgCustomColor" value="#0b1e3f" style="width:40px; height:32px; border:1px solid #ddd; border-radius:6px; cursor:pointer;" onchange="bgSelectColor(this.value)">
+            <span style="font-size:12px; color:#888;" id="bgColorLabel">#0b1e3f (default navy)</span>
+          </div>
+        </div>
+        <!-- Gallery tab -->
+        <div id="bgGalleryTab" style="display:none;">
+          <div style="font-size:12px; color:#666; margin-bottom:8px;">Select a background image — your text will be overlaid on it with a dark scrim for readability.</div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(80px, 1fr)); gap:6px; max-height:280px; overflow-y:auto; padding:4px;" id="bgGalleryGrid"></div>
+          <button type="button" class="btn btn-sm" style="margin-top:8px; background:#fff;color:#666;border:1px solid #ddd;" onclick="bgClearGallery()">Use color instead</button>
+        </div>
+        <input type="hidden" id="bgType" value="color">
+        <input type="hidden" id="bgColorValue" value="#0b1e3f">
+        <input type="hidden" id="bgImageUrl" value="">
       </div>
       <div class="upload-progress" id="uploadProgress" style="display:none;">
         <div class="upload-progress-bar" id="uploadProgressBar" style="width:0%"></div>
@@ -749,6 +776,8 @@ function openCreateModal() {
   document.getElementById('editDate').value = tomorrow.toISOString().split('T')[0];
   onPostTypeChange();
   updateCharCount();
+  bgReset();
+  bgRenderColorPresets();
   document.getElementById('editModal').classList.add('active');
 }
 
@@ -784,6 +813,8 @@ function openEditModal(id) {
   }
   onPostTypeChange();
   updateCharCount();
+  bgReset();
+  bgRenderColorPresets();
   document.getElementById('editModal').classList.add('active');
 }
 
@@ -797,11 +828,107 @@ function updateCharCount() {
 
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
+// ─── Background picker ───
+const BG_COLOR_PRESETS = [
+  { name: 'Navy (default)', color: '#0b1e3f' },
+  { name: 'Deep Blue', color: '#0d47a1' },
+  { name: 'Royal Purple', color: '#4a148c' },
+  { name: 'Forest Green', color: '#1b5e20' },
+  { name: 'Crimson', color: '#b71c1c' },
+  { name: 'Charcoal', color: '#262626' },
+  { name: 'Midnight', color: '#0a0a0a' },
+  { name: 'Espresso', color: '#3e2723' },
+  { name: 'Teal', color: '#004d40' },
+  { name: 'Indigo', color: '#1a237e' },
+  { name: 'Burgundy', color: '#5d1a1a' },
+  { name: 'Slate', color: '#37474f' },
+];
+const GALLERY_IMAGES = [
+  'italy_bg_01','italy_bg_02','italy_bg_03','italy_bg_04','italy_bg_05',
+  'italy_bg_06','italy_bg_07','italy_bg_08','italy_bg_09','italy_bg_10',
+  'italy_bg_11','italy_bg_12','italy_bg_13','italy_bg_14','italy_bg_15',
+  'italy_bg_16','italy_bg_17','italy_bg_18','italy_bg_19','italy_bg_20',
+  'italy_bg_21','italy_bg_22','italy_bg_23','italy_bg_24','italy_bg_25',
+  'italy_bg_26','italy_bg_27','italy_bg_28','italy_bg_29',
+];
+const GALLERY_BASE = 'https://europatheducation.eu/images/gallery';
+
+function bgSwitchTab(tab) {
+  document.getElementById('bgTabColor').style.background = tab === 'color' ? '#2E86C1' : '#fff';
+  document.getElementById('bgTabColor').style.color = tab === 'color' ? '#fff' : '#333';
+  document.getElementById('bgTabGallery').style.background = tab === 'gallery' ? '#2E86C1' : '#fff';
+  document.getElementById('bgTabGallery').style.color = tab === 'gallery' ? '#fff' : '#333';
+  document.getElementById('bgColorTab').style.display = tab === 'color' ? 'block' : 'none';
+  document.getElementById('bgGalleryTab').style.display = tab === 'gallery' ? 'block' : 'none';
+  document.getElementById('bgType').value = tab;
+  if (tab === 'gallery' && !document.getElementById('bgGalleryGrid').children.length) bgRenderGallery();
+}
+
+function bgRenderColorPresets() {
+  const container = document.getElementById('bgColorPresets');
+  if (container.children.length) return;
+  container.innerHTML = BG_COLOR_PRESETS.map(p =>
+    `<div onclick="bgSelectColor('${p.color}')" title="${p.name}" style="width:32px; height:32px; border-radius:6px; background:${p.color}; cursor:pointer; border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.2);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"></div>`
+  ).join('');
+}
+
+function bgSelectColor(color) {
+  document.getElementById('bgColorValue').value = color;
+  document.getElementById('bgCustomColor').value = color;
+  const preset = BG_COLOR_PRESETS.find(p => p.color.toLowerCase() === color.toLowerCase());
+  document.getElementById('bgColorLabel').textContent = preset ? `${color} (${preset.name})` : `${color} (custom)`;
+  // Clear gallery selection
+  document.getElementById('bgImageUrl').value = '';
+  document.querySelectorAll('.bg-gallery-item').forEach(el => el.style.borderColor = '#ddd');
+}
+
+function bgRenderGallery() {
+  const grid = document.getElementById('bgGalleryGrid');
+  grid.innerHTML = GALLERY_IMAGES.map(name =>
+    `<div class="bg-gallery-item" onclick="bgSelectGallery('${name}')" style="width:80px; height:80px; border-radius:6px; overflow:hidden; cursor:pointer; border:2px solid #ddd; background:#eee; transition:border-color .2s;" onmouseover="this.style.borderColor='#2E86C1'" onmouseout="if(this.dataset.selected!=='1')this.style.borderColor='#ddd'">
+      <img src="${GALLERY_BASE}/thumb/${name}.jpg" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
+    </div>`
+  ).join('');
+}
+
+function bgSelectGallery(name) {
+  document.getElementById('bgImageUrl').value = `${GALLERY_BASE}/full/${name}.jpg`;
+  document.querySelectorAll('.bg-gallery-item').forEach(el => { el.style.borderColor = '#ddd'; el.dataset.selected = '0'; });
+  const imgs = document.querySelectorAll('.bg-gallery-item img');
+  GALLERY_IMAGES.forEach((n, i) => { if (n === name) { imgs[i].parentElement.style.borderColor = '#2E86C1'; imgs[i].parentElement.dataset.selected = '1'; } });
+}
+
+function bgClearGallery() {
+  document.getElementById('bgImageUrl').value = '';
+  document.querySelectorAll('.bg-gallery-item').forEach(el => { el.style.borderColor = '#ddd'; el.dataset.selected = '0'; });
+  bgSwitchTab('color');
+}
+
+function bgGetConfig() {
+  return {
+    type: document.getElementById('bgType').value || 'color',
+    color: document.getElementById('bgColorValue').value || '#0b1e3f',
+    imageUrl: document.getElementById('bgImageUrl').value || '',
+  };
+}
+
+function bgReset() {
+  document.getElementById('bgType').value = 'color';
+  document.getElementById('bgColorValue').value = '#0b1e3f';
+  document.getElementById('bgImageUrl').value = '';
+  document.getElementById('bgCustomColor').value = '#0b1e3f';
+  document.getElementById('bgColorLabel').textContent = '#0b1e3f (default navy)';
+  bgSwitchTab('color');
+  const grid = document.getElementById('bgGalleryGrid');
+  if (grid) grid.innerHTML = '';
+}
+
 // ─── Auto-generate branded text image ───
 async function previewBrandedImage() {
   const text = document.getElementById('editText').value.trim();
   if (!text) { toast('Write some text first to preview', 'error'); return; }
-  const file = await generateBrandedImage(text);
+  const bg = bgGetConfig();
+  const file = await generateBrandedImage(text, bg);
   const url = URL.createObjectURL(file);
   const preview = document.getElementById('uploadPreview');
   preview.src = url;
@@ -809,18 +936,62 @@ async function previewBrandedImage() {
   toast('Preview generated — this is what the branded image will look like', 'info');
 }
 
-async function generateBrandedImage(text) {
+// Load an image from URL with crossOrigin support (returns HTMLImageElement)
+function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('Could not load image: ' + url));
+    img.src = url;
+  });
+}
+
+// Draw an image as "cover" (like CSS object-fit: cover) into the given rect
+function drawCover(ctx, img, x, y, w, h) {
+  const scale = Math.max(w / img.width, h / img.height);
+  const drawW = img.width * scale;
+  const drawH = img.height * scale;
+  const dx = x + (w - drawW) / 2;
+  const dy = y + (h - drawH) / 2;
+  ctx.drawImage(img, dx, dy, drawW, drawH);
+}
+
+async function generateBrandedImage(text, bgConfig) {
+  bgConfig = bgConfig || bgGetConfig();
   const canvas = document.createElement('canvas');
   canvas.width = 1080;
   canvas.height = 1080;
   const ctx = canvas.getContext('2d');
 
-  // Background: dark navy gradient
-  const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
-  grad.addColorStop(0, '#0b1e3f');
-  grad.addColorStop(1, '#16213e');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1080, 1080);
+  // Background: gallery image or solid color
+  if (bgConfig.type === 'gallery' && bgConfig.imageUrl) {
+    try {
+      const img = await loadImage(bgConfig.imageUrl);
+      drawCover(ctx, img, 0, 0, 1080, 1080);
+      // Dark scrim for text readability (gradient: darker in middle, lighter at edges)
+      const scrim = ctx.createRadialGradient(540, 540, 200, 540, 540, 700);
+      scrim.addColorStop(0, 'rgba(0,0,0,0.65)');
+      scrim.addColorStop(1, 'rgba(0,0,0,0.35)');
+      ctx.fillStyle = scrim;
+      ctx.fillRect(0, 0, 1080, 1080);
+    } catch (e) {
+      console.warn('Gallery image load failed, falling back to color:', e);
+      const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
+      grad.addColorStop(0, bgConfig.color);
+      grad.addColorStop(1, '#16213e');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1080, 1080);
+    }
+  } else {
+    // Solid color gradient (slightly lighter at bottom-right for depth)
+    const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
+    grad.addColorStop(0, bgConfig.color);
+    // Lighten the second stop slightly
+    grad.addColorStop(1, shadeColor(bgConfig.color, 15));
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1080, 1080);
+  }
 
   // Gold accent bar at top
   ctx.fillStyle = '#c9a84c';
@@ -872,6 +1043,11 @@ async function generateBrandedImage(text) {
   const totalHeight = displayLines.length * lineHeight;
   const startY = 540 - totalHeight / 2;
 
+  // Text shadow for readability on photo backgrounds
+  ctx.shadowColor = 'rgba(0,0,0,0.8)';
+  ctx.shadowBlur = 8;
+  ctx.shadowOffsetY = 2;
+
   displayLines.forEach((line, i) => {
     ctx.fillText(line, 540, startY + i * lineHeight);
   });
@@ -880,6 +1056,11 @@ async function generateBrandedImage(text) {
   if (lines.length > 12) {
     ctx.fillText('...', 540, startY + 12 * lineHeight);
   }
+
+  // Reset shadow for branding text
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
 
   // Handle @username at bottom
   ctx.fillStyle = '#c9a84c';
@@ -895,19 +1076,49 @@ async function generateBrandedImage(text) {
   });
 }
 
+// Lighten/darken a hex color by percent (positive = lighter, negative = darker)
+function shadeColor(hex, percent) {
+  let r = parseInt(hex.slice(1, 3), 16);
+  let g = parseInt(hex.slice(3, 5), 16);
+  let b = parseInt(hex.slice(5, 7), 16);
+  r = Math.min(255, Math.max(0, r + Math.round(r * percent / 100)));
+  g = Math.min(255, Math.max(0, g + Math.round(g * percent / 100)));
+  b = Math.min(255, Math.max(0, b + Math.round(b * percent / 100)));
+  return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
 // Generate a 9:16 (1080x1920) story version of the branded image
-async function generateBrandedStoryImage(text) {
+async function generateBrandedStoryImage(text, bgConfig) {
+  bgConfig = bgConfig || bgGetConfig();
   const canvas = document.createElement('canvas');
   canvas.width = 1080;
   canvas.height = 1920;
   const ctx = canvas.getContext('2d');
 
-  // Background: dark navy gradient
-  const grad = ctx.createLinearGradient(0, 0, 1080, 1920);
-  grad.addColorStop(0, '#0b1e3f');
-  grad.addColorStop(1, '#16213e');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1080, 1920);
+  // Background: gallery image or solid color
+  if (bgConfig.type === 'gallery' && bgConfig.imageUrl) {
+    try {
+      const img = await loadImage(bgConfig.imageUrl);
+      drawCover(ctx, img, 0, 0, 1080, 1920);
+      const scrim = ctx.createRadialGradient(540, 960, 300, 540, 960, 1100);
+      scrim.addColorStop(0, 'rgba(0,0,0,0.65)');
+      scrim.addColorStop(1, 'rgba(0,0,0,0.35)');
+      ctx.fillStyle = scrim;
+      ctx.fillRect(0, 0, 1080, 1920);
+    } catch (e) {
+      const grad = ctx.createLinearGradient(0, 0, 1080, 1920);
+      grad.addColorStop(0, bgConfig.color);
+      grad.addColorStop(1, '#16213e');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1080, 1920);
+    }
+  } else {
+    const grad = ctx.createLinearGradient(0, 0, 1080, 1920);
+    grad.addColorStop(0, bgConfig.color);
+    grad.addColorStop(1, shadeColor(bgConfig.color, 15));
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1080, 1920);
+  }
 
   // Gold accent bar at top
   ctx.fillStyle = '#c9a84c';
@@ -959,6 +1170,11 @@ async function generateBrandedStoryImage(text) {
   const totalHeight = displayLines.length * lineHeight;
   const startY = 960 - totalHeight / 2;
 
+  // Text shadow for readability on photo backgrounds
+  ctx.shadowColor = 'rgba(0,0,0,0.8)';
+  ctx.shadowBlur = 8;
+  ctx.shadowOffsetY = 2;
+
   displayLines.forEach((line, i) => {
     ctx.fillText(line, 540, startY + i * lineHeight);
   });
@@ -966,6 +1182,11 @@ async function generateBrandedStoryImage(text) {
   if (lines.length > 18) {
     ctx.fillText('...', 540, startY + 18 * lineHeight);
   }
+
+  // Reset shadow
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
 
   // Handles at bottom
   ctx.fillStyle = '#c9a84c';
@@ -1089,7 +1310,7 @@ async function savePost() {
     } else if (postType === 'post' && !imageUrl && text) {
       // Always auto-generate branded image from text (text written on the image)
       btn.textContent = 'Generating branded image...';
-      const brandedFile = await generateBrandedImage(text);
+      const brandedFile = await generateBrandedImage(text, bgGetConfig());
       const maxNum = id ? 0 : (allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0);
       imageUrl = await uploadFile(brandedFile, id || (maxNum + 1));
       toast('Branded image generated (text on image)', 'success');
@@ -1097,7 +1318,7 @@ async function savePost() {
       // Also generate 9:16 story version
       try {
         btn.textContent = 'Generating story version (9:16)...';
-        const storyFile = await generateBrandedStoryImage(text);
+        const storyFile = await generateBrandedStoryImage(text, bgGetConfig());
         storyImageUrl = await uploadFile(storyFile, (id || (maxNum + 1)) + '_story');
         toast('Story version generated', 'success');
       } catch (e) { console.warn('Story image generation failed:', e); }
