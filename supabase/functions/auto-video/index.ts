@@ -152,23 +152,7 @@ async function renderWithShotstack(images: string[], voiceoverUrl: string, apiKe
     });
   }
 
-  // Track 3: Branding text at bottom
-  tracks.push({
-    clips: [{
-      asset: {
-        type: 'title',
-        text: 'europatheducation.eu',
-        style: 'minimal',
-        color: '#c9a84c',
-        size: 'small',
-        position: 'bottom',
-      },
-      start: 0,
-      length: totalDuration,
-    }],
-  });
-
-  // Build render body — voiceover only, no background music
+  // Build render body — images + voiceover only, no text overlay, no music
   const renderBody: any = {
     timeline: {
       background: '#000000',
