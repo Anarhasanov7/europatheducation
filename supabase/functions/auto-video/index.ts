@@ -124,7 +124,21 @@ const SHOTSTACK_BASE = Deno.env.get('SHOTSTACK_SANDBOX') === 'false'
   ? 'https://api.shotstack.io/edit/v1/render'
   : 'https://api.shotstack.io/edit/stage/render';
 
-async function renderWithShotstack(images: string[], voiceoverUrl: string, musicUrl: string | null, text: string, apiKey: string): Promise<string> {
+// 10 free music tracks (hosted on europatheducation.eu)
+const MUSIC_TRACKS = [
+  'https://europatheducation.eu/audio/music/lofi_01_crinoline_dreams.mp3',
+  'https://europatheducation.eu/audio/music/lofi_02_relaxing_piano.mp3',
+  'https://europatheducation.eu/audio/music/lofi_03_bedtime_story.mp3',
+  'https://europatheducation.eu/audio/music/upbeat_01_carefree.mp3',
+  'https://europatheducation.eu/audio/music/upbeat_02_sunshine.mp3',
+  'https://europatheducation.eu/audio/music/upbeat_03_happy_rock.mp3',
+  'https://europatheducation.eu/audio/music/upbeat_04_the_builder.mp3',
+  'https://europatheducation.eu/audio/music/cinematic_01_inspired.mp3',
+  'https://europatheducation.eu/audio/music/cinematic_02_eternal_hope.mp3',
+  'https://europatheducation.eu/audio/music/cinematic_03_past_the_edge.mp3',
+];
+
+async function renderWithShotstack(images: string[], voiceoverUrl: string, musicTrackIndex: number, apiKey: string): Promise<string> {
   const imgDuration = 3;
   const totalDuration = images.length * imgDuration;
   const effects = ['zoomIn', 'zoomOut', 'slideLeft', 'slideRight', 'slideUp', 'slideDown'];
@@ -141,7 +155,18 @@ async function renderWithShotstack(images: string[], voiceoverUrl: string, music
   }));
   tracks.push({ clips: imageClips });
 
-  // Track 2: Branding text at bottom
+  // Track 2: Voiceover audio clip
+  if (voiceoverUrl) {
+    tracks.push({
+      clips: [{
+        asset: { type: 'audio', src: voiceoverUrl, volume: 1.0 },
+        start: 0,
+        length: 'auto',
+      }],
+    });
+  }
+
+  // Track 3: Branding text at bottom
   tracks.push({
     clips: [{
       asset: {
@@ -158,9 +183,15 @@ async function renderWithShotstack(images: string[], voiceoverUrl: string, music
   });
 
   // Build render body
+  const musicUrl = MUSIC_TRACKS[musicTrackIndex] || MUSIC_TRACKS[0];
   const renderBody: any = {
     timeline: {
       background: '#000000',
+      soundtrack: {
+        src: musicUrl,
+        effect: 'fadeInFadeOut',
+        volume: 0.3, // background music at 30% so voiceover is clearly audible
+      },
       tracks,
     },
     output: {
@@ -169,14 +200,6 @@ async function renderWithShotstack(images: string[], voiceoverUrl: string, music
       size: { width: 1080, height: 1920 },
     },
   };
-
-  // Use voiceover as primary soundtrack, music as secondary if provided
-  if (voiceoverUrl) {
-    renderBody.timeline.soundtrack = {
-      src: voiceoverUrl,
-      effect: 'fadeInFadeOut',
-    };
-  }
 
   // Submit render
   const renderRes = await fetch(SHOTSTACK_BASE, {
@@ -294,8 +317,9 @@ Deno.serve(async (req: Request) => {
     const audioFileName = `voiceover_${Date.now()}.mp3`;
     const voiceoverUrl = await uploadToStorage(audioBuffer, 'social-uploads', audioFileName, contentType, supabase);
 
-    // 4. Render video with Shotstack (images + voiceover)
-    const videoUrl = await renderWithShotstack(imageUrls, voiceoverUrl, null, scriptText, shotstackKey);
+    // 4. Render video with Shotstack (images + voiceover + background music)
+    const musicTrackIndex = body.musicTrackIndex ?? 3; // default: upbeat_01_carefree
+    const videoUrl = await renderWithShotstack(imageUrls, voiceoverUrl, musicTrackIndex, shotstackKey);
 
     // 5. Download video and upload to Supabase storage
     const videoResp = await fetch(videoUrl);
