@@ -63,9 +63,31 @@ async function publishToThreads(
     if (createData.error) {
       return { success: false, error: createData.error.message };
     }
-    // Videos need ~20-30s to process on Threads; images need ~5s; text needs ~3s
-    const waitMs = isVideoMedia ? 20000 : (imageUrl ? 5000 : 3000);
-    await new Promise(r => setTimeout(r, waitMs));
+    // Videos need ~30-50s to process on Threads. Use retry approach.
+    if (isVideoMedia) {
+      // Wait 30s, then try to publish. If it fails with "does not exist", wait 10s more and retry.
+      for (let attempt = 0; attempt < 3; attempt++) {
+        await new Promise(r => setTimeout(r, attempt === 0 ? 20000 : 10000));
+        const pubRes = await fetch(`${THREADS_API}/${userId}/threads_publish`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ creation_id: createData.id, access_token: token }),
+        });
+        const pubData = await pubRes.json();
+        if (!pubData.error) {
+          return { success: true, post_id: pubData.id };
+        }
+        // If error is not "resource not found", it's a real error
+        if (!pubData.error.message.includes('does not exist')) {
+          return { success: false, error: pubData.error.message };
+        }
+        // Otherwise, media not ready yet — wait and retry
+      }
+      return { success: false, error: 'Threads video processing timeout (50s)' };
+    }
+
+    // For images and text: fixed wait then publish
+    await new Promise(r => setTimeout(r, imageUrl ? 5000 : 3000));
     const publishRes = await fetch(`${THREADS_API}/${userId}/threads_publish`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -158,20 +180,15 @@ Deno.serve(async (_req: Request) => {
     // Threads doesn't have stories or reels, so skip for those types
     // Publish to BOTH Threads accounts: @study.with.anar (primary) + @europath_education (secondary)
     if (postType === 'post') {
-      // Primary account (@study.with.anar)
-      const primaryResult = await publishToThreads(
-        primary.token, primary.userId, threadsText, hasMedia ? post.image_url : null, isVideoMedia, 'primary'
-      );
+      // Publish both accounts IN PARALLEL to save time (video processing takes 30-50s each)
+      const [primaryResult, secondaryResult] = await Promise.all([
+        publishToThreads(primary.token, primary.userId, threadsText, hasMedia ? post.image_url : null, isVideoMedia, 'primary'),
+        publishToThreads(secondary.token, secondary.userId, threadsText, hasMedia ? post.image_url : null, isVideoMedia, 'secondary'),
+      ]);
       platformResults.threads = primaryResult;
       if (primaryResult.success && primaryResult.post_id) {
         postIds.threads_post_id = primaryResult.post_id;
       }
-
-      // Secondary account (@europath_education) — 2s delay to avoid rate limits
-      await new Promise(r => setTimeout(r, 2000));
-      const secondaryResult = await publishToThreads(
-        secondary.token, secondary.userId, threadsText, hasMedia ? post.image_url : null, isVideoMedia, 'secondary'
-      );
       platformResults.threads_2 = secondaryResult;
       if (secondaryResult.success && secondaryResult.post_id) {
         postIds.threads_post_id_2 = secondaryResult.post_id;
@@ -514,18 +531,9 @@ Deno.serve(async (_req: Request) => {
       // Facebook Story
       try {
         if (storyIsVideo) {
-          // Video story: use file_url directly with video_stories endpoint
-          const fbStoryRes = await fetch(`${FB_API}/${PAGE_ID}/video_stories`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ file_url: storyImageUrl, access_token: PAGE_TOKEN }),
-          });
-          const fbStoryData = await fbStoryRes.json();
-          if (fbStoryData.error) {
-            platformResults.fb_story = { success: false, error: fbStoryData.error.message };
-          } else {
-            platformResults.fb_story = { success: true, post_id: fbStoryData.post_id || fbStoryData.id || fbStoryData.story_id };
-          }
+          // FB video stories require chunked upload (upload_phase) which is complex.
+          // Skip FB video stories for now — IG story + FB feed video is sufficient.
+          platformResults.fb_story = { success: false, error: 'FB video stories not supported via API (requires chunked upload)' };
         } else {
           // Photo story: Step 1 — upload unpublished photo (use 9:16 story image)
           const fbPhotoUploadRes = await fetch(`${FB_API}/${PAGE_ID}/photos`, {

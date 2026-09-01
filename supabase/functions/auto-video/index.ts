@@ -262,13 +262,15 @@ Deno.serve(async (req: Request) => {
       return new Response(JSON.stringify({ error: 'Topic is required' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    // 1. Get script template based on topic
+    // 1. Get script template based on topic (or use custom script/caption/images)
     const template = getScriptTemplate(topic);
-    const scriptText = template.text;
-    const caption = template.caption;
-    const imageUrls = template.images.map((img: string) => `https://europatheducation.eu/images/gallery/full/${img}`);
+    const scriptText = body.script || template.text;
+    const caption = body.caption || template.caption;
+    const imageUrls = (body.images?.length
+      ? body.images
+      : template.images.map((img: string) => `https://europatheducation.eu/images/gallery/full/${img}`));
 
-    // 2. Generate Russian voiceover with Google Translate TTS (free, no API key)
+    // 2. Generate Russian voiceover with ElevenLabs (natural voice)
     const { audioBuffer, contentType } = await generateVoiceover(scriptText);
 
     // 3. Upload voiceover to Supabase storage
@@ -284,17 +286,20 @@ Deno.serve(async (req: Request) => {
     const videoFileName = `reel_${Date.now()}.mp4`;
     const storedVideoUrl = await uploadToStorage(videoBuffer, 'social-uploads', videoFileName, 'video/mp4', supabase);
 
-    // 6. Schedule as reel post
-    const post = await scheduleReelPost(storedVideoUrl, caption, supabase);
+    // 6. Schedule as reel post (skip if schedule=false for test runs)
+    let post: any = null;
+    if (body.schedule !== false) {
+      post = await scheduleReelPost(storedVideoUrl, caption, supabase);
+    }
 
     return new Response(JSON.stringify({
       success: true,
       videoUrl: storedVideoUrl,
       script: scriptText,
       caption,
-      postId: post[0]?.id,
-      scheduledAt: post[0]?.scheduled_at,
-      message: 'Video generated and scheduled successfully!',
+      postId: post?.[0]?.id,
+      scheduledAt: post?.[0]?.scheduled_at,
+      message: post ? 'Video generated and scheduled successfully!' : 'Video generated (not scheduled — test mode)',
     }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
   } catch (err) {
