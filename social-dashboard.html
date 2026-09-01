@@ -375,6 +375,39 @@
       <div id="autoVideoStatus" style="margin-top:10px; font-size:13px; display:none;"></div>
     </div>
 
+    <!-- ─── Batch Video Generator ─── -->
+    <div style="background:linear-gradient(135deg,#0f766e,#0d9488); border-radius:12px; padding:16px; margin-bottom:16px; color:#fff;">
+      <h3 style="margin:0 0 8px 0; color:#fff;">📦 Batch Video Generator (5 videos at once)</h3>
+      <p style="margin:0 0 10px 0; font-size:13px; opacity:0.9;">Pick a topic and generate multiple videos at once — each with a different script, shuffled real photos, and natural Russian voiceover. Videos are scheduled 2 hours apart throughout the day.</p>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+        <select id="batchVideoTopic" style="padding:8px 12px; border:none; border-radius:6px; font-size:14px; background:#fff; color:#333; min-width:250px;">
+          <option value="италия">🇮🇹 Обучение в Италии</option>
+          <option value="стипендия">💰 Стипендии DSU</option>
+          <option value="вид на жительство">📄 Вид на жительство</option>
+          <option value="поступление">🎓 Поступление</option>
+          <option value="работа">💼 Работа во время учёбы</option>
+        </select>
+        <select id="batchVideoCount" style="padding:8px 12px; border:none; border-radius:6px; font-size:14px; background:#fff; color:#333;">
+          <option value="3">3 videos</option>
+          <option value="5" selected>5 videos</option>
+          <option value="8">8 videos</option>
+          <option value="10">10 videos</option>
+        </select>
+        <label style="font-size:13px; opacity:0.9; display:flex; align-items:center; gap:4px;">
+          <input type="checkbox" id="batchSchedule" checked> Schedule posts
+        </label>
+        <button class="btn" style="background:#fff; color:#0f766e; font-weight:600;" onclick="generateBatchVideos()" id="batchVideoBtn">📦 Generate Batch</button>
+      </div>
+
+      <div style="font-size:12px; opacity:0.8; margin-bottom:8px;">
+        ⚠️ Free tier: ~50 videos/month (10K ElevenLabs chars). Each video uses ~200 chars. 5 videos = ~1000 chars.
+      </div>
+
+      <div id="batchVideoStatus" style="display:none; background:rgba(0,0,0,0.2); border-radius:8px; padding:12px; font-size:13px; max-height:300px; overflow-y:auto;"></div>
+      <div id="batchVideoResults" style="display:none; margin-top:10px;"></div>
+    </div>
+
     <!-- Manual mode divider -->
     <div style="text-align:center; margin:16px 0; color:#999; font-size:13px;">— or create manually —</div>
 
@@ -1917,6 +1950,67 @@ async function generateAutoVideo() {
     toast('Error: ' + e.message, 'error');
   }
   btn.disabled = false;
+}
+
+// ─── Batch Video Generator (multiple videos at once) ───
+async function generateBatchVideos() {
+  const topic = document.getElementById('batchVideoTopic').value;
+  const count = document.getElementById('batchVideoCount').value;
+  const schedule = document.getElementById('batchSchedule').checked;
+  const btn = document.getElementById('batchVideoBtn');
+  const status = document.getElementById('batchVideoStatus');
+  const results = document.getElementById('batchVideoResults');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating...';
+  status.style.display = 'block';
+  status.innerHTML = `🚀 Generating ${count} videos for topic "${topic}"...<br>This will take ~${count * 2} minutes. Each video: script → voiceover → render → upload → schedule.`;
+  results.style.display = 'none';
+
+  try {
+    const resp = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/batch-videos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic, count: parseInt(count), schedule }),
+    });
+    const data = await resp.json();
+
+    if (data.error) {
+      status.innerHTML = `❌ Error: ${data.error}`;
+      toast('Error: ' + data.error, 'error');
+    } else if (data.success) {
+      const successCount = data.totalGenerated;
+      const failCount = data.totalFailed;
+      status.innerHTML = `✅ <strong>Done! ${successCount}/${data.totalRequested} videos generated${schedule ? ' and scheduled' : ''}.</strong>${failCount > 0 ? ` ⚠️ ${failCount} failed.` : ''}`;
+
+      // Show results
+      if (data.results && data.results.length > 0) {
+        results.style.display = 'block';
+        results.innerHTML = '<h4 style="margin:0 0 8px 0;font-size:14px;">Generated Videos:</h4>' +
+          data.results.map(r => `
+            <div style="background:rgba(0,0,0,0.05); border-radius:8px; padding:8px; margin-bottom:6px; font-size:12px;">
+              <strong>#${r.index}</strong> — ${r.imagesUsed} images ${r.postId ? `→ Post #${r.postId}` : ''}
+              <br><span style="opacity:0.8;">${r.script.substring(0, 80)}...</span>
+              <br><a href="${r.videoUrl}" target="_blank" style="color:#0f766e;">▶ Watch video</a>
+            </div>
+          `).join('');
+      }
+
+      // Show errors
+      if (data.errors && data.errors.length > 0) {
+        results.innerHTML += '<div style="color:#e11d48; margin-top:8px; font-size:12px;">' +
+          data.errors.map(e => `❌ Video #${e.index}: ${e.error}`).join('<br>') + '</div>';
+      }
+
+      toast(`Generated ${successCount} videos!`, 'success');
+      if (typeof loadPosts === 'function') loadPosts();
+    }
+  } catch (e) {
+    status.innerHTML = `❌ Error: ${e.message}`;
+    toast('Error: ' + e.message, 'error');
+  }
+  btn.disabled = false;
+  btn.textContent = '📦 Generate Batch';
 }
 
 async function vsGenerateShotstack() {
