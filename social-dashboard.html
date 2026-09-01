@@ -434,7 +434,8 @@
 
     <div class="form-actions">
       <button class="btn btn-gray" onclick="closeModal('videoModal')">Cancel</button>
-      <button class="btn" style="background:#9333ea;color:#fff;" onclick="vsGenerateVideo()" id="vsGenerateBtn">🎬 Generate Video</button>
+      <button class="btn" style="background:#9333ea;color:#fff;" onclick="vsGenerateVideo()" id="vsGenerateBtn">🎬 Generate (Browser)</button>
+      <button class="btn" style="background:#e11d48;color:#fff;" onclick="vsGenerateShotstack()" id="vsShotstackBtn">✨ Generate (Shotstack HD)</button>
       <button class="btn btn-primary" onclick="vsSchedulePost()" id="vsScheduleBtn" style="display:none;">📅 Schedule as Reel Post</button>
     </div>
   </div>
@@ -1850,6 +1851,133 @@ async function vsGenerateVideo() {
     }
     drawFrame();
   });
+}
+
+// ─── Shotstack HD video generation ───
+async function vsGenerateShotstack() {
+  if (vsSelectedImages.length === 0) { toast('Select at least one image', 'error'); return; }
+  const btn = document.getElementById('vsShotstackBtn');
+  btn.disabled = true;
+  document.getElementById('vsProgress').style.display = 'block';
+  document.getElementById('vsStatus').textContent = 'Submitting to Shotstack...';
+
+  const aspect = document.getElementById('vsAspect').value;
+  const imgDuration = parseFloat(document.getElementById('vsImgDuration').value) || 3;
+  const text = document.getElementById('vsText').value.trim();
+  const imageUrls = vsSelectedImages.map(i => i.url);
+
+  // Get music URL
+  let musicUrl = null;
+  const musicTab = document.getElementById('vsMusicTabPreset').style.background.includes('2E86C1') ? 'preset' :
+                   document.getElementById('vsMusicTabUpload').style.background.includes('2E86C1') ? 'upload' : 'none';
+  if (musicTab === 'preset' && vsMusicUrl) musicUrl = vsMusicUrl;
+  if (musicTab === 'upload' && vsMusicFile) musicUrl = URL.createObjectURL(vsMusicFile); // won't work server-side
+
+  // Note: uploaded music files can't be used with Shotstack (needs a public URL)
+  if (musicTab === 'upload' && vsMusicFile) {
+    toast('Uploaded music needs a public URL for Shotstack. Using preset track or no music.', 'info');
+    musicUrl = null;
+  }
+
+  try {
+    document.getElementById('vsStatus').textContent = 'Submitting render job to Shotstack API...';
+    const resp = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/generate-video', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        images: imageUrls,
+        text: text || null,
+        musicUrl,
+        imgDuration,
+        aspect,
+      }),
+    });
+    const data = await resp.json();
+
+    if (data.error) {
+      toast('Shotstack error: ' + data.error, 'error');
+      btn.disabled = false;
+      document.getElementById('vsProgress').style.display = 'none';
+      return;
+    }
+
+    if (data.status === 'done' && data.url) {
+      // Video is ready — download it
+      document.getElementById('vsStatus').textContent = 'Downloading rendered video...';
+      document.getElementById('vsProgressBar').style.width = '90%';
+      const videoResp = await fetch(data.url);
+      const blob = await videoResp.blob();
+      vsGeneratedVideoBlob = blob;
+      if (vsGeneratedVideoUrl) URL.revokeObjectURL(vsGeneratedVideoUrl);
+      vsGeneratedVideoUrl = URL.createObjectURL(blob);
+      const video = document.getElementById('vsPreviewVideo');
+      video.src = vsGeneratedVideoUrl;
+      video.style.display = 'block';
+      document.getElementById('vsScheduleBtn').style.display = 'inline-block';
+      document.getElementById('vsProgressBar').style.width = '100%';
+      document.getElementById('vsStatus').textContent = `✅ HD video ready! ${(blob.size/1048576).toFixed(1)}MB — Preview and schedule.`;
+      document.getElementById('vsProgress').style.display = 'none';
+      btn.disabled = false;
+    } else if (data.status === 'rendering' && data.renderId) {
+      // Still rendering — start polling
+      document.getElementById('vsStatus').textContent = 'Video rendering on Shotstack... polling...';
+      vsPollShotstack(data.renderId, btn);
+    }
+  } catch (e) {
+    toast('Error: ' + e.message, 'error');
+    btn.disabled = false;
+    document.getElementById('vsProgress').style.display = 'none';
+  }
+}
+
+async function vsPollShotstack(renderId, btn) {
+  let attempts = 0;
+  const maxAttempts = 60; // 5 minutes max
+  const poll = async () => {
+    attempts++;
+    if (attempts > maxAttempts) {
+      toast('Video still rendering. Try again later or use browser generation.', 'error');
+      btn.disabled = false;
+      document.getElementById('vsProgress').style.display = 'none';
+      return;
+    }
+    try {
+      const resp = await fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/generate-video', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'poll', renderId }),
+      });
+      const data = await resp.json();
+      document.getElementById('vsStatus').textContent = `Rendering on Shotstack... (${attempts}/${maxAttempts})`;
+      document.getElementById('vsProgressBar').style.width = Math.min(90, attempts * 1.5) + '%';
+
+      if (data.status === 'done' && data.url) {
+        document.getElementById('vsStatus').textContent = 'Downloading rendered video...';
+        const videoResp = await fetch(data.url);
+        const blob = await videoResp.blob();
+        vsGeneratedVideoBlob = blob;
+        if (vsGeneratedVideoUrl) URL.revokeObjectURL(vsGeneratedVideoUrl);
+        vsGeneratedVideoUrl = URL.createObjectURL(blob);
+        const video = document.getElementById('vsPreviewVideo');
+        video.src = vsGeneratedVideoUrl;
+        video.style.display = 'block';
+        document.getElementById('vsScheduleBtn').style.display = 'inline-block';
+        document.getElementById('vsProgressBar').style.width = '100%';
+        document.getElementById('vsStatus').textContent = `✅ HD video ready! ${(blob.size/1048576).toFixed(1)}MB`;
+        document.getElementById('vsProgress').style.display = 'none';
+        btn.disabled = false;
+      } else if (data.status === 'failed') {
+        toast('Render failed: ' + (data.error || 'unknown'), 'error');
+        btn.disabled = false;
+        document.getElementById('vsProgress').style.display = 'none';
+      } else {
+        setTimeout(poll, 5000); // poll every 5 seconds
+      }
+    } catch (e) {
+      setTimeout(poll, 5000);
+    }
+  };
+  setTimeout(poll, 5000);
 }
 
 async function vsSchedulePost() {
