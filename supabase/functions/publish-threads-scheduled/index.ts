@@ -18,10 +18,65 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
 };
 
-// Helper: get Threads token from DB (refreshed by refresh-threads-token cron) or fall back to env
-async function getThreadsToken(sb: any): Promise<string> {
-  const { data } = await sb.from('social_tokens').select('token_value').eq('token_name', 'META_THREADS_ACCESS_TOKEN').single();
-  return data?.token_value || THREADS_TOKEN_ENV;
+// Helper: get Threads token + user ID from DB by token name suffix ('' for primary, '_2' for secondary)
+async function getThreadsCreds(sb: any, suffix: string = ''): Promise<{ token: string; userId: string }> {
+  const tokenName = `META_THREADS_ACCESS_TOKEN${suffix}`;
+  const userIdName = `META_THREADS_USER_ID${suffix}`;
+  const { data: t } = await sb.from('social_tokens').select('token_value').eq('token_name', tokenName).single();
+  const { data: u } = await sb.from('social_tokens').select('token_value').eq('token_name', userIdName).single();
+  const token = t?.token_value || (suffix === '' ? THREADS_TOKEN_ENV : '');
+  const userId = u?.token_value || (suffix === '' ? THREADS_USER_ID : '');
+  return { token, userId };
+}
+
+// Publish to a single Threads account. Returns { success, post_id?, error? }
+async function publishToThreads(
+  token: string,
+  userId: string,
+  text: string,
+  imageUrl: string | null,
+  isVideoMedia: boolean,
+  label: string,
+): Promise<{ success: boolean; post_id?: string; error?: string }> {
+  if (!token || !userId) {
+    return { success: false, error: `No ${label} Threads credentials` };
+  }
+  try {
+    const body: any = { text, access_token: token };
+    if (imageUrl) {
+      if (isVideoMedia) {
+        body.media_type = 'VIDEO';
+        body.video_url = imageUrl;
+      } else {
+        body.media_type = 'IMAGE';
+        body.image_url = imageUrl;
+      }
+    } else {
+      body.media_type = 'TEXT';
+    }
+    const createRes = await fetch(`${THREADS_API}/${userId}/threads`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const createData = await createRes.json();
+    if (createData.error) {
+      return { success: false, error: createData.error.message };
+    }
+    await new Promise(r => setTimeout(r, imageUrl ? 10000 : 3000));
+    const publishRes = await fetch(`${THREADS_API}/${userId}/threads_publish`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ creation_id: createData.id, access_token: token }),
+    });
+    const publishData = await publishRes.json();
+    if (publishData.error) {
+      return { success: false, error: publishData.error.message };
+    }
+    return { success: true, post_id: publishData.id };
+  } catch (err) {
+    return { success: false, error: String(err) };
+  }
 }
 
 // Detect if URL is a video based on extension
@@ -34,7 +89,9 @@ Deno.serve(async (_req: Request) => {
   if (_req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   const sb = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
-  const THREADS_TOKEN = await getThreadsToken(sb);
+  // Load both Threads accounts: primary (@study.with.anar) + secondary (@europath_education)
+  const primary = await getThreadsCreds(sb, '');
+  const secondary = await getThreadsCreds(sb, '_2');
 
   const { data: duePosts, error: fetchErr } = await sb
     .from('threads_scheduled_posts')
@@ -97,49 +154,29 @@ Deno.serve(async (_req: Request) => {
 
     // === THREADS (supports: text, image, video — NO stories, NO reels) ===
     // Threads doesn't have stories or reels, so skip for those types
+    // Publish to BOTH Threads accounts: @study.with.anar (primary) + @europath_education (secondary)
     if (postType === 'post') {
-      try {
-        const threadsBody: any = { text: threadsText, access_token: THREADS_TOKEN };
-        if (hasMedia) {
-          if (isVideoMedia) {
-            threadsBody.media_type = 'VIDEO';
-            threadsBody.video_url = post.image_url;
-          } else {
-            threadsBody.media_type = 'IMAGE';
-            threadsBody.image_url = post.image_url;
-          }
-        } else {
-          threadsBody.media_type = 'TEXT';
-        }
-        const createRes = await fetch(`${THREADS_API}/${THREADS_USER_ID}/threads`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(threadsBody),
-        });
-        const createData = await createRes.json();
-        if (createData.error) {
-          platformResults.threads = { success: false, error: createData.error.message };
-        } else {
-          // Wait for processing (3s text, 10s media)
-          await new Promise(r => setTimeout(r, hasMedia ? 10000 : 3000));
-          const publishRes = await fetch(`${THREADS_API}/${THREADS_USER_ID}/threads_publish`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ creation_id: createData.id, access_token: THREADS_TOKEN }),
-          });
-          const publishData = await publishRes.json();
-          if (publishData.error) {
-            platformResults.threads = { success: false, error: publishData.error.message };
-          } else {
-            platformResults.threads = { success: true, post_id: publishData.id };
-            postIds.threads_post_id = publishData.id;
-          }
-        }
-      } catch (err) {
-        platformResults.threads = { success: false, error: String(err) };
+      // Primary account (@study.with.anar)
+      const primaryResult = await publishToThreads(
+        primary.token, primary.userId, threadsText, hasMedia ? post.image_url : null, isVideoMedia, 'primary'
+      );
+      platformResults.threads = primaryResult;
+      if (primaryResult.success && primaryResult.post_id) {
+        postIds.threads_post_id = primaryResult.post_id;
+      }
+
+      // Secondary account (@europath_education) — 2s delay to avoid rate limits
+      await new Promise(r => setTimeout(r, 2000));
+      const secondaryResult = await publishToThreads(
+        secondary.token, secondary.userId, threadsText, hasMedia ? post.image_url : null, isVideoMedia, 'secondary'
+      );
+      platformResults.threads_2 = secondaryResult;
+      if (secondaryResult.success && secondaryResult.post_id) {
+        postIds.threads_post_id_2 = secondaryResult.post_id;
       }
     } else {
       platformResults.threads = { success: false, error: `Threads doesn't support ${postType}s` };
+      platformResults.threads_2 = { success: false, error: `Threads doesn't support ${postType}s` };
     }
 
     // === FACEBOOK PAGE ===
@@ -463,7 +500,7 @@ Deno.serve(async (_req: Request) => {
       }
     }
 
-    // Determine overall status (stories are bonus — don't count toward failure)
+    // Determine overall status (stories + secondary threads are bonus — don't count toward failure)
     const mainResults = ['threads', 'facebook', 'instagram'].map(k => platformResults[k]).filter(Boolean);
     const successCount = mainResults.filter((r: any) => r.success).length;
     let status = 'failed';
@@ -480,6 +517,7 @@ Deno.serve(async (_req: Request) => {
       .update({
         status,
         threads_post_id: postIds.threads_post_id || null,
+        threads_post_id_2: postIds.threads_post_id_2 || null,
         fb_post_id: postIds.fb_post_id || null,
         ig_media_id: postIds.ig_media_id || null,
         platforms_status: platformsStatus,

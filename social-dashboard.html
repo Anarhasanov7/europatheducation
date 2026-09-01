@@ -286,13 +286,7 @@
       </div>
       <input type="file" id="fileInput" accept="image/*,video/*" style="display:none" onchange="handleFileSelect(event)">
       <div style="margin-top:10px; display:flex; align-items:center; gap:8px;" id="autoImageRow">
-        <label class="toggle">
-          <input type="checkbox" id="autoImageToggle" checked onchange="onAutoImageToggle()">
-          <span class="toggle-slider"></span>
-        </label>
-        <label for="autoImageToggle" style="font-size:13px; cursor:pointer; user-select:none;" id="autoImageLabel">
-          🎨 Auto-generate branded image from text (navy bg + gold + @study.with.anar)
-        </label>
+        <span style="font-size:13px; color:#c9a84c; font-weight:600;">✅ Auto-generate branded image from text (always on — navy bg + gold + text on image)</span>
         <button type="button" class="btn btn-gray btn-sm" onclick="previewBrandedImage()" style="margin-left:8px;">Preview</button>
       </div>
       <div class="upload-progress" id="uploadProgress" style="display:none;">
@@ -699,16 +693,6 @@ async function refreshStats() {
 }
 
 // ─── Create / Edit ───
-function onAutoImageToggle() {
-  const checked = document.getElementById('autoImageToggle').checked;
-  const label = document.getElementById('autoImageLabel');
-  if (checked) {
-    label.textContent = '🎨 Auto-generate branded image from text (navy bg + gold + @study.with.anar)';
-  } else {
-    label.textContent = '🎨 Auto-generate branded image (OFF — text-only post)';
-  }
-}
-
 function onPostTypeChange() {
   const type = document.getElementById('editPostType').value;
   const textFieldGroup = document.getElementById('textFieldGroup');
@@ -739,8 +723,8 @@ function onPostTypeChange() {
     textFieldGroup.style.display = 'block';
     autoImageRow.style.display = 'flex';
     hint.textContent = 'Regular post: text + optional image/video. Works on all 3 platforms.';
-    uploadHint.textContent = 'JPG, PNG, MP4 — will be deleted after publishing';
-    uploadText.textContent = 'Click to select an image or video (or leave empty for auto-generated branded image)';
+    uploadHint.textContent = 'Optional: upload your own image/video. If empty, a branded image with your text is auto-generated.';
+    uploadText.textContent = 'Click to select an image or video (optional — branded image auto-generated from text)';
     uploadIcon.textContent = '📷';
   }
 }
@@ -1101,13 +1085,13 @@ async function savePost() {
           toast('Story version generated', 'success');
         } catch (e) { console.warn('Story image generation failed:', e); }
       }
-    } else if (postType === 'post' && !imageUrl && document.getElementById('autoImageToggle').checked && text) {
-      // Auto-generate branded image from text
+    } else if (postType === 'post' && !imageUrl && text) {
+      // Always auto-generate branded image from text (text written on the image)
       btn.textContent = 'Generating branded image...';
       const brandedFile = await generateBrandedImage(text);
       const maxNum = id ? 0 : (allPosts.length > 0 ? Math.max(...allPosts.map(p => p.post_number)) : 0);
       imageUrl = await uploadFile(brandedFile, id || (maxNum + 1));
-      toast('Branded image generated & uploaded', 'success');
+      toast('Branded image generated (text on image)', 'success');
 
       // Also generate 9:16 story version
       try {
