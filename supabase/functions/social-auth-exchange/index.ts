@@ -159,11 +159,28 @@ Deno.serve(async (req: Request) => {
           token_value: page.access_token,
         }, { onConflict: 'token_name' });
 
+        // Also store under standard name for the EuroPath page
+        if (page.id === '104201397963733') {
+          await sb.from('social_tokens').upsert({
+            token_name: 'META_PAGE_ACCESS_TOKEN',
+            token_value: page.access_token,
+            notes: 'EuroPath Education FB Page token (with messaging perms)',
+          }, { onConflict: 'token_name' });
+        }
+
         if (page.instagram_business_account?.id) {
           await sb.from('social_tokens').upsert({
             token_name: `IG_BUSINESS_ID_${page.id}`,
             token_value: page.instagram_business_account.id,
           }, { onConflict: 'token_name' });
+
+          // Also store under standard name for the EuroPath page
+          if (page.id === '104201397963733') {
+            await sb.from('social_tokens').upsert({
+              token_name: 'META_IG_BUSINESS_ID',
+              token_value: page.instagram_business_account.id,
+            }, { onConflict: 'token_name' });
+          }
         }
       }
 

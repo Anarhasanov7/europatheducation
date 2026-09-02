@@ -16,6 +16,96 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
 };
 
+// Auto-reply templates
+const AUTO_REPLIES = {
+  threads: {
+    default: '👋 Спасибо за комментарий! Напиши в ДМ «ИТАЛИЯ» — отправлю список программ со стипендией 🎓',
+    question: '👋 Хороший вопрос! Прямо сейчас занят, но скоро отвечу. Или напиши в ДМ — отправлю подробности 📩',
+  },
+  facebook: {
+    default: '👋 Спасибо за комментарий! Есть вопросы? Напишите в ДМ — помогу с поступлением в Италию 🇮🇹',
+  },
+  instagram: {
+    default: '👋 Спасибо! Напишите в ДМ «ИТАЛИЯ» — отправлю список программ со стипендией 🎓',
+  },
+};
+
+// Detect if comment is a question
+function isQuestion(text: string): boolean {
+  const q = text.toLowerCase();
+  return q.includes('?') || q.includes('как') || q.includes('сколько') || q.includes('нужен') || q.includes('можно ли');
+}
+
+// Send reply to Threads
+async function replyToThreads(commentId: string, text: string, token: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${THREADS_API}/${commentId}/reply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        media_type: 'TEXT',
+        text,
+        reply_to_id: commentId,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      console.error('Threads reply error:', data.error);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('Threads reply fetch error:', e);
+    return false;
+  }
+}
+
+// Send reply to Facebook
+async function replyToFacebook(commentId: string, text: string, pageToken: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${FB_API}/${commentId}/comments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        access_token: pageToken,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      console.error('Facebook reply error:', data.error);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('Facebook reply fetch error:', e);
+    return false;
+  }
+}
+
+// Send reply to Instagram
+async function replyToInstagram(commentId: string, text: string, pageToken: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${FB_API}/${commentId}/replies`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        access_token: pageToken,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      console.error('Instagram reply error:', data.error);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('Instagram reply fetch error:', e);
+    return false;
+  }
+}
+
 async function getThreadsToken(sb: any): Promise<string> {
   const { data } = await sb.from('social_tokens').select('token_value').eq('token_name', 'META_THREADS_ACCESS_TOKEN').single();
   return data?.token_value || THREADS_TOKEN_ENV;
@@ -86,7 +176,13 @@ Deno.serve(async (req: Request) => {
   }
 
   // Store comments in DB (upsert — track which ones we've seen)
+  // Also track which are NEW (not in DB before)
+  const { data: existingComments } = await sb.from('social_comments')
+    .select('comment_id').eq('post_id', postId).eq('platform', platform);
+  const existingIds = new Set(existingComments?.map(c => c.comment_id) || []);
+
   for (const c of comments) {
+    const isNew = !existingIds.has(c.comment_id);
     await sb.from('social_comments').upsert({
       post_id: postId,
       platform: c.platform,
@@ -96,6 +192,39 @@ Deno.serve(async (req: Request) => {
       comment_text: c.comment_text,
       fetched_at: new Date().toISOString(),
     }, { onConflict: 'platform,comment_id', ignoreDuplicates: false }).select();
+
+    // Auto-reply only to NEW comments
+    if (isNew) {
+      console.log(`New comment detected: ${c.comment_id}`);
+
+      // Choose reply template
+      let replyText = AUTO_REPLIES[platform as keyof typeof AUTO_REPLIES]?.default || AUTO_REPLIES.threads.default;
+      if (isQuestion(c.comment_text)) {
+        replyText = AUTO_REPLIES.threads.question;
+      }
+
+      let success = false;
+
+      // Send reply based on platform
+      if (platform === 'threads') {
+        success = await replyToThreads(c.comment_id, replyText, THREADS_TOKEN);
+      } else if (platform === 'facebook') {
+        success = await replyToFacebook(c.comment_id, replyText, PAGE_TOKEN);
+      } else if (platform === 'instagram') {
+        success = await replyToInstagram(c.comment_id, replyText, PAGE_TOKEN);
+      }
+
+      // Update DB with reply status
+      if (success) {
+        await sb.from('social_comments').update({
+          replied: true,
+          reply_text: replyText,
+          replied_at: new Date().toISOString(),
+          is_auto_reply: true,
+        }).eq('comment_id', c.comment_id).eq('platform', platform);
+        console.log(`Auto-replied to comment ${c.comment_id}`);
+      }
+    }
   }
 
   // Get reply status from DB

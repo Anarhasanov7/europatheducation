@@ -7,135 +7,199 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-// ─── 54 real Italy photos (uploaded to gallery) ───
-const REAL_PHOTOS: string[] = Array.from({ length: 54 }, (_, i) =>
-  `https://europatheducation.eu/images/gallery/full/italy_real_${String(i + 1).padStart(2, '0')}.jpg`
-);
+// ─── Photo categories (54 real Pexels photos) ───
+// Photos 1-12: Universities, 13-26: Rome, 27-35: Milan, 36-49: Streets/lifestyle, 50: Pisa, 51-54: Students
+const PHOTO_CATEGORIES: Record<string, string[]> = {
+  universities: Array.from({ length: 12 }, (_, i) => photoUrl(i + 1)),
+  rome:         Array.from({ length: 14 }, (_, i) => photoUrl(i + 13)),
+  milan:        Array.from({ length: 9 },  (_, i) => photoUrl(i + 27)),
+  streets:      Array.from({ length: 14 }, (_, i) => photoUrl(i + 36)),
+  landmarks:    [photoUrl(50)],
+  students:     Array.from({ length: 4 },  (_, i) => photoUrl(i + 51)),
+};
 
-// ─── Script variation system ───
-// Each topic has multiple script variants with different phrasing
-// This allows generating many unique videos on the same topic
+function photoUrl(n: number): string {
+  return `https://europatheducation.eu/images/gallery/full/italy_real_${String(n).padStart(2, '0')}.jpg`;
+}
 
+// All photos for random fallback
+const ALL_PHOTOS: string[] = Object.values(PHOTO_CATEGORIES).flat();
+
+// ─── Script system: surprising facts style ───
+// Each variant has: script text, caption, image categories to use, and text overlays for each image
 interface ScriptVariant {
   text: string;
   caption: string;
+  imageCategories: string[];  // which photo categories match this script
+  overlays: string[];         // text shown on each image (HTML)
 }
 
 const TOPIC_VARIANTS: Record<string, ScriptVariant[]> = {
   'италия': [
     {
-      text: 'Хотите учиться в Италии? Это проще, чем вы думаете. Топовые университеты, низкая стоимость обучения, стипендии DSU. Диплом ЕС признаётся во всём мире. EuroPath Education поможет вам на каждом шаге.',
-      caption: '🇮🇹 Преимущества обучения в Италии\n\nТоповые университеты • Низкая стоимость • Стипендии DSU • Диплом ЕС\n\n📍 Подавайте заявку: europatheducation.eu\n\n#studyinitaly #education #italy',
+      text: 'Знаете ли вы, что год обучения в итальянском университете стоит около тысячи евро? Это дешевле, чем многие частные вузы дома. При этом диплом признаётся во всей Европе. А стипендия DSU покрывает и обучение, и проживание. Не миф. Реальность.',
+      caption: '🇮🇹 Знаете ли вы?\n\nОбучение в Италии — от 1000€/год\nДиплом признаётся в 47 странах\nСтипендия DSU покрывает всё\n\n📍 europatheducation.eu\n\n#studyinitaly #facts #italy',
+      imageCategories: ['universities', 'students'],
+      overlays: ['1000€ / год', '47 стран', 'Стипендия DSU', 'Диплом ЕС'],
     },
     {
-      text: 'Италия — идеальное место для учёбы. Доступные университеты, богатая культура, вкусная еда. Стипендии покрывают обучение и проживание. EuroPath Education — ваш путь к европейскому диплому.',
-      caption: '🇮🇹 Почему стоит выбрать Италию?\n\nДоступное образование • Богатая культура • Стипендии\n\n📍 Начните: europatheducation.eu\n\n#studyinitaly #italy #euroeducation',
+      text: 'Болонский университет — старейший в мире. Он основан в 1088 году. Старше Оксфорда. Старше Кембриджа. И сегодня он принимает иностранных студентов без сложных экзаменов. Достаточно аттестата и языкового сертификата.',
+      caption: '� Старейший университет мира\n\nБолонский — основан в 1088 году\nСтарше Оксфорда и Кембриджа\nПоступление без экзаменов\n\n📍 europatheducation.eu\n\n#bologna #university #history',
+      imageCategories: ['universities', 'streets'],
+      overlays: ['1088 год', 'Старше Оксфорда', 'Без экзаменов', 'Болонья'],
     },
     {
-      text: 'Обучение в Италии открывает двери в Европу. Качественное образование, международное окружение, возможность путешествовать по Шенгену. EuroPath Education сделает ваш переезд лёгким.',
-      caption: '🇮🇹 Учёба в Италии — ваш старт в Европе\n\nКачество • Международная среда • Шенген\n\n📍 Заявка: europatheducation.eu\n\n#studyabroad #italy #education',
+      text: 'В Италии студенты могут работать двадцать часов в неделю. Минимальная зарплата — девять евро в час. Это семьсот двадцать евро в месяц. Достаточно, чтобы покрыть аренду и еду. И при этом — учёба в одном из красивейших мест мира.',
+      caption: '💼 Работа во время учёбы\n\n20 часов/неделю • 9€/час\n720€/месяц — аренда + еда\n\n📍 europatheducation.eu\n\n#workandstudy #italy #students',
+      imageCategories: ['streets', 'students'],
+      overlays: ['20 ч/неделю', '9€ / час', '720€ / месяц', 'Учёба + работа'],
     },
     {
-      text: 'Итальянские университеты входят в топ-500 мировых вузов. Поступление без сложных экзаменов. Низкие цены, высокий уровень. EuroPath Education поможет с документами и поступлением.',
-      caption: '🎓 Топовые университеты Италии\n\nТоп-500 мира • Без сложных экзаменов • Доступные цены\n\n📍 Заявка: europatheducation.eu\n\n#university #italy #admission',
+      text: 'Итальянский студенческий ВНЖ даёт право путешествовать по двадцати семи странам Шенгена. Без виз. Париж на выходные? Берлин на концерт? Барселона на море? Всё это доступно с одним документом.',
+      caption: '📄 ВНЖ Италии = 27 стран\n\nШенген без виз\nПариж • Берлин • Барселона\n\n📍 europatheducation.eu\n\n#schengen #residencepermit #italy',
+      imageCategories: ['rome', 'milan', 'streets'],
+      overlays: ['27 стран', 'Без виз', 'Шенген', 'Свобода'],
     },
     {
-      text: 'Думаете об учёбе за границей? Рассмотрите Италию. Тёплый климат, дружелюбные люди, доступное образование. Виды на жительство для студентов. EuroPath Education — ваш надёжный партнёр.',
-      caption: '🇮🇹 Учёба за границей? Выбирайте Италию!\n\nТёплый климат • Доступное образование • ВНЖ\n\n📍 Подавайте заявку: europatheducation.eu\n\n#studyinitaly #abroad #education',
+      text: 'В Италии девяносто семь университетов. Сорок один из них входит в мировой топ-500. Поступление без сложных экзаменов. Стоимость — от нуля до трёх тысяч евро в год. И при этом — бесплатная медицина для студентов. Задумайтесь.',
+      caption: '� Факты об Италии\n\n97 университетов\n41 в топ-500 мира\nОт 0€ до 3000€/год\nБесплатная медицина\n\n📍 europatheducation.eu\n\n#facts #studyinitaly #top500',
+      imageCategories: ['universities', 'students'],
+      overlays: ['97 вузов', '41 в топ-500', '0–3000€/год', 'Бесплатная медицина'],
     },
     {
-      text: 'Италия ждёт иностранных студентов. Поступайте в топовые вузы, получайте стипендии, наслаждайтесь итальянской культурой. EuroPath Education сопровождает вас от заявки до диплома.',
-      caption: '🇮🇹 Италия ждёт вас!\n\nТоповые вузы • Стипендии • Итальянская культура\n\n📍 Начните: europatheducation.eu\n\n#studyinitaly #scholarship #italy',
+      text: 'Диплом итальянского университета признаётся в сорока семи странах. Это все страны Болонской системы. Включая США, Канаду, Великобританию. Один диплом — весь мир открыт. И стоит это в разы дешевле, чем учёба в Америке.',
+      caption: '� Диплом Италии = мир\n\nПризнаётся в 47 странах\nСША • Канада • Великобритания\n\n📍 europatheducation.eu\n\n#diploma #bologna #world',
+      imageCategories: ['universities', 'landmarks'],
+      overlays: ['47 стран', 'Болонская система', 'США • Канада • UK', 'Один диплом'],
     },
     {
-      text: 'Почему всё больше студентов выбирают Италию? Доступные цены, качественное образование, европейский диплом. Возможность работать во время учёбы. EuroPath Education поможет вам поступить.',
-      caption: '🇮🇹 Студенты выбирают Италию\n\nДоступные цены • Европейский диплом • Работа\n\n📍 Заявка: europatheducation.eu\n\n#studyinitaly #students #europe',
+      text: 'Италия — единственная страна в Европе, где иностранцы могут получить высшее образование на английском языке за тысячу евро в год. Не за двадцать тысяч, как в Великобритании. Не за пятнадцать, как в Голландии. За тысячу. Подумайте об этом.',
+      caption: '🇮🇹 Только в Италии\n\nОбразование на английском\n1000€/год — не 20000€\n\n📍 europatheducation.eu\n\n#english #italy #affordable',
+      imageCategories: ['universities', 'milan'],
+      overlays: ['1000€ / год', 'На английском', 'Не 20000€', 'Только Италия'],
     },
     {
-      text: 'Образование в Италии — инвестиция в будущее. Международно признанный диплом, опыт жизни в Европе, новые друзья со всего мира. EuroPath Education — ваш проводник в итальянское образование.',
-      caption: '🎓 Инвестируйте в будущее с Италией\n\nПризнанный диплом • Опыт в Европе • Друзья\n\n📍 Начните: europatheducation.eu\n\n#education #italy #future',
+      text: 'Италия ждёт иностранных студентов. Тёплый климат, Средиземное море, богатейшая культура. Но главное — доступное образование мирового уровня. Четыре из пяти студентов-иностранцев рекомендуют учёбу в Италии своим друзьям. Цифры говорят сами.',
+      caption: '🇮� 4 из 5 рекомендуют\n\nТёплый климат • Мировое образование\n80% студентов рекомендуют\n\n📍 europatheducation.eu\n\n#studyinitaly #recommend #italy',
+      imageCategories: ['streets', 'rome', 'milan'],
+      overlays: ['4 из 5', '80% рекомендуют', 'Средиземное море', 'Мировой уровень'],
     },
   ],
+
   'стипендия': [
     {
-      text: 'Стипендии DSU в Италии — ваш шанс учиться бесплатно. Покрывают обучение, проживание и питание. Доступны всем иностранным студентам. EuroPath Education поможет с оформлением.',
-      caption: '💰 Стипендии DSU в Италии\n\nБесплатное обучение • Проживание • Питание\n\n📍 Заявка: europatheducation.eu\n\n#scholarship #DSU #studyinitaly',
+      text: 'Стипендия DSU покрывает не только обучение. Она даёт место в общежитии. Бесплатное питание в столовой. И ежемесячные деньги на жизнь. Около семи тысяч евро в год. Полностью. Для каждого иностранного студента.',
+      caption: '💰 Стипендия DSU\n\nОбучение + общежитие + питание\n7000€/год на руки\nДля каждого иностранца\n\n📍 europatheducation.eu\n\n#DSU #scholarship #free',
+      imageCategories: ['universities', 'students'],
+      overlays: ['Полное покрытие', 'Общежитие', 'Питание', '7000€/год'],
     },
     {
-      text: 'Учиться бесплатно в Италии? Да, это реально. Региональные стипендии DSU покрывают все расходы. Не упустите свой шанс. EuroPath Education оформит документы за вас.',
-      caption: '💰 Бесплатное обучение в Италии!\n\nСтипендии DSU покрывают всё\n\n📍 Подавайте заявку: europatheducation.eu\n\n#scholarship #freeeducation #italy',
+      text: 'Знаете ли вы, что в Италии можно учиться бесплатно? Не частично, а полностью. Стипендия DSU покрывает обучение, жильё и даёт стипендию. Единственное условие — справка о доходах семьи. И всё.',
+      caption: '💰 Бесплатное обучение в Италии\n\nСтипендия DSU — полное покрытие\nТолько справка о доходах\n\n📍 europatheducation.eu\n\n#free #scholarship #DSU',
+      imageCategories: ['universities', 'students'],
+      overlays: ['Бесплатно', 'DSU', 'Жильё + стипендия', 'Просто'],
     },
     {
-      text: 'Стипендии для иностранных студентов в Италии. DSU, региональные гранты, университетские стипендии. Полное или частичное покрытие. EuroPath Education подберёт лучший вариант для вас.',
-      caption: '💰 Стипендии для иностранцев в Италии\n\nDSU • Гранты • Университетские программы\n\n📍 Заявка: europatheducation.eu\n\n#scholarship #italy #grants',
+      text: 'В Италии существует пять типов стипендий для иностранцев. DSU — самая щедрая. Региональные гранты. Университетские скидки. Программы Erasmus. И правительственные стипендии. Выбор больше, чем вы думаете.',
+      caption: '💰 5 типов стипендий\n\nDSU • Региональные • Erasmus\nУниверситетские • Правительственные\n\n📍 europatheducation.eu\n\n#scholarship #grants #italy',
+      imageCategories: ['universities', 'rome'],
+      overlays: ['5 типов', 'DSU', 'Erasmus', 'Выбор есть'],
     },
     {
-      text: 'Не можете позволить учёбу за границей? В Италии есть стипендии DSU для иностранных студентов. Они покрывают обучение, общежитие и стипендию на жизнь. EuroPath Education поможет получить.',
-      caption: '💰 Стипендии DSU — ваш шанс!\n\nОбучение + общежитие + стипендия\n\n📍 Начните: europatheducation.eu\n\n#DSU #scholarship #studyinitaly',
+      text: 'Стипендия DSU — это не кредит. Его не нужно возвращать. Это подарок от итальянского государства. Семь тысяч евро в год. Обучение, жильё, еда. Безвозмездно. Просто потому что вы решили учиться в Италии.',
+      caption: '💰 DSU — не кредит!\n\nНе нужно возвращать\n7000€/год — подарок\n\n📍 europatheducation.eu\n\n#scholarship #gift #italy',
+      imageCategories: ['universities', 'students'],
+      overlays: ['Не кредит!', '7000€/год', 'Безвозмездно', 'Подарок'],
     },
     {
-      text: 'Бесплатное образование в Италии — не миф. Стипендия DSU доступна каждому иностранному студенту. Подавайте заявку и учитесь бесплатно. EuroPath Education — ваш помощник.',
-      caption: '🎓 Бесплатное образование в Италии\n\nСтипендия DSU для каждого\n\n📍 Заявка: europatheducation.eu\n\n#freeeducation #italy #scholarship',
+      text: 'Не верите, что можно учиться бесплатно? Каждый год тысячи иностранных студентов получают стипендию DSU в Италии. Полное покрытие. Общежитие. Питание. Стипендия на руки. Это не реклама. Это статистика.',
+      caption: '💰 Тысячи получают DSU\n\nКаждый год • Полное покрытие\nЭто статистика, не реклама\n\n📍 europatheducation.eu\n\n#DSU #statistics #free',
+      imageCategories: ['students', 'universities'],
+      overlays: ['Тысячи', 'Каждый год', 'Статистика', 'Не реклама'],
     },
   ],
+
   'вид на жительство': [
     {
-      text: 'Вид на жительство в Италии через обучение. ВНЖ на весь период учёбы, путешествия по Шенгену, право на работу. EuroPath Education — ваш путь к европейскому ВНЖ.',
-      caption: '📄 ВНЖ в Италии через учёбу\n\nШенген • Работа 20ч/неделю • Продление\n\n📍 Начните: europatheducation.eu\n\n#residencepermit #italy #study',
+      text: 'Студенческий ВНЖ Италии открывает двадцать семь стран без виз. Шенген. Без границ. Париж, Берлин, Амстердам — на выходные. Без вопросов на границе. Один документ — весь континент.',
+      caption: '📄 ВНЖ = 27 стран\n\nШенген без виз\nПариж • Берлин • Амстердам\n\n📍 europatheducation.eu\n\n#schengen #residencepermit',
+      imageCategories: ['rome', 'milan', 'streets'],
+      overlays: ['27 стран', 'Без виз', 'Шенген', 'Весь континент'],
     },
     {
-      text: 'Студенческий ВНЖ Италии — ваши возможности. Путешествуйте по Европе, работайте 20 часов в неделю, продлевайте после выпуска. EuroPath Education поможет с оформлением.',
-      caption: '📄 Студенческий ВНЖ Италии\n\nПутешествия • Работа • Продление\n\n📍 Заявка: europatheducation.eu\n\n#residencepermit #studyinitaly #europe',
+      text: 'ВНЖ Италии для студентов продлевается автоматически. Закончили первый курс? Продление. Второй? Продление. Выпускник? Можно остаться на год для поиска работы. Италия не выгоняет своих студентов.',
+      caption: '📄 ВНЖ продлевается автоматически\n\nКаждый год • Без проблем\n+1 год после выпуска\n\n📍 europatheducation.eu\n\n#residencepermit #italy #stay',
+      imageCategories: ['universities', 'students'],
+      overlays: ['Автопродление', 'Каждый год', '+1 год', 'Не выгоняют'],
     },
     {
-      text: 'Хотите жить в Европе? Учёба в Италии — самый простой путь. Студенческий ВНЖ, свободное перемещение по Шенгену, возможность работы. EuroPath Education сделает всё легко.',
-      caption: '🇮🇹 Жизнь в Европе через учёбу\n\nВНЖ • Шенген • Работа\n\n📍 Начните: europatheducation.eu\n\n#residencepermit #europe #italy',
+      text: 'Хотите жить в Европе? Учёба в Италии — самый простой путь. Студенческий ВНЖ, свободное перемещение по Шенгену, право на работу. Через пять лет — постоянный вид на жительство. Через десять — гражданство.',
+      caption: '🇮🇹 Путь к гражданству ЕС\n\nВНЖ → ПМЖ (5 лет) → Гражданство (10 лет)\n\n📍 europatheducation.eu\n\n#citizenship #europe #italy',
+      imageCategories: ['rome', 'milan', 'landmarks'],
+      overlays: ['ВНЖ', 'ПМЖ — 5 лет', 'Гражданство — 10 лет', 'ЕС'],
     },
     {
-      text: 'ВНЖ Италии для студентов: просто, быстро, надёжно. Получите вид на жительство на весь срок обучения. Свобода путешествий, право на работу. EuroPath Education — ваш надёжный партнёр.',
-      caption: '📄 ВНЖ для студентов Италии\n\nПросто • Быстро • Надёжно\n\n📍 Заявка: europatheducation.eu\n\n#residencepermit #italy #students',
+      text: 'Итальянский ВНЖ для студентов — это не просто бумажка. Это право на бесплатную медицину. Это банковский счёт. Это аренда квартиры. Это скидки на транспорт. Это жизнь в Европе на законных основаниях.',
+      caption: '📄 ВНЖ — это возможности\n\nБесплатная медицина\nСчёт • Квартира • Скидки\n\n📍 europatheducation.eu\n\n#residencepermit #benefits',
+      imageCategories: ['streets', 'rome'],
+      overlays: ['Медицина', 'Банк', 'Квартира', 'Скидки'],
     },
   ],
+
   'поступление': [
     {
-      text: 'Поступление в итальянские университеты без сложных экзаменов. Простая процедура, документы на русском признаются. Два потока в год. EuroPath Education оформит всё за вас.',
-      caption: '🎓 Поступление в Италию без экзаменов\n\nПростая процедура • 2 потока • Документы под ключ\n\n📍 Заявка: europatheducation.eu\n\n#admission #italy #university',
+      text: 'Поступление в итальянский университет не требует ЕГЭ. Не требует SAT. Не требует сложных экзаменов. Нужен аттестат, языковой сертификат и мотивационное письмо. Всё. Двери открыты.',
+      caption: '🎓 Поступление без ЕГЭ\n\nАттестат + Язык + Мотивация\nБез сложных экзаменов\n\n📍 europatheducation.eu\n\n#admission #noexam #italy',
+      imageCategories: ['universities', 'students'],
+      overlays: ['Без ЕГЭ', 'Без SAT', 'Аттестат + Язык', 'Двери открыты'],
     },
     {
-      text: 'Как поступить в итальянский вуз? Подготовьте документы, подайте заявку, получите приглашение. EuroPath Education сделает процесс поступления простым и понятным.',
-      caption: '🎓 Как поступить в Италию?\n\nДокументы • Заявка • Приглашение\n\n📍 Начните: europatheducation.eu\n\n#admission #studyinitaly #howto',
+      text: 'В Италии два потока поступления в год. Осенний — сентябрь. Весенний — февраль. Не успели осенью? Поступайте весной. Никакого давления. Никаких пропущенных лет.',
+      caption: '🎓 2 потока в год\n\nСентябрь • Февраль\nНе успели — весной\n\n📍 europatheducation.eu\n\n#admission #twointakes #italy',
+      imageCategories: ['universities', 'rome'],
+      overlays: ['2 потока', 'Сентябрь', 'Февраль', 'Без давления'],
     },
     {
-      text: 'Поступление в Италию стало проще. Не нужны сложные экзамены, достаточно аттестата. Зачисление два раза в год — осень и весна. EuroPath Education поможет на каждом этапе.',
-      caption: '🎓 Поступление в Италию — это просто\n\nБез экзаменов • 2 потока в год\n\n📍 Заявка: europatheducation.eu\n\n#admission #italy #easy',
+      text: 'Итальянские университеты принимают иностранцев на основе конкурса документов. Ваш аттестат конвертируется в итальянские баллы. Высокий средний балл? Высокие шансы. Никаких репетиторов. Никаких подготовительных курсов.',
+      caption: '🎓 Конкурс документов\n\nАттестат → Баллы\nВысокий средний = высокие шансы\n\n📍 europatheducation.eu\n\n#admission #documents #easy',
+      imageCategories: ['universities', 'students'],
+      overlays: ['Конкурс документов', 'Аттестат → Баллы', 'Без репетиторов', 'Честно'],
     },
     {
-      text: 'Итальянские университеты принимают иностранных студентов без вступительных экзаменов. Нужны только документы об образовании. EuroPath Education оформит всё под ключ.',
-      caption: '🎓 Италия без вступительных экзаменов\n\nТолько документы об образовании\n\n📍 Начните: europatheducation.eu\n\n#admission #italy #documents',
+      text: 'Можно поступить в итальянский университет на английском. Без знания итальянского. Более пятисот программ на английском языке. Бакалавриат и магистратура. Бизнес, инженерия, дизайн, мода.',
+      caption: '🎓 На английском!\n\n500+ программ\nБез итальянского\nБизнес • Инженерия • Дизайн\n\n📍 europatheducation.eu\n\n#english #admission #italy',
+      imageCategories: ['milan', 'universities'],
+      overlays: ['На английском', '500+ программ', 'Без итальянского', 'Бизнес • Дизайн'],
     },
   ],
+
   'работа': [
     {
-      text: 'Работа во время учёбы в Италии. Студенты могут работать 20 часов в неделю. Минимальная зарплата 9 евро в час. Стажировки в международных компаниях. EuroPath Education — ваш старт.',
-      caption: '💼 Работа во время учёбы в Италии\n\n20ч/неделю • 9€/час • Стажировки\n\n📍 Заявка: europatheducation.eu\n\n#workandstudy #italy #students',
+      text: 'Студент в Италии может зарабатывать семьсот двадцать евро в месяц. Двадцать часов в неделю, девять евро в час. Это покрывает аренду комнаты и еду. Учёба, которая окупает себя.',
+      caption: '💼 720€/месяц\n\n20ч/неделю • 9€/час\nАренда + еда\n\n📍 europatheducation.eu\n\n#workandstudy #italy',
+      imageCategories: ['streets', 'students'],
+      overlays: ['720€/мес', '20 ч/неделю', '9€/час', 'Окупает себя'],
     },
     {
-      text: 'Совмещайте учёбу и работу в Италии. Право на 20 часов в неделю, оплачиваемые стажировки, опыт работы в ЕС. EuroPath Education поможет начать вашу карьеру в Европе.',
-      caption: '💼 Учёба + Работа в Италии\n\n20ч/неделю • Стажировки • Опыт в ЕС\n\n📍 Начните: europatheducation.eu\n\n#workandstudy #career #italy',
+      text: 'После выпуска итальянский университет даёт год на поиск работы. ВНЖ продлевается автоматически. Нашли работу? Получаете рабочий ВНЖ. Не нашли? Возвращаетесь с европейским дипломом. Выигрыш в любом случае.',
+      caption: '💼 +1 год после выпуска\n\nВНЖ продлевается\nРабочий ВНЖ или диплом\n\n📍 europatheducation.eu\n\n#jobsearch #italy #aftergrad',
+      imageCategories: ['students', 'universities'],
+      overlays: ['+1 год', 'ВНЖ продлевается', 'Рабочий ВНЖ', 'Выигрыш'],
     },
     {
-      text: 'Студенческая работа в Италии — реальность. Работайте в кафе, магазинах, офисах. Минимум 9 евро в час. Накопите опыт и деньги для жизни. EuroPath Education поможет с переездом.',
-      caption: '💼 Студенческая работа в Италии\n\n9€/час • Кафе • Офисы • Магазины\n\n📍 Заявка: europatheducation.eu\n\n#workandstudy #italy #students',
+      text: 'Стажировки в итальянских компаниях — это не просто работа. Это опыт в международной среде. Это резюме, которое открывает двери. Gucci, Ferrari, Armani, Barilla — все ищут стажёров. И многие остаются.',
+      caption: '💼 Стажировки в Италии\n\nGucci • Ferrari • Armani\nМеждународный опыт\n\n📍 europatheducation.eu\n\n#internship #italy #brands',
+      imageCategories: ['milan', 'streets'],
+      overlays: ['Стажировки', 'Gucci • Ferrari', 'Armani', 'Остаются'],
     },
     {
-      text: 'Опыт работы в Европе уже во время учёбы. Италия даёт студентам право работать 20 часов в неделю. Стажировки в международных компаниях. EuroPath Education — ваш путь в Европу.',
-      caption: '💼 Опыт работы в ЕС во время учёбы\n\n20ч/неделю • Международные компании\n\n📍 Начните: europatheducation.eu\n\n#workandstudy #europe #internship',
+      text: 'Минимальная зарплата в Италии — девять евро в час. Студент работает двадцать часов. Это триста шестьдесят евро в две недели. Жильё в студенческом общежитии — двести евро. Еда — сто пятьдесят. Математика простая.',
+      caption: '💼 Математика студента\n\n9€/час → 360€/2 недели\nОбщежитие 200€ • Еда 150€\n\n📍 europatheducation.eu\n\n#math #workandstudy #italy',
+      imageCategories: ['streets', 'students'],
+      overlays: ['9€/час', '360€/2 нед', 'Жильё 200€', 'Еда 150€'],
     },
   ],
 };
-
-// Default variants (used when topic doesn't match any specific category)
-const DEFAULT_VARIANTS: ScriptVariant[] = TOPIC_VARIANTS['италия'];
 
 function getVariants(topic: string): ScriptVariant[] {
   const lower = topic.toLowerCase();
@@ -143,7 +207,7 @@ function getVariants(topic: string): ScriptVariant[] {
   if (lower.includes('виз') || lower.includes('permit') || lower.includes('жител') || lower.includes('внж')) return TOPIC_VARIANTS['вид на жительство'];
   if (lower.includes('поступ') || lower.includes('admiss') || lower.includes('универс')) return TOPIC_VARIANTS['поступление'];
   if (lower.includes('работ') || lower.includes('work') || lower.includes('job')) return TOPIC_VARIANTS['работа'];
-  return TOPIC_VARIANTS['италия'] || DEFAULT_VARIANTS;
+  return TOPIC_VARIANTS['италия'];
 }
 
 // ─── Shuffle array (Fisher-Yates) ───
@@ -156,17 +220,28 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-// ─── Pick N unique items from array ───
 function pickRandom<T>(arr: T[], n: number): T[] {
   return shuffle(arr).slice(0, n);
 }
 
-// ─── ElevenLabs TTS ───
+// ─── Pick images matching the script's categories ───
+function pickImagesForScript(variant: ScriptVariant, count: number): string[] {
+  const matching: string[] = [];
+  for (const cat of variant.imageCategories) {
+    matching.push(...(PHOTO_CATEGORIES[cat] || []));
+  }
+  // If not enough matching photos, fill from all
+  const pool = matching.length >= count ? matching : [...matching, ...ALL_PHOTOS];
+  return pickRandom(pool, count);
+}
+
+// ─── ElevenLabs TTS (improved: more energetic, conversational) ───
 async function generateVoiceover(text: string): Promise<{ audioBuffer: ArrayBuffer; contentType: string }> {
   const apiKey = Deno.env.get('ELEVENLABS_API_KEY');
   if (!apiKey) throw new Error('ElevenLabs API key not configured');
 
-  const voiceId = 'EXAVITQu4vr4xnSDxMaL'; // Sarah — natural female
+  // Charlie — deep, confident, energetic male voice (great for surprising facts)
+  const voiceId = 'IKne3meq5aSn9XLyUdCD'; // Charlie
 
   const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',
@@ -178,7 +253,12 @@ async function generateVoiceover(text: string): Promise<{ audioBuffer: ArrayBuff
     body: JSON.stringify({
       text,
       model_id: 'eleven_multilingual_v2',
-      voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.0, use_speaker_boost: true },
+      voice_settings: {
+        stability: 0.35,        // lower = more variable/expressive
+        similarity_boost: 0.80, // higher = more consistent voice
+        style: 0.45,            // higher = more stylized/animated delivery
+        use_speaker_boost: true,
+      },
     }),
   });
 
@@ -198,13 +278,14 @@ async function uploadToStorage(buffer: ArrayBuffer, bucket: string, fileName: st
   return data.publicUrl;
 }
 
-// ─── Shotstack render ───
+// ─── Shotstack render with text overlays ───
 const SHOTSTACK_BASE = 'https://api.shotstack.io/edit/v1/render';
 
-async function renderWithShotstack(images: string[], voiceoverUrl: string, apiKey: string): Promise<string> {
+async function renderWithShotstack(images: string[], overlays: string[], voiceoverUrl: string, apiKey: string): Promise<string> {
   const imgDuration = 3.5;
   const effects = ['zoomIn', 'zoomOut', 'slideLeft', 'slideRight', 'slideUp', 'slideDown'];
 
+  // Track 1: Image clips
   const imageClips = images.map((url, i) => ({
     asset: { type: 'image', src: url },
     start: i * imgDuration,
@@ -213,13 +294,33 @@ async function renderWithShotstack(images: string[], voiceoverUrl: string, apiKe
     transition: { in: 'fade', out: 'fade' },
   }));
 
+  // Track 2: Text overlays (HTML assets) — semi-transparent background + bold white text
+  const textClips = overlays.slice(0, images.length).map((text, i) => ({
+    asset: {
+      type: 'html',
+      html: `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><div style="background:rgba(0,0,0,0.65);padding:12px 24px;border-radius:8px;border-left:4px solid #f59e0b;"><p style="margin:0;color:#ffffff;font-family:'Montserrat ExtraBold';font-size:42px;font-weight:800;letter-spacing:1px;">${text}</p></div></div>`,
+      css: "p { margin: 0; }",
+      width: 1080,
+      height: 200,
+    },
+    start: i * imgDuration + 0.3,  // slight delay after image appears
+    length: imgDuration - 0.6,     // end slightly before image transitions
+    position: 'bottom',
+    offset: { x: 0, y: 0.15 },
+    transition: { in: 'slideUp', out: 'fade' },
+  }));
+
+  // Track 3: Voiceover audio
+  const tracks: any[] = [
+    { clips: imageClips },
+    { clips: textClips },
+    { clips: [{ asset: { type: 'audio', src: voiceoverUrl, volume: 1.0 }, start: 0, length: 'auto' }] },
+  ];
+
   const renderBody = {
     timeline: {
       background: '#000000',
-      tracks: [
-        { clips: imageClips },
-        { clips: [{ asset: { type: 'audio', src: voiceoverUrl, volume: 1.0 }, start: 0, length: 'auto' }] },
-      ],
+      tracks,
     },
     output: { format: 'mp4', resolution: 'sd', size: { width: 1080, height: 1920 } },
   };
@@ -235,7 +336,6 @@ async function renderWithShotstack(images: string[], voiceoverUrl: string, apiKe
 
   const renderId = renderData.response.id;
 
-  // Poll for completion (max ~3 minutes)
   for (let attempt = 0; attempt < 60; attempt++) {
     await new Promise(r => setTimeout(r, 3000));
     const statusRes = await fetch(`${SHOTSTACK_BASE}/${renderId}`, { headers: { 'x-api-key': apiKey } });
@@ -296,13 +396,10 @@ Deno.serve(async (req: Request) => {
       return new Response(JSON.stringify({ error: 'Topic is required' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    const numVideos = Math.min(Math.max(parseInt(count) || 5, 1), 10); // 1-10 videos
+    const numVideos = Math.min(Math.max(parseInt(count) || 5, 1), 10);
 
-    // Get script variants for this topic
     const variants = getVariants(topic);
-    // Shuffle variants and pick N unique ones
     const selectedVariants = pickRandom(variants, Math.min(numVideos, variants.length));
-    // If we need more videos than variants, cycle through with different image sets
     while (selectedVariants.length < numVideos) {
       selectedVariants.push(variants[selectedVariants.length % variants.length]);
     }
@@ -315,11 +412,9 @@ Deno.serve(async (req: Request) => {
       const progress = `[${i + 1}/${numVideos}]`;
 
       try {
-        console.log(`${progress} Generating video for topic: ${topic}`);
-
-        // Pick 3-4 random real photos for this video
-        const numImages = 3 + Math.floor(Math.random() * 2); // 3 or 4 images
-        const selectedImages = pickRandom(REAL_PHOTOS, numImages);
+        // Pick 3-4 images matching the script's content categories
+        const numImages = 3 + Math.floor(Math.random() * 2);
+        const selectedImages = pickImagesForScript(variant, numImages);
 
         // 1. Generate voiceover
         console.log(`${progress} Generating voiceover...`);
@@ -329,9 +424,9 @@ Deno.serve(async (req: Request) => {
         const audioFileName = `voiceover_batch_${Date.now()}_${i}.mp3`;
         const voiceoverUrl = await uploadToStorage(audioBuffer, 'social-uploads', audioFileName, contentType, supabase);
 
-        // 3. Render video
-        console.log(`${progress} Rendering video with Shotstack...`);
-        const videoUrl = await renderWithShotstack(selectedImages, voiceoverUrl, shotstackKey);
+        // 3. Render video with text overlays
+        console.log(`${progress} Rendering video with text overlays...`);
+        const videoUrl = await renderWithShotstack(selectedImages, variant.overlays, voiceoverUrl, shotstackKey);
 
         // 4. Download and store video
         const videoResp = await fetch(videoUrl);
@@ -339,10 +434,10 @@ Deno.serve(async (req: Request) => {
         const videoFileName = `reel_batch_${Date.now()}_${i}.mp4`;
         const storedVideoUrl = await uploadToStorage(videoBuffer, 'social-uploads', videoFileName, 'video/mp4', supabase);
 
-        // 5. Schedule post (spread throughout the day — every 2-3 hours)
+        // 5. Schedule post
         let post: any = null;
         if (schedule !== false) {
-          const scheduledOffset = (i + 1) * 2 * 3600000; // 2 hours apart
+          const scheduledOffset = (i + 1) * 2 * 3600000;
           post = await scheduleReelPost(storedVideoUrl, variant.caption, supabase, scheduledOffset);
         }
 
@@ -354,9 +449,10 @@ Deno.serve(async (req: Request) => {
           caption: variant.caption,
           postId: post?.[0]?.id,
           imagesUsed: numImages,
+          overlays: variant.overlays,
         });
 
-        console.log(`${progress} Done! Video: ${storedVideoUrl}`);
+        console.log(`${progress} Done!`);
       } catch (err) {
         console.error(`${progress} Error:`, err);
         errors.push({ index: i + 1, error: err.message });
