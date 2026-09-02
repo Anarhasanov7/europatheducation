@@ -158,7 +158,7 @@
   <div class="login-box">
     <h1 data-en="Admin Dashboard">Админ-панель</h1>
     <p class="sub" data-en="EuroPath Education — Sign in to view applications">EuroPath Education — Войдите для просмотра заявок</p>
-    <input type="email" id="adminEmail" placeholder="Email администратора" data-en-placeholder="Admin email" value="hasanov.anar.2023@gmail.com">
+    <input type="email" id="adminEmail" placeholder="Email администратора" data-en-placeholder="Admin email" autocomplete="username">
     <input type="password" id="adminPassword" placeholder="Пароль" data-en-placeholder="Password">
     <button id="loginBtn" onclick="adminLogin()" data-en="Sign In">Войти</button>
     <div class="login-error" id="loginError"></div>
@@ -331,6 +331,10 @@ function esc(str) {
     .replace(/'/g, '&#39;');
 }
 
+// Admin emails allowed to access this dashboard (defense-in-depth; RLS is the real gate)
+const ADMIN_EMAILS = ['hasanov.anar.2023@gmail.com', 'hasanov.anar.1994@gmail.com'];
+function isAdmin(user) { return user && ADMIN_EMAILS.includes(user.email); }
+
 (function loadSB() {
   if (window.supabase) { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); checkSession(); }
   else { setTimeout(loadSB, 100); }
@@ -338,7 +342,17 @@ function esc(str) {
 
 async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) { currentUser = session.user; showAdmin(); }
+  if (session) {
+    currentUser = session.user;
+    if (!isAdmin(currentUser)) { await sb.auth.signOut(); showAccessDenied(); return; }
+    showAdmin();
+  }
+}
+
+function showAccessDenied() {
+  const en = lang() === 'en';
+  document.getElementById('loginError').textContent = en ? 'Access denied: this account is not an admin.' : 'Доступ запрещён: этот аккаунт не является администратором.';
+  document.getElementById('loginError').style.display = 'block';
 }
 
 async function adminGitHubLogin() {
@@ -350,7 +364,7 @@ async function adminGitHubLogin() {
   try {
     const { data, error: e } = await sb.auth.signInWithOAuth({
       provider: 'github',
-      options: { redirectTo: window.location.origin + '/europatheducation/admin.html' }
+      options: { redirectTo: window.location.origin + '/admin.html' }
     });
     if (e) throw e;
   } catch (e) {
@@ -375,6 +389,7 @@ async function adminLogin() {
     btn.disabled = false; btn.textContent = lang() === 'en' ? 'Sign In' : 'Войти';
   } else {
     currentUser = data.user;
+    if (!isAdmin(currentUser)) { await sb.auth.signOut(); showAccessDenied(); btn.disabled = false; btn.textContent = lang() === 'en' ? 'Sign In' : 'Войти'; return; }
     showAdmin();
   }
 }
@@ -469,7 +484,7 @@ function renderTable() {
       : '—';
     return `<tr onclick="openModal('${esc(a.id)}')">
       <td><strong>${a.full_name ? esc(a.full_name) : '<span style="color:#ccc">' + (lang() === 'en' ? 'Not provided' : 'Не указано') + '</span>'}</strong></td>
-      <td style="font-size:13px;">${esc(a.user_id.slice(0,8))}...</td>
+      <td style="font-size:13px;">${esc(a.email || (a.user_id ? a.user_id.slice(0,8) + '...' : '—'))}</td>
       <td class="hide-mobile">${esc(a.country) || '—'}</td>
       <td class="hide-mobile" style="font-size:12px;">${progsHtml}</td>
       <td>${userDocs.length}/6</td>
@@ -560,8 +575,18 @@ async function openModal(appId) {
     modalProgs = [{ university: app.university, program: app.program }];
   }
 
+  // Warn before starting the 30-day deletion countdown (only if not already retrieved)
+  const alreadyRetrieved = userDocs.length > 0 && userDocs.some(d => d.retrieved_at);
+  if (userDocs.length > 0 && !alreadyRetrieved) {
+    const en = lang() === 'en';
+    const msg = en
+      ? `Opening this application will start a 30-day countdown.\n\nThe student's documents (passport, diploma, etc.) will be permanently auto-deleted 30 days from now.\n\nContinue?`
+      : `Открытие этой заявки запустит обратный отсчёт на 30 дней.\n\nДокументы студента (паспорт, аттестат и т.д.) будут безвозвратно удалены через 30 дней.\n\nПродолжить?`;
+    if (!confirm(msg)) return;
+  }
+
   // Mark documents as retrieved (starts 30-day deletion countdown)
-  if (userDocs.length > 0) {
+  if (userDocs.length > 0 && !alreadyRetrieved) {
     const now = new Date().toISOString();
     await sb.from('documents').update({ retrieved_at: now, retrieved_by: currentUser.email }).in('id', userDocs.map(d => d.id));
     // Update local cache
@@ -853,8 +878,9 @@ async function openTicketModal(ticketId) {
         <div class="sender">${m.sender === 'student' ? 'Student' : 'Admin'}</div>
         <div class="text">${esc(m.message)}</div>`;
       if (m.attachment_name) {
-        // Generate signed URL for admin
-        convHtml += `<div class="att">📎 <a href="#" onclick="downloadAttachment('${esc(ticketId)}','${esc(m.attachment_name)}','${esc(m.sender)}');return false;">${esc(m.attachment_name)}</a></div>`;
+        // Generate signed URL for admin — pass args via data attribute (avoid inline-JS string injection)
+        const dlPayload = esc(JSON.stringify({ ticketId, name: m.attachment_name, sender: m.sender }));
+        convHtml += `<div class="att">📎 <a href="#" data-download="${dlPayload}">${esc(m.attachment_name)}</a></div>`;
       }
       if (m.file_request) {
         convHtml += `<div class="file-req"><strong>📎 File requested:</strong> ${esc(m.file_request)}</div>`;
@@ -886,6 +912,17 @@ async function openTicketModal(ticketId) {
     `;
 
     document.getElementById('convLoading').innerHTML = convHtml;
+    // Wire up attachment download links (avoid inline onclick with user-controlled strings — XSS-safe)
+    document.querySelectorAll('#convLoading a[data-download]').forEach(a => {
+      a.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        try {
+          const { ticketId, name, sender } = JSON.parse(a.dataset.download);
+          downloadAttachment(ticketId, name, sender);
+        } catch (e) { console.error('Bad download payload', e); }
+        return false;
+      });
+    });
   } catch (err) {
     console.error('Conversation load error:', err);
     document.getElementById('convLoading').innerHTML = '<p style="color:var(--red);">Failed to load conversation.</p>';
