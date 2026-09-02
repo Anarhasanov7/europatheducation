@@ -36,6 +36,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 const url = new URL(window.location.href);
 const code = url.searchParams.get('code');
 const error = url.searchParams.get('error');
+const state = url.searchParams.get('state') || 'secondary';
 const statusEl = document.getElementById('status');
 const resultsEl = document.getElementById('results');
 const codeDisplay = document.getElementById('code-display');
@@ -58,63 +59,67 @@ async function init() {
   codeEl.textContent = code;
   codeDisplay.style.display = 'block';
 
-  // Try Threads exchange first
-  statusEl.className = 'status status-info';
-  statusEl.textContent = 'Trying Threads token exchange...';
-  let threadsOk = false;
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/social-auth-exchange`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ code, type: 'threads' })
-    });
-    const data = await res.json();
-    if (data.success) {
-      threadsOk = true;
-      resultsEl.innerHTML += `<div class="card"><h2>✅ Threads Connected</h2><p>User ID: <strong>${data.threads_user_id}</strong></p><p class="small">${data.message}</p></div>`;
-    }
-  } catch (e) {
-    // Threads exchange failed — might be a Facebook code
-  }
-
-  // Try Meta (Facebook) exchange
-  statusEl.textContent = 'Trying Facebook token exchange...';
-  let metaOk = false;
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/social-auth-exchange`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ code, type: 'meta' })
-    });
-    const data = await res.json();
-    if (data.success) {
-      metaOk = true;
-      let html = `<div class="card"><h2>✅ Facebook Connected</h2><p>${data.message}</p>`;
-      if (data.pages && data.pages.length) {
-        html += '<h3 style="color:#c9a84c;">Pages Found:</h3>';
-        data.pages.forEach(p => {
-          html += `<div class="acct"><strong>${p.name}</strong> (ID: ${p.id})<br>IG: ${p.instagram_business_account?.id || 'None'}</div>`;
-        });
+  if (state === 'meta') {
+    // Facebook exchange
+    statusEl.className = 'status status-info';
+    statusEl.textContent = 'Trying Facebook token exchange...';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/social-auth-exchange`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+        body: JSON.stringify({ code, type: 'meta' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        let html = `<div class="card"><h2>✅ Facebook Connected</h2><p>${data.message}</p>`;
+        if (data.pages && data.pages.length) {
+          html += '<h3 style="color:#c9a84c;">Pages Found:</h3>';
+          data.pages.forEach(p => {
+            html += `<div class="acct"><strong>${p.name}</strong> (ID: ${p.id})<br>IG: ${p.instagram_business_account?.id || 'None'}</div>`;
+          });
+        }
+        if (data.ig_accounts && data.ig_accounts.length) {
+          html += '<h3 style="color:#c9a84c;">Instagram Accounts:</h3>';
+          data.ig_accounts.forEach(ig => {
+            html += `<div class="acct"><strong>@${ig.username}</strong> (ID: ${ig.id})<br>Page: ${ig.page_name} · Followers: ${ig.followers_count || '?'}</div>`;
+          });
+        }
+        html += '</div>';
+        resultsEl.innerHTML = html;
+        statusEl.className = 'status status-success';
+        statusEl.textContent = 'Facebook authorization successful!';
+      } else {
+        statusEl.className = 'status status-error';
+        statusEl.textContent = 'Facebook exchange failed: ' + (data.error || 'Unknown error');
       }
-      if (data.ig_accounts && data.ig_accounts.length) {
-        html += '<h3 style="color:#c9a84c;">Instagram Accounts:</h3>';
-        data.ig_accounts.forEach(ig => {
-          html += `<div class="acct"><strong>@${ig.username}</strong> (ID: ${ig.id})<br>Page: ${ig.page_name} · Followers: ${ig.followers_count || '?'}</div>`;
-        });
-      }
-      html += '</div>';
-      resultsEl.innerHTML += html;
+    } catch (e) {
+      statusEl.className = 'status status-error';
+      statusEl.textContent = 'Facebook exchange error: ' + e.message;
     }
-  } catch (e) {
-    // Meta exchange failed
-  }
-
-  if (threadsOk || metaOk) {
-    statusEl.className = 'status status-success';
-    statusEl.textContent = 'Authorization successful! See details below.';
   } else {
-    statusEl.className = 'status status-error';
-    statusEl.textContent = 'Auto-exchange failed for both Threads and Facebook. The code might be expired. Please try again from the auth page.';
+    // Threads exchange (state = 'primary' or 'secondary')
+    const acctLabel = state === 'primary' ? '@study.with.anar (primary)' : '@europath_education (secondary)';
+    statusEl.className = 'status status-info';
+    statusEl.textContent = `Trying Threads token exchange for ${acctLabel}...`;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/social-auth-exchange`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+        body: JSON.stringify({ code, type: 'threads', account: state })
+      });
+      const data = await res.json();
+      if (data.success) {
+        resultsEl.innerHTML = `<div class="card"><h2>✅ Threads Connected</h2><p>Account: <strong>${data.account}</strong></p><p>User ID: <strong>${data.threads_user_id}</strong></p><p class="small">${data.message}</p></div>`;
+        statusEl.className = 'status status-success';
+        statusEl.textContent = `Threads ${acctLabel} authorization successful!`;
+      } else {
+        statusEl.className = 'status status-error';
+        statusEl.textContent = 'Threads exchange failed: ' + (data.error || 'Unknown error');
+      }
+    } catch (e) {
+      statusEl.className = 'status status-error';
+      statusEl.textContent = 'Threads exchange error: ' + e.message;
+    }
   }
 }
 

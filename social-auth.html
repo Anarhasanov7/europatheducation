@@ -28,11 +28,19 @@ pre { background: #1a1a2e; color: #c9a84c; padding: 12px; border-radius: 8px; ov
 <p class="small">Connect multiple Threads, Instagram, and Facebook accounts for cross-posting.</p>
 
 <div class="card">
-  <h2>Step 1: Threads — @europath_education</h2>
-  <p>Authorize the <strong>@europath_education</strong> Threads account.</p>
-  <p class="small">Make sure you're logged into the @europath_education Threads account in your browser, then click the button.</p>
-  <a class="btn btn-threads" href="#" id="threads-btn">Authorize @europath_education on Threads</a>
-  <div id="threads-status"></div>
+  <h2>Step 1a: Threads — @study.with.anar (Primary)</h2>
+  <p>Authorize the <strong>@study.with.anar</strong> Threads account with full permissions (read replies + engagement).</p>
+  <p class="small">Make sure you're logged into the @study.with.anar Threads account in your browser, then click the button.</p>
+  <a class="btn btn-threads" href="#" id="threads-btn-primary">Authorize @study.with.anar</a>
+  <div id="threads-status-primary"></div>
+</div>
+
+<div class="card">
+  <h2>Step 1b: Threads — @europath_education (Secondary)</h2>
+  <p>Authorize the <strong>@europath_education</strong> Threads account with full permissions (read replies + engagement).</p>
+  <p class="small">Log out of @study.with.anar and log into @europath_education, then click.</p>
+  <a class="btn btn-threads" href="#" id="threads-btn-secondary">Authorize @europath_education</a>
+  <div id="threads-status-secondary"></div>
 </div>
 
 <div class="card">
@@ -55,23 +63,26 @@ const SUPABASE_ANON_KEY = 'sb_publishable_ZPz6L33fOQXqRpl4R5ChAA_JKoeyPXM';
 
 const THREADS_CLIENT_ID = '4280706285480169';
 const THREADS_REDIRECT = 'https://europatheducation.eu/threads-callback.html';
-const THREADS_SCOPE = 'threads_basic,threads_content_publish';
+const THREADS_SCOPE = 'threads_basic,threads_content_publish,threads_manage_replies,threads_read_engagement';
 
 const META_APP_ID = '959105600544977';
 const META_REDIRECT = 'https://europatheducation.eu/threads-callback.html';
-const META_SCOPE = 'pages_manage_posts,pages_read_engagement,pages_show_list,instagram_basic,instagram_content_publish,publish_to_groups,business_management';
+const META_SCOPE = 'pages_manage_posts,pages_read_engagement,pages_show_list,instagram_basic,instagram_content_publish,publish_to_groups,business_management,instagram_manage_messages,pages_messaging';
 
-// Build auth URLs
-const threadsAuthUrl = `https://threads.net/oauth/authorize?client_id=${THREADS_CLIENT_ID}&redirect_uri=${encodeURIComponent(THREADS_REDIRECT)}&scope=${THREADS_SCOPE}&response_type=code`;
-const metaAuthUrl = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${META_APP_ID}&redirect_uri=${encodeURIComponent(META_REDIRECT)}&scope=${encodeURIComponent(META_SCOPE)}&response_type=code`;
+// Build auth URLs — use state param to track which account
+const threadsAuthUrlPrimary = `https://threads.net/oauth/authorize?client_id=${THREADS_CLIENT_ID}&redirect_uri=${encodeURIComponent(THREADS_REDIRECT)}&scope=${encodeURIComponent(THREADS_SCOPE)}&response_type=code&state=primary`;
+const threadsAuthUrlSecondary = `https://threads.net/oauth/authorize?client_id=${THREADS_CLIENT_ID}&redirect_uri=${encodeURIComponent(THREADS_REDIRECT)}&scope=${encodeURIComponent(THREADS_SCOPE)}&response_type=code&state=secondary`;
+const metaAuthUrl = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${META_APP_ID}&redirect_uri=${encodeURIComponent(META_REDIRECT)}&scope=${encodeURIComponent(META_SCOPE)}&response_type=code&state=meta`;
 
-document.getElementById('threads-btn').href = threadsAuthUrl;
+document.getElementById('threads-btn-primary').href = threadsAuthUrlPrimary;
+document.getElementById('threads-btn-secondary').href = threadsAuthUrlSecondary;
 document.getElementById('meta-btn').href = metaAuthUrl;
 
 // Check URL for code/callback
 const url = new URL(window.location.href);
 const code = url.searchParams.get('code');
 const error = url.searchParams.get('error');
+const state = url.searchParams.get('state') || 'secondary'; // default to secondary for backwards compat
 
 async function init() {
   if (error) {
@@ -82,29 +93,30 @@ async function init() {
   }
 
   if (code) {
-    // Try exchanging with Threads first
-    await tryExchangeCode(code, 'threads');
-    // Also try Meta (Facebook)
-    await tryExchangeCode(code, 'meta');
+    // Determine which account based on state param
+    if (state === 'meta') {
+      await tryExchangeCode(code, 'meta');
+    } else {
+      // state is 'primary' or 'secondary'
+      await tryExchangeCode(code, 'threads', state);
+    }
   }
 
   // Load current accounts
   await loadCurrentAccounts();
 }
 
-async function tryExchangeCode(code, type) {
-  const statusEl = document.getElementById(type === 'threads' ? 'threads-status' : 'meta-status');
-  showStatus(statusEl.id, `Exchanging ${type} authorization code...`, 'info');
+async function tryExchangeCode(code, type, account = 'secondary') {
+  const statusEl = document.getElementById(type === 'threads' ? `threads-status-${account}` : 'meta-status');
+  showStatus(statusEl.id, `Exchanging ${type} authorization code (${account})...`, 'info');
 
   try {
-    const endpoint = type === 'threads'
-      ? `${SUPABASE_URL}/functions/v1/social-auth-exchange`
-      : `${SUPABASE_URL}/functions/v1/social-auth-exchange`;
+    const endpoint = `${SUPABASE_URL}/functions/v1/social-auth-exchange`;
 
     const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ code, type })
+      body: JSON.stringify({ code, type, account })
     });
     const data = await res.json();
 
@@ -112,7 +124,7 @@ async function tryExchangeCode(code, type) {
       showStatus(statusEl.id, `${type} exchange failed: ${data.error}`, 'error');
     } else {
       if (type === 'threads') {
-        showStatus(statusEl.id, `Threads connected! User ID: ${data.threads_user_id}`, 'success');
+        showStatus(statusEl.id, `Threads connected! ${data.account || ''} User ID: ${data.threads_user_id}`, 'success');
       } else {
         showStatus(statusEl.id, `Facebook connected! Found ${data.pages?.length || 0} pages, ${data.ig_accounts?.length || 0} IG accounts`, 'success');
         displayMetaAccounts(data.pages, data.ig_accounts);
