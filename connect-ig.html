@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connect Instagram @study.with.anar</title>
+<style>
+body { font-family: -apple-system, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
+.card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+h1 { font-size: 1.5em; margin-bottom: 10px; }
+.btn { display: inline-block; padding: 14px 28px; background: #0095f6; color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; margin: 10px 0; }
+.btn:hover { background: #0077c6; }
+.status { padding: 12px; border-radius: 8px; margin: 10px 0; }
+.status.success { background: #d4edda; color: #155724; }
+.status.error { background: #f8d7da; color: #721c24; }
+.status.info { background: #d1ecf1; color: #0c5460; }
+pre { background: #f8f9fa; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Connect Instagram @study.with.anar</h1>
+<p>You need to authenticate with Facebook to connect your Instagram Business account.</p>
+
+<div id="status" class="status info">Click the button below to start.</div>
+
+<a id="authBtn" class="btn" href="#">Connect with Facebook</a>
+
+<div id="result" style="display:none;">
+  <h3>Result:</h3>
+  <pre id="resultJson"></pre>
+</div>
+</div>
+
+<script>
+const META_APP_ID = '959105600544977';
+const REDIRECT_URI = window.location.origin + window.location.pathname;
+const SCOPES = 'instagram_basic,instagram_content_publish,pages_show_list,pages_read_engagement,pages_manage_posts,business_management';
+
+const authBtn = document.getElementById('authBtn');
+const statusDiv = document.getElementById('status');
+const resultDiv = document.getElementById('result');
+const resultJson = document.getElementById('resultJson');
+
+// Build OAuth URL
+const authUrl = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${META_APP_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${SCOPES}&response_type=code&state=connect_ig`;
+authBtn.href = authUrl;
+
+// Check for code in URL
+const urlParams = new URLSearchParams(window.location.search);
+const code = urlParams.get('code');
+
+if (code) {
+  statusDiv.className = 'status info';
+  statusDiv.textContent = 'Exchanging code for tokens...';
+  authBtn.style.display = 'none';
+
+  // Exchange code via edge function
+  fetch('https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/social-auth-exchange', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code, type: 'meta' })
+  })
+  .then(r => r.json())
+  .then(data => {
+    resultDiv.style.display = 'block';
+    resultJson.textContent = JSON.stringify(data, null, 2);
+
+    if (data.success) {
+      statusDiv.className = 'status success';
+      statusDiv.innerHTML = `✅ Connected! Found ${data.ig_accounts?.length || 0} Instagram accounts:<br>` +
+        (data.ig_accounts || []).map(ig => `• @${ig.username} (${ig.followers_count} followers) — Page: ${ig.page_name}`).join('<br>') +
+        `<br><br>Now check which IG accounts are connected. If @study.with.anar is listed, we need to store its ID.`;
+    } else {
+      statusDiv.className = 'status error';
+      statusDiv.textContent = '❌ ' + (data.error || 'Unknown error');
+    }
+  })
+  .catch(err => {
+    statusDiv.className = 'status error';
+    statusDiv.textContent = '❌ Error: ' + err.message;
+  });
+}
+</script>
+</body>
+</html>
