@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok Authorization — EuroPath Education</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233ddfff'/><stop offset='1' stop-color='%23c6ff3d'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='72' font-size='62' font-weight='900' text-anchor='middle' fill='%23080a14' font-family='Arial,sans-serif'>E</text></svg>">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #1a1a2e; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+  .card { max-width: 480px; padding: 40px; text-align: center; }
+  h1 { font-size: 1.5em; margin-bottom: 16px; }
+  .status { padding: 12px 20px; border-radius: 8px; margin: 20px 0; font-size: 0.95em; }
+  .status.processing { background: #e8f4fd; color: #0066cc; }
+  .status.success { background: #e8f8e8; color: #2d7a2d; }
+  .status.error { background: #fde8e8; color: #c42d2d; }
+  .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid #e0e0e0; border-top-color: #0066cc; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  a { color: #0066cc; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>TikTok Authorization</h1>
+  <div id="status" class="status processing">
+    <span class="spinner"></span>
+    <span id="message">Processing authorization...</span>
+  </div>
+  <p id="detail"></p>
+  <p><a href="https://europatheducation.eu">Return to EuroPath Education</a></p>
+</div>
+<script>
+  (async () => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+    const error = params.get('error');
+    const errorDesc = params.get('error_description');
+
+    const statusEl = document.getElementById('status');
+    const msgEl = document.getElementById('message');
+    const detailEl = document.getElementById('detail');
+
+    if (error) {
+      statusEl.className = 'status error';
+      msgEl.textContent = 'Authorization failed';
+      detailEl.textContent = errorDesc || error;
+      return;
+    }
+
+    if (!code) {
+      statusEl.className = 'status error';
+      msgEl.textContent = 'No authorization code received';
+      return;
+    }
+
+    try {
+      const callbackUrl = 'https://glfizcgayqecnvtfihgy.supabase.co/functions/v1/tiktok-auth?code=' + encodeURIComponent(code) + (state ? '&state=' + encodeURIComponent(state) : '');
+      const res = await fetch(callbackUrl, { method: 'GET' });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && (data.success || data.access_token)) {
+        statusEl.className = 'status success';
+        msgEl.textContent = 'TikTok account authorized successfully!';
+        detailEl.textContent = 'The EuroPath Education TikTok account is now connected. You can close this page.';
+      } else {
+        statusEl.className = 'status error';
+        msgEl.textContent = 'Authorization callback failed';
+        detailEl.textContent = data.error || data.message || 'Unknown error';
+      }
+    } catch (e) {
+      statusEl.className = 'status error';
+      msgEl.textContent = 'Network error';
+      detailEl.textContent = e.message;
+    }
+  })();
+</script>
+</body>
+</html>
