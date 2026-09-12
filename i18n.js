@@ -46,6 +46,21 @@
       }
     });
 
+    // Swap aria-label for elements with data-en-aria
+    const ariaEls = document.querySelectorAll('[data-en-aria]');
+    ariaEls.forEach(el => {
+      if (lang === 'en') {
+        if (el.dataset.enAriaOriginal === undefined) {
+          el.dataset.enAriaOriginal = el.getAttribute('aria-label');
+        }
+        el.setAttribute('aria-label', el.dataset.enAria);
+      } else {
+        if (el.dataset.enAriaOriginal !== undefined) {
+          el.setAttribute('aria-label', el.dataset.enAriaOriginal);
+        }
+      }
+    });
+
     // Update html lang attribute
     document.documentElement.lang = lang;
 
