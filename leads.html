@@ -36,6 +36,9 @@
   .login { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1e293b; padding: 30px; border-radius: 16px; text-align: center; }
   .login input { width: 250px; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; }
   .login button { padding: 10px 30px; border-radius: 8px; border: none; background: #38bdf8; color: #0f172a; font-weight: bold; cursor: pointer; }
+  .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid #334155; border-top: 3px solid #38bdf8; border-radius: 50%; animation: spin 1s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  .error { color: #ef4444; padding: 20px; text-align: center; }
 </style>
 </head>
 <body>
@@ -46,6 +49,7 @@
   <input type="password" id="password" placeholder="Password" onkeypress="if(event.key==='Enter')doLogin()">
   <br>
   <button onclick="doLogin()">Login</button>
+  <div id="login-error" style="color:#ef4444; margin-top:10px; font-size:13px; display:none;"></div>
 </div>
 
 <div id="dashboard" style="display:none;">
@@ -86,21 +90,39 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsZml6Y2dheXFlY252dGZpaGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTAzMDUsImV4cCI6MjEwMzU4NjMwNX0.NGMeiFUAGkaR5h7yHGxuzEGjB_y2niWRKviH5Yf4qHo';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsZml6Y2dheXFlY252dGZpaGd5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODAxMDMwNSwiZXhwIjoyMTAzNTg2MzA1fQ.NGMeiFUAGkaR5h7yHGxuzEGjB_y2niWRKviH5Yf4qHo';
 
 const PASSWORD = 'EuroPath2026!Leads';
-let supabase;
+let supabaseClient = null;
 let currentTab = 'all';
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/"/g, '"')
+    .replace(/'/g, '&#039;');
+}
 
 function doLogin() {
   const pw = document.getElementById('password').value;
+  const errEl = document.getElementById('login-error');
   if (pw === PASSWORD) {
+    errEl.style.display = 'none';
+    if (!window.supabase || !window.supabase.createClient) {
+      errEl.textContent = 'Error: Supabase library failed to load. Check your internet connection.';
+      errEl.style.display = 'block';
+      return;
+    }
     document.getElementById('login').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     loadData();
   } else {
-    alert('Wrong password');
+    errEl.textContent = 'Wrong password. Please try again.';
+    errEl.style.display = 'block';
   }
 }
 
@@ -112,7 +134,15 @@ function setTab(tab, btn) {
 }
 
 async function loadData() {
-  let query = supabase.from('social_leads').select('*').order('created_at', { ascending: false }).limit(100);
+  const tbody = document.getElementById('leads-tbody');
+  tbody.innerHTML = '<tr><td colspan="12" class="empty"><span class="loading"></span>Loading leads...</td></tr>';
+
+  if (!supabaseClient) {
+    tbody.innerHTML = '<tr><td colspan="12" class="error">Not connected. Please reload and login.</td></tr>';
+    return;
+  }
+
+  let query = supabaseClient.from('social_leads').select('*').order('created_at', { ascending: false }).limit(100);
 
   if (currentTab === 'qualified') {
     query = query.eq('questionnaire_completed', true);
@@ -124,7 +154,7 @@ async function loadData() {
 
   const { data, error } = await query;
   if (error) {
-    document.getElementById('leads-tbody').innerHTML = `<tr><td colspan="12" class="empty">Error: ${error.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="12" class="error">Error: ${escapeHtml(error.message || 'Unknown error')}</td></tr>`;
     return;
   }
 
@@ -133,7 +163,8 @@ async function loadData() {
   const qualified = data.filter(l => l.questionnaire_completed).length;
   const booked = data.filter(l => l.consultation_booked).length;
   const completed = data.filter(l => l.consultation_completed).length;
-  const avgScore = qualified ? Math.round(data.filter(l => l.lead_score).reduce((a, l) => a + (l.lead_score || 0), 0) / qualified) : 0;
+  const scoredLeads = data.filter(l => l.lead_score != null);
+  const avgScore = scoredLeads.length ? Math.round(scoredLeads.reduce((a, l) => a + (l.lead_score || 0), 0) / scoredLeads.length) : 0;
 
   document.getElementById('stats').innerHTML = `
     <div class="stat-card"><div class="num">${total}</div><div class="label">Total Leads</div></div>
@@ -144,7 +175,7 @@ async function loadData() {
   `;
 
   if (!data.length) {
-    document.getElementById('leads-tbody').innerHTML = '<tr><td colspan="12" class="empty">No leads found</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="12" class="empty">No leads found yet. Leads will appear here when people message the bot.</td></tr>';
     return;
   }
 
@@ -157,13 +188,14 @@ async function loadData() {
     consultation_booked: '<span class="badge badge-booked">Booked</span>',
     dm_sent: '<span class="badge badge-qualified">DM Sent</span>',
     engaged: '<span class="badge badge-new">Engaged</span>',
+    completed: '<span class="badge badge-completed">Completed</span>',
   };
 
   const rows = data.map(l => {
     const answers = l.questionnaire_answers || {};
     const score = l.lead_score || 0;
     const scoreClass = score >= 70 ? 'score-high' : score >= 40 ? 'score-med' : 'score-low';
-    const name = l.platform_display_name || l.platform_username || 'Unknown';
+    const name = escapeHtml(l.platform_display_name || l.platform_username || 'Unknown');
     const consult = l.consultation_scheduled_at
       ? new Date(l.consultation_scheduled_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Baku' })
       : '—';
@@ -172,20 +204,20 @@ async function loadData() {
     return `<tr>
       <td><span class="score ${scoreClass}">${score}</span></td>
       <td>${name}</td>
-      <td>${l.platform}</td>
-      <td class="lang">${langFlag} ${l.lead_language || 'en'}</td>
-      <td class="source">${l.lead_source || '—'}</td>
-      <td>${statusBadges[l.status] || l.status}</td>
-      <td>${eduLabels[answers.education_level] || '—'}</td>
-      <td>${answers.field_of_study || '—'}</td>
-      <td>${schLabels[answers.scholarship_needed] || '—'}</td>
-      <td>${answers.start_year || '—'}</td>
-      <td>${consult}</td>
-      <td>${l.telegram_chat_id || '—'}</td>
+      <td>${escapeHtml(l.platform || '—')}</td>
+      <td class="lang">${langFlag} ${escapeHtml(l.lead_language || 'en')}</td>
+      <td class="source">${escapeHtml(l.lead_source || '—')}</td>
+      <td>${statusBadges[l.status] || escapeHtml(l.status || '—')}</td>
+      <td>${eduLabels[answers.education_level] ? escapeHtml(eduLabels[answers.education_level]) : '—'}</td>
+      <td>${escapeHtml(answers.field_of_study || '—')}</td>
+      <td>${schLabels[answers.scholarship_needed] ? escapeHtml(schLabels[answers.scholarship_needed]) : '—'}</td>
+      <td>${escapeHtml(answers.start_year || '—')}</td>
+      <td>${escapeHtml(consult)}</td>
+      <td>${escapeHtml(l.telegram_chat_id || '—')}</td>
     </tr>`;
   }).join('');
 
-  document.getElementById('leads-tbody').innerHTML = rows;
+  tbody.innerHTML = rows;
 }
 </script>
 </body>
