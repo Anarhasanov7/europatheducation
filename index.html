@@ -2301,7 +2301,7 @@
     sessionStorage.setItem('epChatOpened', '1');
   }
 
-  // Update quick reply buttons on language change
+  // Update quick reply buttons AND re-translate welcome message on language change
   window.addEventListener('langchange', e => {
     quickBox.innerHTML = '';
     topics.forEach(t => {
@@ -2310,6 +2310,14 @@
       b.addEventListener('click', () => handleSend(t.label[e.detail.lang]));
       quickBox.appendChild(b);
     });
+    // Re-translate the first bot message (welcome) if only the welcome is present
+    const msgs = document.querySelectorAll('#epChatMessages .ep-msg');
+    if (msgs.length === 1 && msgs[0].classList.contains('bot')) {
+      const welcome = e.detail.lang === 'en'
+        ? 'Hello! I\u2019m Alisa \u2014 EuroPath Education AI consultant. Ask me about admission, scholarships, visas, housing, or choose a topic below.'
+        : 'Здравствуйте! Я Алиса — AI-консультант EuroPath Education. Спросите меня о поступлении, стипендиях, визе, жилье или выберите тему ниже.';
+      msgs[0].textContent = welcome;
+    }
   });
 })();
 </script>
