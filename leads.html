@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EuroPath Lead Pipeline</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 20px; }
+  h1 { font-size: 24px; margin-bottom: 20px; color: #38bdf8; }
+  .stats { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stat-card { background: #1e293b; border-radius: 12px; padding: 15px 20px; min-width: 140px; }
+  .stat-card .num { font-size: 28px; font-weight: bold; color: #38bdf8; }
+  .stat-card .label { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+  .tab { padding: 8px 16px; border-radius: 8px; background: #1e293b; cursor: pointer; border: none; color: #94a3b8; font-size: 14px; }
+  .tab.active { background: #38bdf8; color: #0f172a; font-weight: bold; }
+  table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 12px; overflow: hidden; }
+  th { text-align: left; padding: 12px 15px; background: #334155; font-size: 13px; color: #94a3b8; }
+  td { padding: 10px 15px; border-top: 1px solid #334155; font-size: 14px; }
+  tr:hover { background: #334155; }
+  .score { font-weight: bold; padding: 3px 8px; border-radius: 6px; font-size: 12px; }
+  .score-high { background: #dc2626; color: white; }
+  .score-med { background: #f59e0b; color: #0f172a; }
+  .score-low { background: #64748b; color: white; }
+  .badge { padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+  .badge-new { background: #3b82f6; }
+  .badge-qualified { background: #8b5cf6; }
+  .badge-booked { background: #10b981; }
+  .badge-completed { background: #64748b; }
+  .badge-questionnaire { background: #f59e0b; color: #0f172a; }
+  .lang { font-size: 12px; color: #94a3b8; }
+  .source { font-size: 11px; color: #64748b; }
+  .empty { text-align: center; padding: 40px; color: #64748b; }
+  .refresh { float: right; background: #38bdf8; color: #0f172a; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+  .login { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1e293b; padding: 30px; border-radius: 16px; text-align: center; }
+  .login input { width: 250px; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; }
+  .login button { padding: 10px 30px; border-radius: 8px; border: none; background: #38bdf8; color: #0f172a; font-weight: bold; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div id="login" class="login">
+  <h1>🔐 EuroPath Lead Pipeline</h1>
+  <p style="color:#94a3b8; margin: 10px 0;">Enter access password</p>
+  <input type="password" id="password" placeholder="Password" onkeypress="if(event.key==='Enter')doLogin()">
+  <br>
+  <button onclick="doLogin()">Login</button>
+</div>
+
+<div id="dashboard" style="display:none;">
+  <h1>🎓 EuroPath Lead Pipeline <button class="refresh" onclick="loadData()">↻ Refresh</button></h1>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('all', this)">All Leads</button>
+    <button class="tab" onclick="setTab('qualified', this)">Qualified</button>
+    <button class="tab" onclick="setTab('booked', this)">Booked</button>
+    <button class="tab" onclick="setTab('completed', this)">Completed</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Score</th>
+        <th>Name</th>
+        <th>Platform</th>
+        <th>Lang</th>
+        <th>Source</th>
+        <th>Status</th>
+        <th>Education</th>
+        <th>Field</th>
+        <th>Scholarship</th>
+        <th>Start</th>
+        <th>Consultation</th>
+        <th>Chat ID</th>
+      </tr>
+    </thead>
+    <tbody id="leads-tbody">
+      <tr><td colspan="12" class="empty">Loading...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsZml6Y2dheXFlY252dGZpaGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTAzMDUsImV4cCI6MjEwMzU4NjMwNX0.NGMeiFUAGkaR5h7yHGxuzEGjB_y2niWRKviH5Yf4qHo';
+
+const PASSWORD = 'EuroPath2026!Leads';
+let supabase;
+let currentTab = 'all';
+
+function doLogin() {
+  const pw = document.getElementById('password').value;
+  if (pw === PASSWORD) {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    loadData();
+  } else {
+    alert('Wrong password');
+  }
+}
+
+function setTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  loadData();
+}
+
+async function loadData() {
+  let query = supabase.from('social_leads').select('*').order('created_at', { ascending: false }).limit(100);
+
+  if (currentTab === 'qualified') {
+    query = query.eq('questionnaire_completed', true);
+  } else if (currentTab === 'booked') {
+    query = query.eq('consultation_booked', true);
+  } else if (currentTab === 'completed') {
+    query = query.eq('consultation_completed', true);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    document.getElementById('leads-tbody').innerHTML = `<tr><td colspan="12" class="empty">Error: ${error.message}</td></tr>`;
+    return;
+  }
+
+  // Stats
+  const total = data.length;
+  const qualified = data.filter(l => l.questionnaire_completed).length;
+  const booked = data.filter(l => l.consultation_booked).length;
+  const completed = data.filter(l => l.consultation_completed).length;
+  const avgScore = qualified ? Math.round(data.filter(l => l.lead_score).reduce((a, l) => a + (l.lead_score || 0), 0) / qualified) : 0;
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="num">${total}</div><div class="label">Total Leads</div></div>
+    <div class="stat-card"><div class="num">${qualified}</div><div class="label">Qualified</div></div>
+    <div class="stat-card"><div class="num">${booked}</div><div class="label">Booked</div></div>
+    <div class="stat-card"><div class="num">${completed}</div><div class="label">Completed</div></div>
+    <div class="stat-card"><div class="num">${avgScore}</div><div class="label">Avg Score</div></div>
+  `;
+
+  if (!data.length) {
+    document.getElementById('leads-tbody').innerHTML = '<tr><td colspan="12" class="empty">No leads found</td></tr>';
+    return;
+  }
+
+  const eduLabels = { high_school: 'High school', bachelor: "Bachelor's", master: "Master's", other: 'Other' };
+  const schLabels = { full: 'Full', partial: 'Partial', no: 'Self-funded' };
+  const statusBadges = {
+    new: '<span class="badge badge-new">New</span>',
+    questionnaire: '<span class="badge badge-questionnaire">Questionnaire</span>',
+    qualified: '<span class="badge badge-qualified">Qualified</span>',
+    consultation_booked: '<span class="badge badge-booked">Booked</span>',
+    dm_sent: '<span class="badge badge-qualified">DM Sent</span>',
+    engaged: '<span class="badge badge-new">Engaged</span>',
+  };
+
+  const rows = data.map(l => {
+    const answers = l.questionnaire_answers || {};
+    const score = l.lead_score || 0;
+    const scoreClass = score >= 70 ? 'score-high' : score >= 40 ? 'score-med' : 'score-low';
+    const name = l.platform_display_name || l.platform_username || 'Unknown';
+    const consult = l.consultation_scheduled_at
+      ? new Date(l.consultation_scheduled_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Baku' })
+      : '—';
+    const langFlag = { en: '🇬🇧', ru: '🇷🇺', az: '🇦🇿' }[l.lead_language] || '🌐';
+
+    return `<tr>
+      <td><span class="score ${scoreClass}">${score}</span></td>
+      <td>${name}</td>
+      <td>${l.platform}</td>
+      <td class="lang">${langFlag} ${l.lead_language || 'en'}</td>
+      <td class="source">${l.lead_source || '—'}</td>
+      <td>${statusBadges[l.status] || l.status}</td>
+      <td>${eduLabels[answers.education_level] || '—'}</td>
+      <td>${answers.field_of_study || '—'}</td>
+      <td>${schLabels[answers.scholarship_needed] || '—'}</td>
+      <td>${answers.start_year || '—'}</td>
+      <td>${consult}</td>
+      <td>${l.telegram_chat_id || '—'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('leads-tbody').innerHTML = rows;
+}
+</script>
+</body>
+</html>
