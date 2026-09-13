@@ -53,7 +53,7 @@
 </div>
 
 <div id="dashboard" style="display:none;">
-  <h1>🎓 EuroPath Lead Pipeline <button class="refresh" onclick="loadData()">↻ Refresh</button></h1>
+  <h1>🎓 EuroPath Lead Pipeline <button class="refresh" onclick="loadData()">↻ Refresh</button> <span id="last-updated" style="font-size:12px; color:#64748b; font-weight:normal;"></span></h1>
 
   <div class="stats" id="stats"></div>
 
@@ -78,11 +78,12 @@
         <th>Scholarship</th>
         <th>Start</th>
         <th>Consultation</th>
+        <th>Joined</th>
         <th>Chat ID</th>
       </tr>
     </thead>
     <tbody id="leads-tbody">
-      <tr><td colspan="12" class="empty">Loading...</td></tr>
+      <tr><td colspan="13" class="empty">Loading...</td></tr>
     </tbody>
   </table>
 </div>
@@ -95,6 +96,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const PASSWORD = 'EuroPath2026!Leads';
 let supabaseClient = null;
 let currentTab = 'all';
+let autoRefreshTimer = null;
 
 function escapeHtml(str) {
   if (str == null) return '';
@@ -120,6 +122,8 @@ function doLogin() {
     document.getElementById('dashboard').style.display = 'block';
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     loadData();
+    // Auto-refresh every 30 seconds
+    autoRefreshTimer = setInterval(loadData, 30000);
   } else {
     errEl.textContent = 'Wrong password. Please try again.';
     errEl.style.display = 'block';
@@ -154,9 +158,11 @@ async function loadData() {
 
   const { data, error } = await query;
   if (error) {
-    tbody.innerHTML = `<tr><td colspan="12" class="error">Error: ${escapeHtml(error.message || 'Unknown error')}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="13" class="error">Error: ${escapeHtml(error.message || 'Unknown error')}</td></tr>`;
     return;
   }
+
+  document.getElementById('last-updated').textContent = `(Updated ${new Date().toLocaleTimeString()})`;
 
   // Stats
   const total = data.length;
@@ -175,7 +181,7 @@ async function loadData() {
   `;
 
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="12" class="empty">No leads found yet. Leads will appear here when people message the bot.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="13" class="empty">No leads found yet. Leads will appear here when people message the bot.</td></tr>';
     return;
   }
 
@@ -199,6 +205,9 @@ async function loadData() {
     const consult = l.consultation_scheduled_at
       ? new Date(l.consultation_scheduled_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Baku' })
       : '—';
+    const joined = l.created_at
+      ? new Date(l.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : '—';
     const langFlag = { en: '🇬🇧', ru: '🇷🇺', az: '🇦🇿' }[l.lead_language] || '🌐';
 
     return `<tr>
@@ -213,6 +222,7 @@ async function loadData() {
       <td>${schLabels[answers.scholarship_needed] ? escapeHtml(schLabels[answers.scholarship_needed]) : '—'}</td>
       <td>${escapeHtml(answers.start_year || '—')}</td>
       <td>${escapeHtml(consult)}</td>
+      <td>${escapeHtml(joined)}</td>
       <td>${escapeHtml(l.telegram_chat_id || '—')}</td>
     </tr>`;
   }).join('');
