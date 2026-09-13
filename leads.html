@@ -132,7 +132,8 @@ function doLogin() {
     document.getElementById('dashboard').style.display = 'block';
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     loadData();
-    // Auto-refresh every 30 seconds
+    // Auto-refresh every 30 seconds (clear any existing timer first)
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer);
     autoRefreshTimer = setInterval(loadData, 30000);
   } else {
     errEl.textContent = 'Wrong password. Please try again.';
@@ -140,12 +141,23 @@ function doLogin() {
   }
 }
 
+function doLogout() {
+  if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+  supabaseClient = null;
+  cachedAllData = [];
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login').style.display = 'block';
+  document.getElementById('password').value = '';
+}
+
 function setTab(tab, btn) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  loadData();
+  renderTable();
 }
+
+let cachedAllData = [];
 
 async function loadData() {
   const tbody = document.getElementById('leads-tbody');
@@ -168,8 +180,14 @@ async function loadData() {
     return;
   }
 
-  const allData = allLeads || [];
+  cachedAllData = allLeads || [];
   document.getElementById('last-updated').textContent = `(Updated ${new Date().toLocaleTimeString()})`;
+  renderTable();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('leads-tbody');
+  const allData = cachedAllData;
 
   // Stats — always from ALL leads, regardless of active tab
   const total = allData.length;
@@ -188,7 +206,7 @@ async function loadData() {
   `;
 
   // Filter data for the current tab
-  let data = allLeads;
+  let data = allData;
   if (currentTab === 'qualified') {
     data = allData.filter(l => l.questionnaire_completed);
   } else if (currentTab === 'booked') {
