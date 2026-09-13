@@ -39,6 +39,14 @@
   .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid #334155; border-top: 3px solid #38bdf8; border-radius: 50%; animation: spin 1s linear infinite; vertical-align: middle; margin-right: 8px; }
   @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   .error { color: #ef4444; padding: 20px; text-align: center; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  @media (max-width: 768px) {
+    body { padding: 10px; }
+    h1 { font-size: 18px; }
+    .stat-card { min-width: 100px; padding: 10px 12px; }
+    .stat-card .num { font-size: 22px; }
+    th, td { padding: 8px 10px; font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -64,6 +72,7 @@
     <button class="tab" onclick="setTab('completed', this)">Completed</button>
   </div>
 
+  <div class="table-wrap">
   <table>
     <thead>
       <tr>
@@ -86,6 +95,7 @@
       <tr><td colspan="13" class="empty">Loading...</td></tr>
     </tbody>
   </table>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -139,37 +149,33 @@ function setTab(tab, btn) {
 
 async function loadData() {
   const tbody = document.getElementById('leads-tbody');
-  tbody.innerHTML = '<tr><td colspan="12" class="empty"><span class="loading"></span>Loading leads...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="13" class="empty"><span class="loading"></span>Loading leads...</td></tr>';
 
   if (!supabaseClient) {
-    tbody.innerHTML = '<tr><td colspan="12" class="error">Not connected. Please reload and login.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="13" class="error">Not connected. Please reload and login.</td></tr>';
     return;
   }
 
-  let query = supabaseClient.from('social_leads').select('*').order('created_at', { ascending: false }).limit(100);
+  // Always fetch all leads for stats (not filtered by tab)
+  const { data: allLeads, error: allErr } = await supabaseClient
+    .from('social_leads')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(100);
 
-  if (currentTab === 'qualified') {
-    query = query.eq('questionnaire_completed', true);
-  } else if (currentTab === 'booked') {
-    query = query.eq('consultation_booked', true);
-  } else if (currentTab === 'completed') {
-    query = query.eq('consultation_completed', true);
-  }
-
-  const { data, error } = await query;
-  if (error) {
-    tbody.innerHTML = `<tr><td colspan="13" class="error">Error: ${escapeHtml(error.message || 'Unknown error')}</td></tr>`;
+  if (allErr) {
+    tbody.innerHTML = `<tr><td colspan="13" class="error">Error: ${escapeHtml(allErr.message || 'Unknown error')}</td></tr>`;
     return;
   }
 
   document.getElementById('last-updated').textContent = `(Updated ${new Date().toLocaleTimeString()})`;
 
-  // Stats
-  const total = data.length;
-  const qualified = data.filter(l => l.questionnaire_completed).length;
-  const booked = data.filter(l => l.consultation_booked).length;
-  const completed = data.filter(l => l.consultation_completed).length;
-  const scoredLeads = data.filter(l => l.lead_score != null);
+  // Stats — always from ALL leads, regardless of active tab
+  const total = allLeads.length;
+  const qualified = allLeads.filter(l => l.questionnaire_completed).length;
+  const booked = allLeads.filter(l => l.consultation_booked).length;
+  const completed = allLeads.filter(l => l.consultation_completed).length;
+  const scoredLeads = allLeads.filter(l => l.lead_score != null);
   const avgScore = scoredLeads.length ? Math.round(scoredLeads.reduce((a, l) => a + (l.lead_score || 0), 0) / scoredLeads.length) : 0;
 
   document.getElementById('stats').innerHTML = `
@@ -179,6 +185,16 @@ async function loadData() {
     <div class="stat-card"><div class="num">${completed}</div><div class="label">Completed</div></div>
     <div class="stat-card"><div class="num">${avgScore}</div><div class="label">Avg Score</div></div>
   `;
+
+  // Filter data for the current tab
+  let data = allLeads;
+  if (currentTab === 'qualified') {
+    data = allLeads.filter(l => l.questionnaire_completed);
+  } else if (currentTab === 'booked') {
+    data = allLeads.filter(l => l.consultation_booked);
+  } else if (currentTab === 'completed') {
+    data = allLeads.filter(l => l.consultation_completed);
+  }
 
   if (!data.length) {
     tbody.innerHTML = '<tr><td colspan="13" class="empty">No leads found yet. Leads will appear here when people message the bot.</td></tr>';
