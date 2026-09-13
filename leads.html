@@ -111,10 +111,10 @@ let autoRefreshTimer = null;
 function escapeHtml(str) {
   if (str == null) return '';
   return String(str)
-    .replace(/&/g, '&')
-    .replace(/</g, '<')
-    .replace(/>/g, '>')
-    .replace(/"/g, '"')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
 
@@ -168,14 +168,15 @@ async function loadData() {
     return;
   }
 
+  const allData = allLeads || [];
   document.getElementById('last-updated').textContent = `(Updated ${new Date().toLocaleTimeString()})`;
 
   // Stats — always from ALL leads, regardless of active tab
-  const total = allLeads.length;
-  const qualified = allLeads.filter(l => l.questionnaire_completed).length;
-  const booked = allLeads.filter(l => l.consultation_booked).length;
-  const completed = allLeads.filter(l => l.consultation_completed).length;
-  const scoredLeads = allLeads.filter(l => l.lead_score != null);
+  const total = allData.length;
+  const qualified = allData.filter(l => l.questionnaire_completed).length;
+  const booked = allData.filter(l => l.consultation_booked).length;
+  const completed = allData.filter(l => l.consultation_completed).length;
+  const scoredLeads = allData.filter(l => l.lead_score != null);
   const avgScore = scoredLeads.length ? Math.round(scoredLeads.reduce((a, l) => a + (l.lead_score || 0), 0) / scoredLeads.length) : 0;
 
   document.getElementById('stats').innerHTML = `
@@ -189,11 +190,11 @@ async function loadData() {
   // Filter data for the current tab
   let data = allLeads;
   if (currentTab === 'qualified') {
-    data = allLeads.filter(l => l.questionnaire_completed);
+    data = allData.filter(l => l.questionnaire_completed);
   } else if (currentTab === 'booked') {
-    data = allLeads.filter(l => l.consultation_booked);
+    data = allData.filter(l => l.consultation_booked);
   } else if (currentTab === 'completed') {
-    data = allLeads.filter(l => l.consultation_completed);
+    data = allData.filter(l => l.consultation_completed);
   }
 
   if (!data.length) {
