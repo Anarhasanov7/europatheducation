@@ -1780,37 +1780,151 @@
   <div class="section-sub" data-en="Official letters from Sapienza, Tor Vergata, Pisa, Cassino, Napoli, Montpellier and more. Personal data blurred for privacy.">Официальные письма из Sapienza, Tor Vergata, Пизы, Кассино, Неаполя, Монпелье и других вузов. Личные данные размыты.</div>
   <style>
     .letters-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; margin-top:32px; }
-    .letters-grid a { display:block; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,.08); transition:transform .2s; }
+    .letters-grid a { display:block; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,.08); transition:transform .2s; position:relative; cursor:pointer; }
     .letters-grid a:hover { transform:scale(1.03); }
+    .letters-grid a::after { content:'⤢'; position:absolute; right:10px; bottom:10px; width:32px; height:32px; border-radius:50%; background:rgba(8,10,20,.65); color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; opacity:0; transition:opacity .2s; backdrop-filter:blur(4px); }
+    .letters-grid a:hover::after { opacity:1; }
     .letters-grid img { width:100%; height:280px; object-fit:cover; object-position:top; display:block; }
+    .letters-hint { margin-top:16px; font-size:13px; color:var(--gray); text-align:center; }
+
+    .lv-overlay { position:fixed; inset:0; z-index:9999; background:rgba(8,10,20,.94); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .lv-overlay.open { opacity:1; pointer-events:auto; }
+    .lv-img { max-width:min(92vw,880px); max-height:80vh; border-radius:10px; box-shadow:0 30px 90px rgba(0,0,0,.65); cursor:pointer; user-select:none; -webkit-user-drag:none; transition:opacity .18s ease, transform .18s ease; }
+    .lv-img.lv-out-left { opacity:0; transform:translateX(-46px) scale(.98); }
+    .lv-img.lv-out-right { opacity:0; transform:translateX(46px) scale(.98); }
+    .lv-img.lv-in-left { opacity:0; transform:translateX(-46px) scale(.98); transition:none; }
+    .lv-img.lv-in-right { opacity:0; transform:translateX(46px) scale(.98); transition:none; }
+    .lv-btn { position:absolute; border:none; background:rgba(255,255,255,.08); color:#fff; width:52px; height:52px; border-radius:50%; font-size:26px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s, transform .15s; backdrop-filter:blur(6px); z-index:2; }
+    .lv-btn:hover { background:var(--electric); color:var(--ink); transform:scale(1.08); }
+    .lv-prev { left:18px; top:50%; transform:translateY(-50%); }
+    .lv-next { right:18px; top:50%; transform:translateY(-50%); }
+    .lv-prev:hover { transform:translateY(-50%) scale(1.08); }
+    .lv-next:hover { transform:translateY(-50%) scale(1.08); }
+    .lv-close { top:18px; right:18px; font-size:28px; }
+    .lv-play { top:18px; right:80px; font-size:18px; }
+    .lv-counter { position:absolute; top:28px; left:24px; color:rgba(255,255,255,.75); font-size:14px; font-weight:600; letter-spacing:1px; font-variant-numeric:tabular-nums; z-index:2; }
+    .lv-progress { position:absolute; left:0; right:0; bottom:0; height:3px; background:rgba(255,255,255,.12); }
+    .lv-bar { height:100%; width:0; background:linear-gradient(90deg,var(--electric),var(--lime)); transition:width .3s; }
+    @media (max-width:640px) {
+      .lv-btn { width:44px; height:44px; font-size:22px; }
+      .lv-prev { left:8px; } .lv-next { right:8px; }
+      .lv-play { right:64px; }
+      .lv-img { max-height:76vh; }
+    }
   </style>
   <div class="letters-grid">
-    <a href="letters/letter-07.jpg" target="_blank"><img src="letters/letter-07.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-13.jpg" target="_blank"><img src="letters/letter-13.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-17.jpg" target="_blank"><img src="letters/letter-17.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-19.jpg" target="_blank"><img src="letters/letter-19.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-22.jpg" target="_blank"><img src="letters/letter-22.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-25.jpg" target="_blank"><img src="letters/letter-25.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-33.jpg" target="_blank"><img src="letters/letter-33.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-34.jpg" target="_blank"><img src="letters/letter-34.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-35.jpg" target="_blank"><img src="letters/letter-35.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-37.jpg" target="_blank"><img src="letters/letter-37.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-40.jpg" target="_blank"><img src="letters/letter-40.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-43.jpg" target="_blank"><img src="letters/letter-43.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-44.jpg" target="_blank"><img src="letters/letter-44.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-45.jpg" target="_blank"><img src="letters/letter-45.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-47.jpg" target="_blank"><img src="letters/letter-47.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-48.jpg" target="_blank"><img src="letters/letter-48.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-49.jpg" target="_blank"><img src="letters/letter-49.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-50.jpg" target="_blank"><img src="letters/letter-50.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-51.jpg" target="_blank"><img src="letters/letter-51.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-52.jpg" target="_blank"><img src="letters/letter-52.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-54.jpg" target="_blank"><img src="letters/letter-54.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-56.jpg" target="_blank"><img src="letters/letter-56.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-57.jpg" target="_blank"><img src="letters/letter-57.jpg" loading="lazy" alt="Admission letter"></a>
-    <a href="letters/letter-58.jpg" target="_blank"><img src="letters/letter-58.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-07.jpg"><img src="letters/letter-07.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-13.jpg"><img src="letters/letter-13.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-17.jpg"><img src="letters/letter-17.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-19.jpg"><img src="letters/letter-19.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-22.jpg"><img src="letters/letter-22.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-25.jpg"><img src="letters/letter-25.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-33.jpg"><img src="letters/letter-33.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-34.jpg"><img src="letters/letter-34.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-35.jpg"><img src="letters/letter-35.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-37.jpg"><img src="letters/letter-37.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-40.jpg"><img src="letters/letter-40.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-43.jpg"><img src="letters/letter-43.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-44.jpg"><img src="letters/letter-44.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-45.jpg"><img src="letters/letter-45.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-47.jpg"><img src="letters/letter-47.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-48.jpg"><img src="letters/letter-48.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-49.jpg"><img src="letters/letter-49.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-50.jpg"><img src="letters/letter-50.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-51.jpg"><img src="letters/letter-51.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-52.jpg"><img src="letters/letter-52.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-54.jpg"><img src="letters/letter-54.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-56.jpg"><img src="letters/letter-56.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-57.jpg"><img src="letters/letter-57.jpg" loading="lazy" alt="Admission letter"></a>
+    <a href="letters/letter-58.jpg"><img src="letters/letter-58.jpg" loading="lazy" alt="Admission letter"></a>
   </div>
+  <div class="letters-hint" data-en="Click a letter to open the viewer — then click, swipe, or use the arrows.">Нажмите на письмо, чтобы открыть просмотр — листайте кликом, свайпом или стрелками.</div>
 </section>
+
+<div class="lv-overlay" id="lvOverlay" aria-hidden="true">
+    <div class="lv-counter" id="lvCounter">1 / 24</div>
+    <button class="lv-btn lv-play" id="lvPlay" aria-label="Slideshow">⏵</button>
+    <button class="lv-btn lv-close" id="lvClose" aria-label="Close">×</button>
+    <button class="lv-btn lv-prev" id="lvPrev" aria-label="Previous">‹</button>
+    <img class="lv-img" id="lvImg" alt="Admission letter" draggable="false">
+    <button class="lv-btn lv-next" id="lvNext" aria-label="Next">›</button>
+    <div class="lv-progress"><div class="lv-bar" id="lvBar"></div></div>
+  </div>
+
+  <script>
+  (function () {
+    const links = Array.from(document.querySelectorAll('.letters-grid a'));
+    const srcs = links.map(a => a.getAttribute('href'));
+    const overlay = document.getElementById('lvOverlay');
+    const img = document.getElementById('lvImg');
+    const counter = document.getElementById('lvCounter');
+    const bar = document.getElementById('lvBar');
+    const playBtn = document.getElementById('lvPlay');
+    let i = 0, timer = null, touchX = null;
+
+    function preload(idx) {
+      [idx - 1, idx + 1].forEach(j => {
+        if (j >= 0 && j < srcs.length) { const p = new Image(); p.src = srcs[j]; }
+      });
+    }
+    function render(dir) {
+      counter.textContent = (i + 1) + ' / ' + srcs.length;
+      bar.style.width = ((i + 1) / srcs.length * 100) + '%';
+      if (dir) {
+        img.classList.add(dir > 0 ? 'lv-out-right' : 'lv-out-left');
+        setTimeout(() => {
+          img.src = srcs[i];
+          img.classList.remove('lv-out-right', 'lv-out-left');
+          img.classList.add(dir > 0 ? 'lv-in-right' : 'lv-in-left');
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            img.classList.remove('lv-in-right', 'lv-in-left');
+          }));
+        }, 160);
+      } else {
+        img.src = srcs[i];
+      }
+      preload(i);
+    }
+    function go(d) { i = (i + d + srcs.length) % srcs.length; render(d); restart(); }
+    function openAt(idx) {
+      i = idx;
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      render(0);
+    }
+    function close() {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      stop();
+    }
+    function play() { playBtn.textContent = '⏸'; timer = setInterval(() => go(1), 4500); }
+    function stop() { playBtn.textContent = '⏵'; clearInterval(timer); timer = null; }
+    function restart() { if (timer) { clearInterval(timer); play(); } }
+
+    links.forEach((a, idx) => a.addEventListener('click', e => { e.preventDefault(); openAt(idx); }));
+    document.getElementById('lvNext').addEventListener('click', e => { e.stopPropagation(); go(1); });
+    document.getElementById('lvPrev').addEventListener('click', e => { e.stopPropagation(); go(-1); });
+    document.getElementById('lvClose').addEventListener('click', close);
+    playBtn.addEventListener('click', () => timer ? stop() : play());
+    img.addEventListener('click', () => go(1));
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', e => {
+      if (!overlay.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'ArrowLeft') go(-1);
+    });
+    overlay.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+    overlay.addEventListener('touchend', e => {
+      if (touchX === null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+      touchX = null;
+    }, { passive: true });
+  })();
+  </script>
 
 <!-- ─── CTA ─── -->
 <section id="contact" class="fade-in">
