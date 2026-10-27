@@ -86,7 +86,7 @@ const SKIP_WORDS = [
 // Fallback images by category (verified Unsplash, no hotlink issues)
 const FALLBACK_IMAGES = {
   scholarship: [
-    'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&h=675&fit=crop',
+    'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1200&h=675&fit=crop',
     'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=675&fit=crop',
   ],
   admission: [
@@ -123,7 +123,7 @@ const FALLBACK_IMAGES = {
     'https://images.unsplash.com/photo-1559113202-c916b8e44373?w=1200&h=675&fit=crop', // Brussels Grand Place
   ],
 };
-const DEFAULT_HERO = 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&h=675&fit=crop';
+const DEFAULT_HERO = 'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1200&h=675&fit=crop';
 function fallbackImage(country, category, used) {
   const pools = [...(FALLBACK_IMAGES[country] || []), ...(FALLBACK_IMAGES[category] || FALLBACK_IMAGES.admission)];
   return pools.find(u => !used.has(u.toLowerCase())) || pools[0];
