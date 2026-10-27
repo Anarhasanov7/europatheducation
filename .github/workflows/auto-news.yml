@@ -1,0 +1,30 @@
+name: Auto-News EuroPath
+on:
+  schedule:
+    # Daily 05:00 UTC (07:00 Italy / 08:00 Baku) — after the NGO run
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch, rewrite and publish news
+        run: node .github/scripts/auto-news.mjs
+
+      - name: Commit and push generated pages
+        run: |
+          git config user.name "EuroPath News Bot"
+          git config user.email "noreply@github.com"
+          git add news/ en/news/ sitemap.xml
+          git diff --staged --quiet || git commit -m "Auto-news: daily education digest [skip ci]"
+          git push
