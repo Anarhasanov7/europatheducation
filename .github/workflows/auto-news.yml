@@ -25,6 +25,6 @@ jobs:
         run: |
           git config user.name "EuroPath News Bot"
           git config user.email "noreply@github.com"
-          git add news/ en/news/ sitemap.xml
+          git add news/ en/news/ sitemap.xml index.html
           git diff --staged --quiet || git commit -m "Auto-news: daily education digest [skip ci]"
           git push

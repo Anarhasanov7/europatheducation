@@ -1,6 +1,76 @@
 {
   "articles": [
     {
+      "slug": "2026-10-27-universite-a-bordeaux-je-n-ai-pas-envie-de-continuer-ces-etudiants-nau",
+      "file": "2026-10-27-universite-a-bordeaux-je-n-ai-pas-envie-de-continuer-ces-etudiants-nau.html",
+      "date": "2026-10-27",
+      "category": "admission",
+      "country": "fr",
+      "title_ru": "Университет в Бордо: «Я не хочу продолжать», - эти студенты, потерпевшие кораблекрушение в Паркурсапе, не смогли поступить на обучение по своему выбору",
+      "title_en": "University in Bordeaux: \"I don't want to continue\", these students shipwrecked from Parcoursup, prevented from joining the training of their choice",
+      "desc_ru": "Университет в Бордо: «Я не хочу продолжать», - эти студенты, потерпевшие кораблекрушение в Паркурсапе, не смогли присоединиться к обучению по своему выбору",
+      "desc_en": "University in Bordeaux: \"I do not want to continue\", these students shipwrecked from Parcoursup, prevented from joining the training of their choice South West",
+      "source_name": "Sud Ouest",
+      "source_url": "https://news.google.com/rss/articles/CBMiqgJBVV95cUxQT0pCQWViRVNERHFEa0djTE4wTEM0U3VHMVBFODcxaUVFNzJESmtBNEsydzJYV3dnMjNQUDZlM0UzZ0c0ZHJJNEpDTEQ5czU4SmN0d3N4c1N0azM5LVZkR3FWRldPTER0UEl4U29oM1VuNnRLZlk1RENWUklfV2xkNHg3YnBKTDBLWUJidXlGN1QtYmxsSElZeF9CRnZsd05KVFc5OG53RW1VNmhOQlFzLUw4ak9kb2hQZE00a0d3OFVleHZRbDh2QUR1Qkx1UkZlZG9QblIyRm9BdDR6UzhNblVsMmJTdnZheV9JUnF6UHdVM1RSYmZDMTA5X2pMREdXWnFWZFlYdVVnSzRXVTNybk9RWF81Q0xJTXdOcUhweWo5akl2NkVqOVlB?oc=5",
+      "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=675&fit=crop"
+    },
+    {
+      "slug": "2026-10-27-becas-de-la-agencia-efe-y-la-fundacion-la-caixa-ultima-fase-de-selecci",
+      "file": "2026-10-27-becas-de-la-agencia-efe-y-la-fundacion-la-caixa-ultima-fase-de-selecci.html",
+      "date": "2026-10-27",
+      "category": "scholarship",
+      "country": "es",
+      "title_ru": "Стипендии от Агентства «Окружающая среда для Европы» и Фонда «La Caixa», последний этап отбора студентов",
+      "title_en": "Scholarships from the EfE Agency and the \"la Caixa\" Foundation, last phase of student selection",
+      "desc_ru": "Стипендии от Агентства «Окружающая среда для Европы» и Фонда «la Caixa» последний этап отбора студентов Корпоративное агентство «Окружающая среда для Европы»",
+      "desc_en": "Scholarships from the EfE Agency and the \"la Caixa\" Foundation last phase of student selection Corporate EFE Agency",
+      "source_name": "Agencia EFE Corporativa",
+      "source_url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPeUhYUWdkc2lOb1dRaDI5bTlJYk9IalV3VkxmNXRoX045WG1INE5yVnBhT3NLc3BaeDRMM1RqVzlXQ1BjdFQyY25vREduT0lwNnZKaHBoVDJIZzM3U3UySFNpc2ZzQkZ3czdlR2hlZG42WXhwaGRTTHptZDVFa2NuMjdhaHZCMWVRc1hDVDRDTE12b0FCRFFVSlV6Z05CZktRSW11dU9aNWVnRC1MMGpN?oc=5",
+      "image": "https://agenciaefe.es/wp-content/uploads/2025/10/2025_10_23_1904-1.jpg"
+    },
+    {
+      "slug": "2026-10-27-el-gobierno-aprueba-un-nuevo-estatuto-del-estudiantado-universitario-p",
+      "file": "2026-10-27-el-gobierno-aprueba-un-nuevo-estatuto-del-estudiantado-universitario-p.html",
+      "date": "2026-10-27",
+      "category": "admission",
+      "country": "es",
+      "title_ru": "Правительство утверждает новый Устав студента университета для укрепления прав и участия студентов - Министерство науки, инноваций и университетов",
+      "title_en": "The Government approves a new University Student Statute to strengthen the rights and participation of students - Ministry of Science, Innovation and Universities",
+      "desc_ru": "Правительство утверждает новый Устав студента университета для укрепления прав и участия студентов Министерства науки, инноваций и университетов",
+      "desc_en": "The Government approves a new University Student Statute to strengthen the rights and participation of students Ministry of Science, Innovation and Universities",
+      "source_name": "Ministerio de Ciencia, Innovación y Universidades",
+      "source_url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNc2RQcDB1UnFqcXFaOV9sbUx4YUt4WGhCMFVNMEltVGJUVm1jMms0N3lYVGZ3LUE5eS1QcnR2bWN2dWtSUzZBY1pwRGF0WGZ4SmRERFlFM196eTRyWWhaeXlUNGxjc1JFbmtyN29SUkpMa1V4cnFIbGN0SXdLcjFsaDdUdlB2SXRDWUpudTdrYW9wdzNidFdjamJxT3pyMEk5alJqdElpZlVZVENZRGZibHdn?oc=5",
+      "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=675&fit=crop"
+    },
+    {
+      "slug": "2026-10-27-becas-complementarias-de-movilidad-destinadas-a-estudiantes-universita",
+      "file": "2026-10-27-becas-complementarias-de-movilidad-destinadas-a-estudiantes-universita.html",
+      "date": "2026-10-27",
+      "category": "scholarship",
+      "country": "es",
+      "title_ru": "Стипендии на дополнительную мобильность для студентов ВУЗов",
+      "title_en": "Complementary mobility scholarships for university students",
+      "desc_ru": "Стипендии для студентов университетов La Brújula de Calahorra",
+      "desc_en": "Complementary mobility scholarships for university students La Brújula de Calahorra",
+      "source_name": "La Brújula de Calahorra",
+      "source_url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOQnJhOWhmWWcydnZBZEtYZy1XdUtEU2Y4Tno3TEYtaXNIVWUwZWYyN3pURTNxSVVhY1lmR3NjNkc0c3k3RTJON1JHU0gyaVMxYXVCYXQ5WFV1X2pjYWJXTzVRdDBFdnFfczd3VmlmY196Uk4wSDllLVptZmtIa1JGbVEtRV9UZ0hPUDdxemZ5aVhjbGhxS2VNTzlxRi12TG8tU0FmVWdaUVZhenFPUUNtOURzWHBTY2VRSUZjdEN3?oc=5",
+      "image": "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=675&fit=crop"
+    },
+    {
+      "slug": "2026-10-27-remplacement-de-parcoursup-une-bourse-etudiante-sur-l-inflation-renove",
+      "file": "2026-10-27-remplacement-de-parcoursup-une-bourse-etudiante-sur-l-inflation-renove.html",
+      "date": "2026-10-27",
+      "category": "scholarship",
+      "country": "fr",
+      "title_ru": "«Замена Parcoursup», «студенческая стипендия на инфляцию», «обновление университетов»... меры, предусмотренные Себастьеном Лекорню для старшеклассников и студентов университетов",
+      "title_en": "\"Replacement of Parcoursup\", \"a student scholarship on inflation\", \"renovating universities\"... the measures envisaged by Sébastien Lecornu for high school and university students",
+      "desc_ru": "«Замена Parcoursup», «студенческая стипендия на инфляцию», «обновление университетов»... меры, предусмотренные Себастьеном Лекорню для старшеклассников и студентов L'Indépendant",
+      "desc_en": "\"Replacement of Parcoursup\", \"a student scholarship on inflation\", \"renovating universities\"... the measures envisaged by Sébastien Lecornu for high school and university students L'Indépendant",
+      "source_name": "L'Indépendant",
+      "source_url": "https://news.google.com/rss/articles/CBMipwJBVV95cUxNNFJYZ1NteFVwOWh0OTJJejdLSUU1eHQxeE9seHV3dnZsWExGc0hqcmJyVDVsclh6ZE9ER0pvTXB0eE1sd194MnBvU2xQQTFUbnBMcHM2WWlySlhqc05maUZhMDQ3T1dkcXdIdEFQTVdRTmxNaFUzR3JrdzhUTXJ6TThoTG9YcGdBaGluZ2hLLWZWTW5uS3ZZa0NUUkgyaE5SWWFCa3pYb25tNk1fQkg2TTE0ZzNOUjVRd3pKRkJ4SUZIRlRRRGdPOUR4bHFLSjBuOTRyaXU0VjBicThaQ0pBaUtYZldBOUltbDVwaEpkXzJNRzYyN1Bmd0tqVlNzYmxzanhaT1RlQmNMY3QyWVByYjZIQkRfbHd4MHM4TEJ1NWJQUF9hYXNj?oc=5",
+      "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&h=675&fit=crop"
+    },
+    {
       "slug": "2026-10-27-universita-a-cesena-mentre-il-campus-cresce-in-citta-si-inaugurano-nuo",
       "file": "2026-10-27-universita-a-cesena-mentre-il-campus-cresce-in-citta-si-inaugurano-nuo.html",
       "date": "2026-10-27",
@@ -9,7 +79,10 @@
       "title_en": "University in Cesena, while the Campus grows in the city, new student accommodation is inaugurated",
       "source_name": "Comune di Cesena",
       "source_url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQajZ0Z3lqOGJSV1U3by1hTmdOZXdjNkRieGhKUmk1Tld5UW94SzNIMlhHUnI2elFyM2R5MFdVRldUcWdJS2lXZmc2YThQQ1ZGd2pxVmpIcGFRY20xcXBoREd6OTFaRkRpS194SVpNUVFnNXliY2N5c0xGdHd2alQ3RFRXMEx1QmVvOUVLdXc5Mm1XTEhEUUNHLW8zYzZMc1o4ZEF4M1BXam1JdTdJcjgtZ2Q3M2c0Mm5ZbGJ1ZzczLTdHYjFDaXpVTGw0NDhwZw?oc=5",
-      "image": "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Университет в Чезене, в то время как кампус растет в городе, для студентов открывается новое жилье Муниципалитет Чезены",
+      "desc_en": "University in Cesena, while the Campus grows in the city, new accommodation is inaugurated for students Municipality of Cesena"
     },
     {
       "slug": "2026-10-27-liguria-universita-alloggi-per-studenti-nuova-residenza-con-52-posti-f",
@@ -20,7 +93,10 @@
       "title_en": "Liguria, university: student accommodation, new residence with 52 places financed by the ministry",
       "source_name": "Telenord",
       "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQalRoWWxCNWVUZlM5R19leWR2NzE1MU54NVlyWG9LNF95NWZpNkV4NGhyOXJxbW1uR3hPWGFEOVJtN2Jmd2gwMjZnT0hyZlp6VE5QMnZJdGZKSFVlWkxya3NOU2F3VTFhbEN4eEpGZ0xHU1g4LUNsWjNJamxFV0xkV3AtMTBDUGE2?oc=5",
-      "image": "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Лигурия, университет: студенческое жилье, новая резиденция на 52 места, финансируемая министерством Telenord",
+      "desc_en": "Liguria, university: student accommodation, new residence with 52 places financed by the Telenord ministry"
     },
     {
       "slug": "2026-10-27-erasmus-days-2026-una-settimana-dedicata-alle-opportunita-di-mobilita",
@@ -31,7 +107,10 @@
       "title_en": "Erasmus Days 2026: a week dedicated to international mobility opportunities",
       "source_name": "Politecnico di Torino",
       "source_url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQak5KZmFJaXlXRzJHSnZZRXplWXdrSm4wdUliaVFiSnpPLWdfSXA5T01fYW05OFNNQzFIdmFYS0VMcHV5bFhVbFRLak00bUpLXzBfRk94SVRrczdFcTZyQzM4d2R0ei1ZZmtyaGFpcmVCemhSOVhXRkszVzJ1STlvczR5QndCX0hlY0xyVG5GTU85RUlyWkwtOWtnSi14VVNPd0VMT1QtQ3hJQ2tjMWJfcnpRb1Q2TldROHA5Z2c3SHRZLU1GTHJQOU5R?oc=5",
-      "image": "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Erasmus Days 2026: неделя, посвященная возможностям международной мобильности Политехнический университет Турина",
+      "desc_en": "Erasmus Days 2026: a week dedicated to international mobility opportunities Politecnico di Torino"
     },
     {
       "slug": "2026-10-27-giovani-erasmus-23-studenti-internazionali-in-visita-alle-catacombe-di",
@@ -42,7 +121,10 @@
       "title_en": "Youth: Erasmus+, 23 international students visiting the Catacombs of San Sebastiano in Rome - SIR",
       "source_name": "SIR - Servizio Informazione Religiosa",
       "source_url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOUTZ4NGtsOHRVazU4X29nWG1WbEluR2FCMjB1aGk1amxfN2JOa0E0RXNEa1hETHlZTmpKZlNySUNDazNtWWpRT1doYXFndmNBc044V05SM2hhNFZ4QUd5X0NETE9ORFZhbWdCdm9ERUd6aTA2SGZzdC1hUWliSDgzYTNFSVdRRExldlZfc29EVGd6TWZuS3VzNGU0aW1Ed0hCd3JYbkJkRXN3LUlhXzcyTWdOb25zMWVXeFl2cWxMd2l5LWxJZUM4RnBzclJ1Y1ZFeXZ3TA?oc=5",
-      "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Молодежь: Erasmus+, 23 иностранных студента посещают катакомбы Сан-Себастьяно в Риме SIR - Служба религиозной информации",
+      "desc_en": "Youth: Erasmus+, 23 international students visiting the Catacombs of San Sebastiano in Rome SIR - Religious Information Service"
     },
     {
       "slug": "2026-10-27-fashion-art-and-food-management-studenti-internazionali-e-tasso-dioccu",
@@ -53,7 +135,10 @@
       "title_en": "Fashion, Art and Food Management. International students and graduates occupancy rate at 90%",
       "source_name": "Ateneapoli",
       "source_url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxNeGpQb2hEak9PVTV0TjBxS05ReGEtZmVKWm1oNzBjX3JwSm93NTFURUo5dmZ4V1loYWVNNWM0MUxaaENYakpWNlQ0ZnpxUjh2dDJXWmlpMlJ6cWt6Nmd0SmppT2s3M0prX1ktMGRBbG1ZS0xTVEMyMXJHdGZZMU9CS3luLWhBMDdYbldrTTlyYy1UaWFMTnM4aF80U2lZNWxTMlQ2RjczYkl5M2xDLXhwWWZkblZTMlh3NFk0QkRzNC1FQ3dSUlZLSjZRLWNTMkdlaFlJ?oc=5",
-      "image": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Мода, искусство и управление продуктами питания. Уровень занятости иностранных студентов и выпускников в Афинах составляет 90%",
+      "desc_en": "Fashion, Art and Food Management. International students and graduates occupancy rate at 90% Athens"
     },
     {
       "slug": "2026-10-27-sport-e-universita-prorogati-i-termini-per-partecipare-all-avviso-per",
@@ -64,7 +149,10 @@
       "title_en": "Sports and universities, the deadlines to participate in the Notice for scholarships for students with high sporting merits have been extended",
       "source_name": "Federazione Italiana Sport Rotellistici",
       "source_url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxPRmY4YVkxaWk4YTJiNzQ2ZEFxMUp4TGxQVjZ1NldiaW56eUxsRzNNdC1KQjdvam1hbExxN1Q3QWgxVFgyM21vbVJGZnFKNW1tOVNoRVBtVC0xamNwR2huY2tXTldZeURrQUpfd2lWVjBBSVNtdkhrbjJPY3p2Slh4ZU1XY3pEUmVGUFNmb3VWNHFmRFNPaF9GQ2t1VFZVQUtUYm5Fb2UxSnBlNDB2UXZUY3JBOWJoeGxCdEZLNzIyNVR5LU93UXhPenNQdDFVX1EzQTZnMDRDU0lReVhHdHZ4MUZHeUFPcXBDVnQ4RnR2YVZUdnh2Y2V0dQ?oc=5",
-      "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Спорт и университеты, продлены сроки участия в Уведомлении о стипендиях для студентов с высокими спортивными заслугами Итальянская федерация дорожного спорта",
+      "desc_en": "Sports and universities, the deadlines to participate in the Notice for scholarships for students with high sporting merits have been extended Italian Federation of Road Sports"
     },
     {
       "slug": "2026-10-27-allenare-il-talento-nelle-corse-e-in-universita-i-protagonisti-di-ferr",
@@ -75,7 +163,10 @@
       "title_en": "Training talent, in racing and in universities. The protagonists of Ferrari Hypercar meet students",
       "source_name": "Università degli studi di Parma",
       "source_url": "https://news.google.com/rss/articles/CBMiR0FVX3lxTE5kd1oyTWNTR2o5bXA4S1JheWRvVzd3MGVFTkd1MENDc2VMcWV5a3JPS2NzSFQyVW10TEZHNVhTNVVpNUhjYXdn?oc=5",
-      "image": "https://images.unsplash.com/photo-1544531585-9847b68c8c86?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1544531585-9847b68c8c86?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Подготовка талантов, в гонках и в университетах. Главные герои гиперкара Ferrari встречают студентов Пармского университета",
+      "desc_en": "Training talent, in racing and in universities. The protagonists of Ferrari Hypercar meet students University of Parma"
     },
     {
       "slug": "2026-10-27-bando-alloggi-per-studenti-prorogata-la-scadenza-per-l-ultimazione-dei",
@@ -86,7 +177,10 @@
       "title_en": "Call for student accommodation: the deadline for the completion of the works has been extended to 19 August 2026 - ANCE",
       "source_name": "ANCE - Associazione Nazionale Costruttori Edili",
       "source_url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQeDVrVTFhMlFYbjBKUUs2cFY2LVVGaTJnRW1vcHhRbnNGNEJtY1ZEc1F6WUZERWhOLTBiR0lOT0Z4ZDdSTW1TcS1HemQwQUpVOUNKNzR4UlhMR0VJZ2lVTFhvblRVa1dhdW9ZUTFqcmQ1UkdUWXpScUxQSmRQZElGR1ZZZ1JmOGZBNXVVdkw3SG9qN1Q5NXM2S1l3M3VORzFDb2NjT3MwODR2R29WcTFvM1U5dEkzM3NwTDQ0?oc=5",
-      "image": "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Заявка на размещение студентов: срок завершения работ продлен до 19 августа 2026 года. ANCE - Associazione Nazionale Costrutori Edili",
+      "desc_en": "Call for student accommodation: the deadline for the completion of the works has been extended to 19 August 2026 ANCE - Associazione Nazionale Costrutori Edili"
     },
     {
       "slug": "2026-10-27-sport-e-universita-borse-di-studio-per-studenti-atleti-bando-prorogato",
@@ -97,7 +191,10 @@
       "title_en": "Sports and universities, scholarships for student-athletes: call extended to 10 November",
       "source_name": "Fitarco",
       "source_url": "https://news.google.com/rss/articles/CBMi6wFBVV95cUxPcEl3Q3VhWnMwamhUX2RmdWViOUc3SHJDR3UzcF9RWUl2NTA5RWJieXVWSlZZUXROUGFlcXl0SWs0UU5aaFFESk4xcmxBOFJHTHhURWZyNzRxS3I5QzRsbEhDN3JfbnRlWGpoaW55UHE3TFlUbFBfYllRM1h3QW9hUzVYUnNxdWpDUGx3SXRNTzVZVURDZThzd2NsOTNTLWdzelJBcURPb0lJVUgydUpGU3pSbXNVdG5SVzIxdnh5VFRoeXRkczctLU96NF9XeF90akxSeENyekpQZzFudm40N3NUOXVmRWFpaTNZ?oc=5",
-      "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Спорт и университеты, стипендии для студентов-спортсменов: звонок продлен до 10 ноября Fitarco",
+      "desc_en": "Sports and universities, scholarships for student-athletes: call extended to 10 November Fitarco"
     },
     {
       "slug": "2026-10-27-erasmus-bando-di-mobilita-per-tirocinio-a-a-2026-27",
@@ -108,7 +205,10 @@
       "title_en": "Erasmus+ /Mobility call for internships (academic year 2026/27)",
       "source_name": "Università di Catania",
       "source_url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOVkFiQncyWXp3STVUTkItbVd3N25XcTFWU2pfMUN5eE1WWlgyX0k3ZW9vMEw3cFRJMkJFbGhMMmJlckhHQ1N4eF82RDVkZmRDWTE5TXB2U3hJWFpKcmprNDRQLWpmZzc1XzV0RXphR1IxTHJ1WTVRSTBQZTdVSWx5VTB0b3RWMExnb1FodlRmdjRPSnd3empacVdR?oc=5",
-      "image": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=675&fit=crop"
+      "image": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=675&fit=crop",
+      "country": "it",
+      "desc_ru": "Erasmus+ /Mobility приглашает на стажировку (2026/27 учебный год) Университет Катании",
+      "desc_en": "Erasmus+ /Mobility call for internships (academic year 2026/27) University of Catania"
     }
   ]
 }

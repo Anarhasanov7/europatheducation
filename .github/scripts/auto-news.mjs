@@ -11,24 +11,44 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SITE = 'https://europatheducation.eu';
-const MAX_ARTICLES_PER_RUN = 5;
+const MAX_ARTICLES_PER_RUN = +(process.env.MAX_ARTICLES || 5);
+const REGEN_ONLY = process.argv.includes('--regen');
 const REGISTRY_PATH = join(ROOT, 'news', 'articles.json');
 
 // ─── Feeds: popular Italian sources + international education ───
 const FEEDS = [
-  { name: 'Google News IT: Università', lang: 'it', category: 'admission',
+  // ─── Italy (primary market) ───
+  { name: 'Google News IT: Università', lang: 'it', country: 'it', category: 'admission',
     url: 'https://news.google.com/rss/search?q=universit%C3%A0+OR+immatricolazioni+OR+iscrizioni+universit%C3%A0&hl=it&gl=IT&ceid=IT:it' },
-  { name: 'Google News IT: Borse di studio', lang: 'it', category: 'scholarship',
+  { name: 'Google News IT: Borse di studio', lang: 'it', country: 'it', category: 'scholarship',
     url: 'https://news.google.com/rss/search?q=%22borsa+di+studio%22+OR+%22borse+di+studio%22+OR+DSU+OR+%22diritto+allo+studio%22&hl=it&gl=IT&ceid=IT:it' },
-  { name: 'Google News IT: Studenti internazionali', lang: 'it', category: 'visa',
+  { name: 'Google News IT: Studenti internazionali', lang: 'it', country: 'it', category: 'visa',
     url: 'https://news.google.com/rss/search?q=%22studenti+internazionali%22+OR+%22studenti+stranieri%22+OR+%22visto+per+studio%22+OR+Universitaly&hl=it&gl=IT&ceid=IT:it' },
-  { name: 'Google News IT: Erasmus & mobilità', lang: 'it', category: 'mobility',
+  { name: 'Google News IT: Erasmus & mobilità', lang: 'it', country: 'it', category: 'mobility',
     url: 'https://news.google.com/rss/search?q=Erasmus+OR+%22studio+all%27estero%22+OR+%22mobilit%C3%A0+studentesca%22&hl=it&gl=IT&ceid=IT:it' },
-  { name: 'Google News IT: Alloggi studenti', lang: 'it', category: 'housing',
+  { name: 'Google News IT: Alloggi studenti', lang: 'it', country: 'it', category: 'housing',
     url: 'https://news.google.com/rss/search?q=%22alloggi+studenteschi%22+OR+%22alloggi+per+studenti%22+OR+%22mensa+universitaria%22+OR+%22costo+della+vita%22+studenti&hl=it&gl=IT&ceid=IT:it' },
-  { name: 'Corriere: Scuola', lang: 'it', category: 'admission',
+  { name: 'Corriere: Scuola', lang: 'it', country: 'it', category: 'admission',
     url: 'https://www.corriere.it/rss/scuola.xml' },
-  { name: 'The PIE News', lang: 'en', category: 'admission',
+  // ─── Spain ───
+  { name: 'Google News ES: Universidades', lang: 'es', country: 'es', category: 'admission',
+    url: 'https://news.google.com/rss/search?q=universidad+OR+universidades+OR+matr%C3%ADcula+universitaria&hl=es&gl=ES&ceid=ES:es' },
+  { name: 'Google News ES: Becas', lang: 'es', country: 'es', category: 'scholarship',
+    url: 'https://news.google.com/rss/search?q=becas+OR+%22beca+mec%22+OR+%22estudiantes+internacionales%22+OR+%22estudiar+en+espa%C3%B1a%22&hl=es&gl=ES&ceid=ES:es' },
+  { name: 'Google News ES: Erasmus & residencias', lang: 'es', country: 'es', category: 'mobility',
+    url: 'https://news.google.com/rss/search?q=erasmus+OR+%22residencia+de+estudiantes%22+OR+%22alojamiento+universitario%22&hl=es&gl=ES&ceid=ES:es' },
+  // ─── France ───
+  { name: 'Google News FR: Universités', lang: 'fr', country: 'fr', category: 'admission',
+    url: 'https://news.google.com/rss/search?q=universit%C3%A9+OR+inscription+universitaire+OR+%22parcoursup%22&hl=fr&gl=FR&ceid=FR:fr' },
+  { name: 'Google News FR: Bourses & étudiants', lang: 'fr', country: 'fr', category: 'scholarship',
+    url: 'https://news.google.com/rss/search?q=%22bourse+%C3%A9tudiante%22+OR+%22%C3%A9tudiants+%C3%A9trangers%22+OR+%22campus+france%22+OR+CROUS&hl=fr&gl=FR&ceid=FR:fr' },
+  // ─── Belgium ───
+  { name: 'Google News BE: Universités', lang: 'fr', country: 'be', category: 'admission',
+    url: 'https://news.google.com/rss/search?q=universit%C3%A9+OR+%22%C3%A9tudiants+internationaux%22+OR+bachelier+OR+inscription&hl=fr&gl=BE&ceid=BE:fr' },
+  { name: 'Google News BE: Studenten', lang: 'nl', country: 'be', category: 'scholarship',
+    url: 'https://news.google.com/rss/search?q=universiteit+OR+studenten+OR+beurs+OR+studietoelage&hl=nl&gl=BE&ceid=BE:nl' },
+  // ─── International education press ───
+  { name: 'The PIE News', lang: 'en', country: 'it', category: 'admission',
     url: 'https://www.thepienews.com/feed/' },
 ];
 
@@ -44,6 +64,14 @@ const MUST_KEYWORDS = [
   'lingua italiana','afam','accademia','ranking','qs','politecnico',
   'bando','scadenza','deadline','tassa universitaria','tasse','retta',
   'post-laurea','formazione','corsi di laurea','open day','orientamento',
+  // Spanish / French / Dutch equivalents (multi-country feeds)
+  'universidad','universidades','estudiantes','estudiante','beca','becas',
+  'matrícula','inscripción','facultad','grado','máster','master universitario',
+  'residencia de estudiantes','alojamiento','selectividad','ebau','doctorado',
+  'université','universités','étudiants','étudiant','bourse','bourses',
+  'inscription','parcoursup','licence','crous','campus france','faculté',
+  'logement étudiant','résidence étudiante','doctorat','bachelier',
+  'universiteit','studenten','beurs','studietoelage','inschrijving','kot',
 ];
 
 const SKIP_WORDS = [
@@ -90,6 +118,28 @@ function stripHtml(s) {
     .replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
 }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Brand-association SEO: every public title/description must mention the country + EuroPath
+const SEO_KEYWORDS = 'EuroPath Education, Италия, Italy, study in Italy, итальянские университеты, поступление в Италию, Испания, Франция, Бельгия, учёба в Европе';
+const COUNTRY = {
+  it: { ru: 'Италия', en: 'Italy', test: /итали|ital/i, prefixRu: 'Италия: ', prefixEn: 'Italy: ' },
+  es: { ru: 'Испания', en: 'Spain', test: /испан|spain|españ/i, prefixRu: 'Испания: ', prefixEn: 'Spain: ' },
+  fr: { ru: 'Франция', en: 'France', test: /франц|france|french|français/i, prefixRu: 'Франция: ', prefixEn: 'France: ' },
+  be: { ru: 'Бельгия', en: 'Belgium', test: /бельг|belgi/i, prefixRu: 'Бельгия: ', prefixEn: 'Belgium: ' },
+};
+function seoTitle(t, ru, country = 'it') {
+  t = (t || '').trim();
+  const c = COUNTRY[country] || COUNTRY.it;
+  if (!c.test.test(t)) t = (ru ? c.prefixRu : c.prefixEn) + t;
+  return t;
+}
+function seoDesc(d, ru, country = 'it') {
+  d = (d || '').trim();
+  const c = COUNTRY[country] || COUNTRY.it;
+  if (!c.test.test(d)) d = (ru ? c.prefixRu : c.prefixEn) + d;
+  if (!/europath/i.test(d)) d += ' — EuroPath Education';
+  return d.slice(0, 155);
+}
 function slugify(s) {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
     .replace(/[^a-z0-9а-яё]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,70).replace(/-+$/,'');
@@ -130,7 +180,7 @@ function parseFeed(xml, feed) {
     let realUrl = '';
     const hrefM = rawDesc.match(/href="([^"]+)"/) || rawDesc.match(/href=&quot;([^&]+)&quot;/);
     if (hrefM && !hrefM[1].includes('news.google.com')) realUrl = hrefM[1];
-    if (title && link) items.push({ title, link: link.trim(), realUrl, sourceSiteUrl: srcUrl, description: desc, pubDate, image: img, feedName: srcName, feedLang: feed.lang, category: feed.category });
+    if (title && link) items.push({ title, link: link.trim(), realUrl, sourceSiteUrl: srcUrl, description: desc, pubDate, image: img, feedName: srcName, feedLang: feed.lang, category: feed.category, country: feed.country || 'it' });
   }
   return items;
 }
@@ -204,12 +254,21 @@ const CONTEXT_EN = {
   mobility: `Mobility programmes like Erasmus+ are built into the Italian degree — a semester or two abroad across Europe and beyond is part of the journey.`,
   housing: `What does student life in Italy actually cost? We calculated it city by city — Milan, Rome, Bologna and smaller university towns.`,
 };
+const CONTEXT_RU_FOREIGN = `EuroPath Education сопровождает поступление не только в итальянские университеты, но и в вузы Испании, Франции и Бельгии — от подбора программы до документов и визы. Италия остаётся нашим главным направлением: бесплатная консультация поможет сравнить варианты.`;
+const CONTEXT_EN_FOREIGN = `EuroPath Education supports admissions not only to Italian universities but also to institutions in Spain, France and Belgium — from program selection to documents and visas. Italy remains our core destination: a free consultation helps compare your options.`;
+function contextFor(item, ru) {
+  if ((item.country || 'it') === 'it') {
+    const m = ru ? CONTEXT_RU : CONTEXT_EN;
+    return m[item.category] || m.admission;
+  }
+  return ru ? CONTEXT_RU_FOREIGN : CONTEXT_EN_FOREIGN;
+}
 
 // ─── HTML template (matches existing /news design) ───
 const CSS = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box}:root{--ink:#080a14;--navy:#0b1e3f;--electric:#3ddfff;--lime:#c6ff3d;--gray:#6b7280;--off:#f4f5f7}body{font-family:'Inter',-apple-system,sans-serif;background:var(--off);color:var(--ink);line-height:1.75}.topbar{background:var(--ink);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800;font-size:16px}.brand .mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--electric),var(--lime));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:900;font-size:16px}.topbar a.home{color:#9ca3af;text-decoration:none;font-size:13px;font-weight:600}.topbar a.cta{background:linear-gradient(135deg,var(--electric),var(--lime));color:var(--ink);padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none}article{max-width:780px;margin:0 auto;padding:40px 20px 60px}.crumbs{font-size:13px;color:var(--gray);margin-bottom:20px}.crumbs a{color:#2563eb;text-decoration:none}h1{font-size:clamp(26px,4.5vw,34px);font-weight:900;letter-spacing:-.5px;line-height:1.2;margin-bottom:14px}.meta{font-size:13px;color:var(--gray);margin-bottom:28px}h2{font-size:21px;font-weight:800;margin:32px 0 12px}p{margin-bottom:14px;color:#1f2937}.lead{font-size:17px}.hero{width:100%;border-radius:16px;margin:0 0 28px;aspect-ratio:16/9;object-fit:cover}ul{margin:0 0 16px 22px;color:#1f2937}li{margin-bottom:6px}.cta-box{margin:40px 0;background:linear-gradient(135deg,var(--navy),#16213e);color:#fff;border-radius:20px;padding:32px;text-align:center}.cta-box h2{color:#fff;margin:0 0 10px;font-size:22px}.cta-box p{color:#cbd5e1;margin-bottom:20px}.cta-box a{display:inline-block;background:linear-gradient(135deg,var(--electric),var(--lime));color:var(--ink);padding:14px 32px;border-radius:24px;font-weight:800;text-decoration:none}.related{border-top:1px solid #e5e7eb;padding-top:28px;margin-top:40px}.related h3{font-size:17px;margin-bottom:12px}.related a{display:block;color:#0369a1;text-decoration:none;font-weight:600;padding:6px 0}.src{font-size:13px;color:var(--gray);font-style:italic}footer{text-align:center;color:var(--gray);font-size:12px;padding:32px 20px}footer a{color:var(--gray)}.langlink{color:#9ca3af;font-size:12px;text-decoration:none;border:1px solid #4b5563;padding:3px 10px;border-radius:12px;margin-left:10px}`;
 const FAVICON = `<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233ddfff'/><stop offset='1' stop-color='%23c6ff3d'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='72' font-size='62' font-weight='900' text-anchor='middle' fill='%23080a14' font-family='Arial,sans-serif'>E</text></svg>">`;
 
-function articlePage({ lang, title, desc, url, altUrl, altLabel, bodyHtml, image, dateIso, dateLabel, catLabel, homeLabel, newsLabel, newsHref, ctaH, ctaP, ctaBtn, footerText, jsonLd }) {
+function articlePage({ lang, title, desc, keywords, url, altUrl, altLabel, bodyHtml, image, dateIso, dateLabel, catLabel, homeLabel, newsLabel, newsHref, ctaH, ctaP, ctaBtn, footerText, jsonLd }) {
   return `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
@@ -217,6 +276,7 @@ function articlePage({ lang, title, desc, url, altUrl, altLabel, bodyHtml, image
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)} — EuroPath Education</title>
 <meta name="description" content="${esc(desc)}">
+<meta name="keywords" content="${esc(keywords || SEO_KEYWORDS)}">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="${url}">
 ${FAVICON}
@@ -352,6 +412,118 @@ ${newsCards || `    <p style="color:var(--gray)">${ru ? 'Новости появ
 </html>`;
 }
 
+// ─── Article page renderer (shared by publish + regen) ───
+function renderArticleFiles(a) {
+  const urlRu = `${SITE}/news/${a.file}`;
+  const urlEn = `${SITE}/en/news/${a.file}`;
+  const d = new Date(a.date + 'T12:00:00Z');
+  const country = a.country || 'it';
+  const displayUrl = a.source_url || '';
+
+  const bodyRu = `<p class="lead">${esc(a.desc_ru || a.title_ru)}</p>
+<p>${contextFor(a, true)}</p>
+<p class="src">Источник: <a href="${esc(displayUrl)}" target="_blank" rel="noopener nofollow">${esc(a.source_name || '')}</a>. Материал переведён и адаптирован командой EuroPath Education.</p>`;
+
+  const bodyEn = `<p class="lead">${esc(a.desc_en || a.title_en)}</p>
+<p>${contextFor(a, false)}</p>
+<p class="src">Source: <a href="${esc(displayUrl)}" target="_blank" rel="noopener nofollow">${esc(a.source_name || '')}</a>. Translated and adapted by the EuroPath Education team.</p>`;
+
+  const titleRu = seoTitle(a.title_ru, true, country);
+  const titleEn = seoTitle(a.title_en, false, country);
+  const descRu = seoDesc(a.desc_ru || a.title_ru, true, country);
+  const descEn = seoDesc(a.desc_en || a.title_en, false, country);
+  const keywords = `${SEO_KEYWORDS}, ${(COUNTRY[country] || COUNTRY.it).ru}, ${(COUNTRY[country] || COUNTRY.it).en}, ${a.category}`;
+
+  const articleLd = {
+    '@context': 'https://schema.org', '@type': 'Article',
+    headline: titleRu, description: (a.desc_ru || a.title_ru).slice(0, 200), inLanguage: 'ru',
+    keywords, datePublished: a.date, dateModified: a.date,
+    author: { '@type': 'Organization', name: 'EuroPath Education', url: SITE + '/' },
+    publisher: { '@type': 'EducationalOrganization', name: 'EuroPath Education', url: SITE + '/', logo: { '@type': 'ImageObject', url: SITE + '/logos/europath-logo-og.jpg' } },
+    about: [{ '@type': 'Country', name: (COUNTRY[country] || COUNTRY.it).en }, { '@type': 'EducationalOrganization', name: 'EuroPath Education' }],
+    mainEntityOfPage: urlRu, image: a.image,
+  };
+  const articleLdEn = { ...articleLd, headline: titleEn, description: (a.desc_en || a.title_en).slice(0, 200), inLanguage: 'en', mainEntityOfPage: urlEn };
+  const crumbsLd = (lang) => ({
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: lang === 'ru' ? 'Главная' : 'Home', item: SITE + '/' },
+      { '@type': 'ListItem', position: 2, name: lang === 'ru' ? 'Новости' : 'News', item: SITE + (lang === 'ru' ? '/news/' : '/en/news/') },
+      { '@type': 'ListItem', position: 3, name: lang === 'ru' ? titleRu : titleEn },
+    ],
+  });
+
+  writeFileSync(join(ROOT, 'news', a.file), articlePage({
+    lang: 'ru', title: titleRu, desc: descRu, keywords, url: urlRu, altUrl: urlEn, altLabel: 'EN',
+    bodyHtml: bodyRu, image: a.image, dateIso: a.date, dateLabel: fmtDateRu(d),
+    catLabel: CAT_RU[a.category] || 'Новости', homeLabel: 'Главная', newsLabel: 'Новости и гайды', newsHref: '/news/',
+    ctaH: 'Хотите учиться в Италии?', ctaP: 'Бесплатная консультация — оценим профиль и расскажем о стипендиях.', ctaBtn: 'Консультация',
+    footerText: `© 2026 EuroPath Education · <a href="/">europatheducation.eu</a> · <a href="https://t.me/studywithanar">Telegram</a>`,
+    jsonLd: [articleLd, crumbsLd('ru')],
+  }));
+
+  writeFileSync(join(ROOT, 'en', 'news', a.file), articlePage({
+    lang: 'en', title: titleEn, desc: descEn, keywords, url: urlEn, altUrl: urlRu, altLabel: 'RU',
+    bodyHtml: bodyEn, image: a.image, dateIso: a.date, dateLabel: fmtDateEn(d),
+    catLabel: CAT_EN[a.category] || 'News', homeLabel: 'Home', newsLabel: 'News & guides', newsHref: '/en/news/',
+    ctaH: 'Want to study in Italy?', ctaP: 'Free consultation — we assess your profile and scholarship options.', ctaBtn: 'Consultation',
+    footerText: `© 2026 EuroPath Education · <a href="/">europatheducation.eu</a> · <a href="https://t.me/studywithanar">Telegram</a>`,
+    jsonLd: [articleLdEn, crumbsLd('en')],
+  }));
+}
+
+// Re-render every registry article — backfills descriptions and applies
+// the latest template/SEO rules retroactively. Cheap: local files only.
+function regenAllPages(articles) {
+  mkdirSync(join(ROOT, 'news'), { recursive: true });
+  mkdirSync(join(ROOT, 'en', 'news'), { recursive: true });
+  for (const a of articles) {
+    if (!a.country) a.country = 'it';
+    if (!a.desc_ru) {
+      const f = join(ROOT, 'news', a.file);
+      const m = existsSync(f) ? readFileSync(f, 'utf8').match(/<p class="lead">([\s\S]*?)<\/p>/) : null;
+      a.desc_ru = m ? m[1].replace(/<[^>]+>/g, '').trim() : a.title_ru;
+    }
+    if (!a.desc_en) {
+      const f = join(ROOT, 'en', 'news', a.file);
+      const m = existsSync(f) ? readFileSync(f, 'utf8').match(/<p class="lead">([\s\S]*?)<\/p>/) : null;
+      a.desc_en = m ? m[1].replace(/<[^>]+>/g, '').trim() : a.title_en;
+    }
+    renderArticleFiles(a);
+  }
+}
+
+// ─── Homepage top-10 news block (rewritten each run between markers) ───
+const HOME_BLOCK_RE = /<!-- AUTO-NEWS:START -->[\s\S]*?<!-- AUTO-NEWS:END -->/;
+const NF_CSS = `.nf{padding:60px 24px;max-width:900px;margin:0 auto}.nf-head{margin-bottom:24px}.nf-kicker{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#3ddfff;margin-bottom:8px}.nf-head h2{font-size:clamp(22px,4vw,30px);font-weight:900;color:#fff;letter-spacing:-.5px;margin:0}.nf-list{display:flex;flex-direction:column;gap:10px}.nf-item{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 18px;text-decoration:none;transition:background .2s,transform .2s}.nf-item:hover{background:rgba(255,255,255,.08);transform:translateX(4px)}.nf-tag{flex-shrink:0;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#080a14;background:linear-gradient(135deg,#3ddfff,#c6ff3d);padding:4px 10px;border-radius:20px}.nf-title{flex:1;font-size:14px;font-weight:600;color:#e5e7eb;line-height:1.4}.nf-date{flex-shrink:0;font-size:11px;color:#6b7280;white-space:nowrap}.nf-all{display:inline-block;margin-top:20px;font-size:13px;font-weight:700;color:#3ddfff;text-decoration:none}.nf-all:hover{text-decoration:underline}@media(max-width:600px){.nf-item{flex-wrap:wrap}.nf-date{display:none}}`;
+function homeNewsBlock(articles) {
+  const items = articles.slice(0, 10).map(a => `      <a class="nf-item" href="/news/${a.file}">
+        <span class="nf-tag">${esc(CAT_RU[a.category] || 'Новости')}</span>
+        <span class="nf-title" data-en="${esc(a.title_en)}">${esc(a.title_ru)}</span>
+        <span class="nf-date">${fmtDateRu(new Date(a.date + 'T12:00:00Z'))}</span>
+      </a>`).join('\n');
+  return `<!-- AUTO-NEWS:START -->
+<section class="nf" aria-label="Latest news">
+  <style>${NF_CSS}</style>
+  <div class="nf-head">
+    <div class="nf-kicker" data-en="Europe education news">Новости образования в Европе</div>
+    <h2 data-en="Latest from EuroPath — studying in Italy &amp; Europe">Последние новости — учёба в Италии и Европе</h2>
+  </div>
+  <div class="nf-list">
+${items || '      <p class="nf-title" style="color:#9ca3af">Новости скоро появятся.</p>'}
+  </div>
+  <a class="nf-all" href="/news/" data-en="All news &amp; guides →">Все новости и гайды →</a>
+</section>
+<!-- AUTO-NEWS:END -->`;
+}
+function updateHomeNews(articles) {
+  const f = join(ROOT, 'index.html');
+  const html = readFileSync(f, 'utf8');
+  if (!HOME_BLOCK_RE.test(html)) { console.log('  index.html: AUTO-NEWS markers not found — skipped'); return; }
+  writeFileSync(f, html.replace(HOME_BLOCK_RE, homeNewsBlock(articles)));
+  console.log('  index.html: top-10 news block updated');
+}
+
 // ─── Sitemap ───
 function buildSitemap(articles) {
   const today = isoDate(new Date());
@@ -401,146 +573,111 @@ async function main() {
     return false;
   }
 
-  // Fetch
-  const all = [];
-  for (const feed of FEEDS) {
-    const items = await fetchFeed(feed);
-    console.log(`  ${feed.name}: ${items.length}`);
-    all.push(...items);
-  }
-  console.log(`Total fetched: ${all.length}`);
-
-  // Score + dedup
-  const candidates = all
-    .filter(i => i.title && i.link)
-    .filter(i => !existingUrls.has(i.link.toLowerCase()))
-    .filter(i => !isDupTitle(i.title))
-    .map(i => ({ i, s: scoreItem(i) }))
-    .filter(c => c.s > 0)
-    .sort((a, b) => b.s - a.s);
-  console.log(`Candidates after scoring/dedup: ${candidates.length}`);
-
-  if (!candidates.length) { console.log('Nothing to publish today.'); return; }
-
-  // Dedup within this run's batch too (same story can arrive via different source URLs)
-  const picked = [];
-  const batchTitles = [];
-  const similar = (a, b) => {
-    const wa = a.toLowerCase().split(/\s+/).filter(w => w.length > 3);
-    const wb = b.toLowerCase().split(/\s+/).filter(w => w.length > 3);
-    if (!wa.length || !wb.length) return false;
-    let m = 0;
-    for (const w of wa) if (wb.some(x => x.includes(w) || w.includes(x))) m++;
-    return m / Math.max(wa.length, wb.length) >= 0.5;
-  };
-  for (const c of candidates) {
-    if (picked.length >= MAX_ARTICLES_PER_RUN) break;
-    if (batchTitles.some(t => similar(t, c.i.title))) { console.log(`  [batch-dedup] skipping dup: ${c.i.title.slice(0, 60)}`); continue; }
-    batchTitles.push(c.i.title);
-    picked.push(c);
-  }
   const today = new Date();
   const dateStr = isoDate(today);
+  let published = 0;
 
-  for (const { i: item } of picked) {
-    console.log(`\nPublishing: ${item.title.slice(0, 80)}`);
-    const cleanTitle = item.title.replace(/\s*-\s*[^-]{3,40}$/, '').trim();
-
-    // Image + fuller description from source page.
-    // Google News RSS ships boilerplate ("Copertura completa..."/"Full coverage...")
-    // and placeholder images — for those items always resolve the real article page.
-    const isGoogleNews = item.link.includes('news.google.com');
-    const isBoilerplate = (s) => /full coverage|copertura completa|полный охват|google news/i.test(s || '');
-    // For Google News items prefer the real article URL for meta scraping
-    const metaTarget = isGoogleNews ? (item.realUrl || item.link) : item.link;
-
-    let image = item.image && !isBadImage(item.image) ? item.image : null;
-    if (!image) image = await fetchMeta(metaTarget, 'image');
-    if (!image && item.sourceSiteUrl) image = await fetchMeta(item.sourceSiteUrl, 'image');
-    if (!image) {
-      const pool = FALLBACK_IMAGES[item.category] || FALLBACK_IMAGES.admission;
-      image = pool.find(u => !usedImages.has(u.toLowerCase())) || pool[0];
+  if (!REGEN_ONLY) {
+    // Fetch
+    const all = [];
+    for (const feed of FEEDS) {
+      const items = await fetchFeed(feed);
+      console.log(`  ${feed.name}: ${items.length}`);
+      all.push(...items);
     }
+    console.log(`Total fetched: ${all.length}`);
 
-    let longDesc = (!item.description || isBoilerplate(item.description)) ? '' : item.description;
-    if (isGoogleNews || !longDesc || longDesc.length < 120) {
-      const d = await fetchMeta(metaTarget, 'description');
-      if (d && !isBoilerplate(d) && d.length > (longDesc || '').length) longDesc = stripHtml(d);
-    }
-    if (!longDesc) longDesc = cleanTitle; // last resort: lead = title
+    // Score + dedup
+    const candidates = all
+      .filter(i => i.title && i.link)
+      .filter(i => !existingUrls.has(i.link.toLowerCase()))
+      .filter(i => !isDupTitle(i.title))
+      .map(i => ({ i, s: scoreItem(i) }))
+      .filter(c => c.s > 0)
+      .sort((a, b) => b.s - a.s);
+    console.log(`Candidates after scoring/dedup: ${candidates.length}`);
 
-    // Translations: RU is primary, EN second
-    const srcLang = item.feedLang === 'en' ? 'en' : 'it';
-    const titleRu = await translate(cleanTitle, srcLang, 'ru');
-    const titleEn = srcLang === 'en' ? cleanTitle : await translate(cleanTitle, srcLang, 'en');
-    const descRu = await translate(longDesc || cleanTitle, srcLang, 'ru');
-    const descEn = srcLang === 'en' ? (longDesc || cleanTitle) : await translate(longDesc || cleanTitle, srcLang, 'en');
-
-    const slug = `${dateStr}-${slugify(cleanTitle) || 'news'}`;
-    const fileName = `${slug}.html`;
-    const urlRu = `${SITE}/news/${fileName}`;
-    const urlEn = `${SITE}/en/news/${fileName}`;
-
-    const displayUrl = item.realUrl || item.link;
-    const bodyRu = `<p class="lead">${esc(descRu)}</p>
-<p>${CONTEXT_RU[item.category] || CONTEXT_RU.admission}</p>
-<p class="src">Источник: <a href="${esc(displayUrl)}" target="_blank" rel="noopener nofollow">${esc(item.feedName)}</a>. Материал переведён и адаптирован командой EuroPath Education.</p>`;
-
-    const bodyEn = `<p class="lead">${esc(descEn)}</p>
-<p>${CONTEXT_EN[item.category] || CONTEXT_EN.admission}</p>
-<p class="src">Source: <a href="${esc(displayUrl)}" target="_blank" rel="noopener nofollow">${esc(item.feedName)}</a>. Translated and adapted by the EuroPath Education team.</p>`;
-
-    const jsonLd = {
-      '@context': 'https://schema.org', '@type': 'Article',
-      headline: titleRu, description: descRu.slice(0, 200), inLanguage: 'ru',
-      datePublished: dateStr, dateModified: dateStr,
-      author: { '@type': 'Organization', name: 'EuroPath Education', url: SITE + '/' },
-      publisher: { '@type': 'EducationalOrganization', name: 'EuroPath Education', url: SITE + '/', logo: { '@type': 'ImageObject', url: SITE + '/logos/europath-logo-og.jpg' } },
-      mainEntityOfPage: urlRu, image,
+    // Dedup within this run's batch too (same story can arrive via different source URLs)
+    const picked = [];
+    const batchTitles = [];
+    const similar = (a, b) => {
+      const wa = a.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+      const wb = b.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+      if (!wa.length || !wb.length) return false;
+      let m = 0;
+      for (const w of wa) if (wb.some(x => x.includes(w) || w.includes(x))) m++;
+      return m / Math.max(wa.length, wb.length) >= 0.5;
     };
-    const jsonLdEn = { ...jsonLd, headline: titleEn, description: descEn.slice(0, 200), inLanguage: 'en', mainEntityOfPage: urlEn };
+    for (const c of candidates) {
+      if (picked.length >= MAX_ARTICLES_PER_RUN) break;
+      if (batchTitles.some(t => similar(t, c.i.title))) { console.log(`  [batch-dedup] skipping dup: ${c.i.title.slice(0, 60)}`); continue; }
+      batchTitles.push(c.i.title);
+      picked.push(c);
+    }
 
-    mkdirSync(join(ROOT, 'news'), { recursive: true });
-    mkdirSync(join(ROOT, 'en', 'news'), { recursive: true });
+    for (const { i: item } of picked) {
+      console.log(`\nPublishing: ${item.title.slice(0, 80)}`);
+      const cleanTitle = item.title.replace(/\s*-\s*[^-]{3,40}$/, '').trim();
 
-    writeFileSync(join(ROOT, 'news', fileName), articlePage({
-      lang: 'ru', title: titleRu, desc: descRu.slice(0, 155), url: urlRu, altUrl: urlEn, altLabel: 'EN',
-      bodyHtml: bodyRu, image, dateIso: dateStr, dateLabel: fmtDateRu(today),
-      catLabel: CAT_RU[item.category] || 'Новости', homeLabel: 'Главная', newsLabel: 'Новости и гайды', newsHref: '/news/',
-      ctaH: 'Хотите учиться в Италии?', ctaP: 'Бесплатная консультация — оценим профиль и расскажем о стипендиях.', ctaBtn: 'Консультация',
-      footerText: `© 2026 EuroPath Education · <a href="/">europatheducation.eu</a> · <a href="https://t.me/studywithanar">Telegram</a>`,
-      jsonLd,
-    }));
+      // Image + fuller description from source page.
+      // Google News RSS ships boilerplate and placeholder images — for those
+      // items always resolve the real article page.
+      const isGoogleNews = item.link.includes('news.google.com');
+      const isBoilerplate = (s) => /full coverage|copertura completa|полный охват|google news/i.test(s || '');
+      const metaTarget = isGoogleNews ? (item.realUrl || item.link) : item.link;
 
-    writeFileSync(join(ROOT, 'en', 'news', fileName), articlePage({
-      lang: 'en', title: titleEn, desc: descEn.slice(0, 155), url: urlEn, altUrl: urlRu, altLabel: 'RU',
-      bodyHtml: bodyEn, image, dateIso: dateStr, dateLabel: fmtDateEn(today),
-      catLabel: CAT_EN[item.category] || 'News', homeLabel: 'Home', newsLabel: 'News & guides', newsHref: '/en/news/',
-      ctaH: 'Want to study in Italy?', ctaP: 'Free consultation — we assess your profile and scholarship options.', ctaBtn: 'Consultation',
-      footerText: `© 2026 EuroPath Education · <a href="/">europatheducation.eu</a> · <a href="https://t.me/studywithanar">Telegram</a>`,
-      jsonLd: jsonLdEn,
-    }));
+      let image = item.image && !isBadImage(item.image) ? item.image : null;
+      if (!image) image = await fetchMeta(metaTarget, 'image');
+      if (!image && item.sourceSiteUrl) image = await fetchMeta(item.sourceSiteUrl, 'image');
+      if (!image) {
+        const pool = FALLBACK_IMAGES[item.category] || FALLBACK_IMAGES.admission;
+        image = pool.find(u => !usedImages.has(u.toLowerCase())) || pool[0];
+      }
 
-    articles.unshift({
-      slug, file: fileName, date: dateStr, category: item.category,
-      title_ru: titleRu, title_en: titleEn,
-      source_name: item.feedName, source_url: displayUrl, image,
-    });
-    usedImages.add((image || '').toLowerCase());
-    console.log(`  → /news/${fileName} + /en/news/${fileName}`);
-    await new Promise(r => setTimeout(r, 800)); // be nice to MyMemory
+      let longDesc = (!item.description || isBoilerplate(item.description)) ? '' : item.description;
+      if (isGoogleNews || !longDesc || longDesc.length < 120) {
+        const dd = await fetchMeta(metaTarget, 'description');
+        if (dd && !isBoilerplate(dd) && dd.length > (longDesc || '').length) longDesc = stripHtml(dd);
+      }
+      if (!longDesc) longDesc = cleanTitle; // last resort: lead = title
+
+      // Translations: RU is primary, EN second
+      const srcLang = item.feedLang || 'it';
+      const titleRu = await translate(cleanTitle, srcLang, 'ru');
+      const titleEn = srcLang === 'en' ? cleanTitle : await translate(cleanTitle, srcLang, 'en');
+      const descRu = await translate(longDesc || cleanTitle, srcLang, 'ru');
+      const descEn = srcLang === 'en' ? (longDesc || cleanTitle) : await translate(longDesc || cleanTitle, srcLang, 'en');
+
+      const slug = `${dateStr}-${slugify(cleanTitle) || 'news'}`;
+      const fileName = `${slug}.html`;
+
+      articles.unshift({
+        slug, file: fileName, date: dateStr, category: item.category, country: item.country || 'it',
+        title_ru: titleRu, title_en: titleEn, desc_ru: descRu, desc_en: descEn,
+        source_name: item.feedName, source_url: item.realUrl || item.link, image,
+      });
+      usedImages.add((image || '').toLowerCase());
+      published++;
+      console.log(`  → /news/${fileName} + /en/news/${fileName}`);
+      await new Promise(r => setTimeout(r, 800)); // be nice to MyMemory
+    }
+    if (!picked.length) console.log('Nothing new to publish — regen only.');
   }
+
+  // Re-render ALL article pages so SEO/template upgrades apply retroactively
+  regenAllPages(articles);
 
   // Cap registry at 400 entries to bound file size
   registry.articles = articles.slice(0, 400);
   writeFileSync(REGISTRY_PATH, JSON.stringify(registry, null, 2));
 
-  // Regenerate index pages + sitemap
+  // Regenerate index pages + sitemap + homepage top-10 block
   writeFileSync(join(ROOT, 'news', 'index.html'), indexPage('ru', registry.articles));
   writeFileSync(join(ROOT, 'en', 'news', 'index.html'), indexPage('en', registry.articles));
   writeFileSync(join(ROOT, 'sitemap.xml'), buildSitemap(registry.articles));
+  updateHomeNews(registry.articles);
 
-  console.log(`\nDone. Published ${picked.length} article(s). Registry: ${registry.articles.length} total.`);
+  console.log(`\nDone. Published ${published} article(s). Registry: ${registry.articles.length} total.`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
