@@ -373,7 +373,7 @@ function indexPage(lang, articles) {
     </a>`).join('\n');
 
   const newsCards = articles.map(a => `    <a class="ncard" href="${base}${a.file}">
-      ${a.image ? `<img src="${esc(a.image)}" alt="" loading="lazy">` : ''}
+      <img src="${esc(a.image || fallbackImage(a.country || 'it', a.category, new Set()))}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_HERO}'">
       <div class="body">
         <div class="ntitle">${esc(ru ? a.title_ru : a.title_en)}</div>
         <div class="nmeta">${ru ? fmtDateRu(new Date(a.date)) : fmtDateEn(new Date(a.date))} · ${esc(ru ? CAT_RU[a.category]||'Новости' : CAT_EN[a.category]||'News')} · ${esc(a.source_name||'')}</div>
@@ -519,14 +519,20 @@ function regenAllPages(articles) {
 const HOME_BLOCK_RE = /<!-- AUTO-NEWS:START -->[\s\S]*?<!-- AUTO-NEWS:END -->/;
 const NF_CSS = `.nf{padding:64px 24px;max-width:980px;margin:0 auto}.nf-head{margin-bottom:26px}.nf-kicker{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#0b74d1;margin-bottom:8px}.nf-head h2{font-size:clamp(24px,4vw,32px);font-weight:900;color:#0b1e3f;letter-spacing:-.5px;margin:0}.nf-list{display:grid;gap:14px}.nf-item{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:12px 18px 12px 12px;text-decoration:none;box-shadow:0 1px 4px rgba(11,30,63,.06);transition:box-shadow .2s,transform .2s}.nf-item:hover{box-shadow:0 10px 26px rgba(11,30,63,.14);transform:translateY(-2px)}.nf-img{flex-shrink:0;width:104px;height:76px;object-fit:cover;border-radius:10px}.nf-main{flex:1;min-width:0}.nf-tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#080a14;background:linear-gradient(135deg,#3ddfff,#c6ff3d);padding:3px 10px;border-radius:20px;margin-bottom:6px}.nf-title{display:block;font-size:15px;font-weight:700;color:#111827;line-height:1.4}.nf-date{flex-shrink:0;font-size:12px;color:#6b7280;white-space:nowrap;font-weight:600}.nf-all{display:inline-block;margin-top:24px;font-size:14px;font-weight:800;color:#0b74d1;text-decoration:none}.nf-all:hover{text-decoration:underline}@media(max-width:640px){.nf-img{width:76px;height:58px}.nf-date{display:none}.nf-title{font-size:14px}}`;
 function homeNewsBlock(articles) {
-  const items = articles.slice(0, 10).map(a => `      <a class="nf-item" href="/news/${a.file}">
-        ${a.image ? `<img class="nf-img" src="${esc(a.image)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
+  const usedImgs = new Set();
+  const items = articles.slice(0, 10).map(a => {
+    const fb = fallbackImage(a.country || 'it', a.category, usedImgs);
+    const src = a.image || fb;
+    usedImgs.add((src || '').toLowerCase()); usedImgs.add(fb.toLowerCase());
+    return `      <a class="nf-item" href="/news/${a.file}">
+        <img class="nf-img" src="${esc(src)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${fb}'">
         <span class="nf-main">
           <span class="nf-tag">${esc(CAT_RU[a.category] || 'Новости')}</span>
           <span class="nf-title" data-en="${esc(a.title_en)}">${esc(a.title_ru)}</span>
         </span>
         <span class="nf-date">${fmtDateRu(new Date(a.date + 'T12:00:00Z'))}</span>
-      </a>`).join('\n');
+      </a>`;
+  }).join('\n');
   return `<!-- AUTO-NEWS:START -->
 <section class="nf" aria-label="Latest news">
   <style>${NF_CSS}</style>
