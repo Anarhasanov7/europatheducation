@@ -42,7 +42,7 @@
   "name": "EuroPath Education",
   "alternateName": ["EuroPath Education", "europatheducation.eu", "Euro Path Education"],
   "url": "https://europatheducation.eu/",
-  "logo": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233ddfff'/><text x='50' y='72' font-size='62' font-weight='900' text-anchor='middle' fill='%23080a14'>E</text></svg>",
+  "logo": {"@type": "ImageObject", "url": "https://europatheducation.eu/logos/europath-logo-og.jpg"},
   "description": "EuroPath Education is a consulting company based in Italy that helps international students enroll in top Italian state universities. Direct partnerships with Sapienza, Bologna, Padova, Pavia, Torino, Milano, Pisa, Firenze, Roma Tre, and Tor Vergata. Scholarships, visas, housing, and full support.",
   "address": {
     "@type": "PostalAddress",
@@ -53,20 +53,17 @@
     "addressCountry": "IT"
   },
   "sameAs": [
-    "https://europatheducation.eu/"
+    "https://europatheducation.eu/",
+    "https://www.instagram.com/europath_education",
+    "https://www.threads.net/@study.with.anar",
+    "https://t.me/edupathJAbot"
   ],
-  "department": [
-    {"@type": "EducationalOrganization", "name": "Sapienza Università di Roma"},
-    {"@type": "EducationalOrganization", "name": "Università di Bologna"},
-    {"@type": "EducationalOrganization", "name": "Università di Pavia"},
-    {"@type": "EducationalOrganization", "name": "Università degli Studi di Torino"},
-    {"@type": "EducationalOrganization", "name": "Università di Padova"},
-    {"@type": "EducationalOrganization", "name": "Università degli Studi di Milano"},
-    {"@type": "EducationalOrganization", "name": "Università di Pisa"},
-    {"@type": "EducationalOrganization", "name": "Università di Firenze"},
-    {"@type": "EducationalOrganization", "name": "Università degli Studi Roma Tre"},
-    {"@type": "EducationalOrganization", "name": "Università di Roma Tor Vergata"}
-  ]
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "url": "https://t.me/edupathJAbot",
+    "availableLanguage": ["ru", "en", "it"]
+  }
 }
 </script>
 <style>
@@ -1154,6 +1151,7 @@
     <li><a href="#process" data-en="Process">Процесс</a></li>
     <li><a href="#location" data-en="Location">Локация</a></li>
     <li><a href="#reviews" data-en="Reviews">Отзывы</a></li>
+    <li><a href="/news/" data-en="Guides">Гайды</a></li>
     <li><a href="#contact-form" data-en="Contact">Контакты</a></li>
     <li><a href="login.html" data-en="Account">Личный кабинет</a></li>
   </ul>
