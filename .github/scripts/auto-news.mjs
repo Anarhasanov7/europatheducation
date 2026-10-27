@@ -534,7 +534,7 @@ function homeNewsBlock(articles) {
       </a>`;
   }).join('\n');
   return `<!-- AUTO-NEWS:START -->
-<section class="nf" aria-label="Latest news">
+<section id="news" class="nf" aria-label="Latest news">
   <style>${NF_CSS}</style>
   <div class="nf-head">
     <div class="nf-kicker" data-en="Europe education news">Новости образования в Европе</div>

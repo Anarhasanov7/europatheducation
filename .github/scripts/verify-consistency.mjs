@@ -52,6 +52,16 @@ console.log('=== News engine ===');
 ok(index.includes('<!-- AUTO-NEWS:START -->') && index.includes('<!-- AUTO-NEWS:END -->'), 'AUTO-NEWS markers present');
 ok((index.match(/class="nf-item"/g) || []).length >= 5, `homepage feed items (got ${(index.match(/class="nf-item"/g) || []).length})`);
 ok((index.match(/class="nf-img"/g) || []).length === (index.match(/class="nf-item"/g) || []).length, 'every feed item has a thumbnail');
+// Every feed item links to a real article file
+const feedHrefs = [...index.matchAll(/class="nf-item" href="\/news\/([^"]+)"/g)].map(m => m[1]);
+ok(feedHrefs.every(f => existsSync(join(ROOT, 'news', f))), 'every feed link resolves to a real article');
+// Registry ↔ disk: no orphan files, no missing files
+const diskNews = readdirSync(join(ROOT, 'news')).filter(f => /^20\d\d-\d\d-\d\d.*\.html$/.test(f));
+const regFiles = new Set(registry.map(a => a.file));
+const orphans = diskNews.filter(f => !regFiles.has(f));
+const missing = registry.filter(a => !diskNews.includes(a.file));
+ok(orphans.length === 0, `no orphan news files on disk (${orphans.length})`);
+ok(missing.length === 0, `no registry entries missing files (${missing.length})`);
 const COUNTRIES = ['Италия', 'Испания', 'Франция', 'Бельгия'];
 let badArticles = 0;
 for (const a of registry) {
@@ -62,8 +72,33 @@ for (const a of registry) {
   if (!COUNTRIES.some(c => title.startsWith(c)) || !title.includes('EuroPath Education')) { badArticles++; console.log(`    bad title SEO: ${title.slice(0, 70)}`); }
   if (!a.image) { badArticles++; console.log(`    no image: ${a.file}`); }
   if (!sitemap.includes(a.file)) { badArticles++; console.log(`    not in sitemap: ${a.file}`); }
+  if (!ru.includes('"@type": "Article"') && !ru.includes('"@type":"Article"')) { badArticles++; console.log(`    no Article schema: ${a.file}`); }
+  if (!ru.includes('BreadcrumbList')) { badArticles++; console.log(`    no BreadcrumbList: ${a.file}`); }
+  if (!ru.includes(`canonical" href="https://europatheducation.eu/news/${a.file}"`)) { badArticles++; console.log(`    bad canonical: ${a.file}`); }
+  if (!ru.includes(`hreflang="en"`)) { badArticles++; console.log(`    no EN hreflang: ${a.file}`); }
+  if (!ru.includes('og:title')) { badArticles++; console.log(`    no OG tags: ${a.file}`); }
 }
-ok(badArticles === 0, `all ${registry.length} articles: files exist, country+EuroPath title, image, sitemap`);
+ok(badArticles === 0, `all ${registry.length} articles: files, country+EuroPath title, image, sitemap, Article+Breadcrumb schema, canonical, hreflang, OG`);
+// Guides exist and are linked
+const GUIDE_FILES = ['regionalnaya-stipendiya-dsu-italiya.html','postuplenie-v-universitet-italii-2027.html','priznanie-diploma-cimea-dichiarazione-di-valore.html','studencheskaya-viza-italiya-tipy-dokumenty.html','stoimost-ucheby-i-zhizni-v-italii.html'];
+for (const g of GUIDE_FILES) {
+  ok(existsSync(join(ROOT, 'news', g)) && sitemap.includes(g), `guide exists + in sitemap: ${g.slice(0, 40)}`);
+}
+ok(existsSync(join(ROOT, 'news', 'index.html')) && existsSync(join(ROOT, 'en', 'news', 'index.html')), 'news index pages RU + EN exist');
+const enNews = existsSync(join(ROOT, 'en', 'news')) ? readdirSync(join(ROOT, 'en', 'news')).filter(f => /^20\d\d-\d\d-\d\d.*\.html$/.test(f)).length : 0;
+ok(enNews === diskNews.length, `EN mirrors: ${enNews} EN vs ${diskNews.length} RU`);
+
+console.log('=== Homepage structure ===');
+ok(index.includes('data-en="News">Новости') && index.includes('href="#news"'), 'nav → #news renamed');
+ok(index.includes('data-en="FAQ">Вопросы') && index.includes('href="#faq"'), 'nav → #faq present');
+for (const id of ['mission','why-italy','partners','journey','packages','process','location','reviews','news','faq','contact-form']) {
+  ok(index.includes(`id="${id}"`), `section #${id} present`);
+}
+ok((index.match(/<details class="faq-item">/g) || []).length === (faqLd?.mainEntity?.length || -1), 'FAQ HTML count = FAQPage schema count');
+ok((index.match(/<details class="faq-item">[\s\S]*?summary data-en/g) || []).length >= 10, 'FAQ items carry data-en translations');
+ok(existsSync(join(ROOT, 'i18n.js')), 'i18n.js (EN toggle) exists');
+ok(existsSync(join(ROOT, '.github', 'workflows', 'auto-news.yml')) && existsSync(join(ROOT, '.github', 'workflows', 'consistency.yml')), 'both workflows present');
+ok(existsSync(join(ROOT, 'data', 'offer.json')), 'offer.json source of truth exists');
 
 console.log('=== Hygiene ===');
 ok(index.includes(offer.telegram), `Telegram link = ${offer.telegram}`);
