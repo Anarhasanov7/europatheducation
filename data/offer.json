@@ -1,0 +1,45 @@
+{
+  "_meta": "Single source of truth for EuroPath service packages — mirrors the LaTeX Service Packages document. verify-consistency.mjs checks the whole site against this file.",
+  "packages": [
+    {
+      "id": "p1",
+      "name_ru": "Консьерж поступления",
+      "name_en": "Admission Concierge",
+      "price": 2000,
+      "regular_price": 2000,
+      "instalments": [900, 800, 300],
+      "features": {
+        "program_selection": true,
+        "exam_prep": false,
+        "dsu_scholarship": false,
+        "codice_fiscale_bank": false,
+        "accommodation": false,
+        "full_duration": false,
+        "emergency_24_7": true,
+        "in_person_accompaniment": "extra"
+      }
+    },
+    {
+      "id": "p2",
+      "name_ru": "Полный пакет",
+      "name_en": "Full Package",
+      "price": 2400,
+      "regular_price": 3000,
+      "discount_note": "early-stage discount",
+      "instalments": [1000, 900, 500],
+      "support_months": 12,
+      "features": {
+        "program_selection": true,
+        "exam_prep": true,
+        "dsu_scholarship": true,
+        "codice_fiscale_bank": true,
+        "accommodation": true,
+        "full_duration": true,
+        "emergency_24_7": true,
+        "in_person_accompaniment": "extra"
+      }
+    }
+  ],
+  "faq_must_not_contain": ["Аликанте", "Alicante"],
+  "telegram": "studywithanar"
+}
