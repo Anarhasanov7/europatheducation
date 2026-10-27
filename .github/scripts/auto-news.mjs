@@ -105,7 +105,29 @@ const FALLBACK_IMAGES = {
     'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=1200&h=675&fit=crop',
     'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&h=675&fit=crop',
   ],
+  // Country landmark pools — used before category pools for visual variety
+  it: [
+    'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=1200&h=675&fit=crop', // Colosseum, Rome
+    'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1200&h=675&fit=crop', // Venice
+    'https://images.unsplash.com/photo-1513581166391-887a96ddeafd?w=1200&h=675&fit=crop', // Milan Duomo
+  ],
+  es: [
+    'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=1200&h=675&fit=crop', // Madrid Gran Vía
+    'https://images.unsplash.com/photo-1583422409516-2895a77efded?w=1200&h=675&fit=crop', // Barcelona
+  ],
+  fr: [
+    'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200&h=675&fit=crop', // Paris / Eiffel
+    'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&h=675&fit=crop', // Paris street
+  ],
+  be: [
+    'https://images.unsplash.com/photo-1559113202-c916b8e44373?w=1200&h=675&fit=crop', // Brussels Grand Place
+  ],
 };
+const DEFAULT_HERO = 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&h=675&fit=crop';
+function fallbackImage(country, category, used) {
+  const pools = [...(FALLBACK_IMAGES[country] || []), ...(FALLBACK_IMAGES[category] || FALLBACK_IMAGES.admission)];
+  return pools.find(u => !used.has(u.toLowerCase())) || pools[0];
+}
 
 const BAD_IMAGE_HINTS = ['logo','icon','avatar','favicon','placeholder','default','gstatic.com/gnews','googleusercontent.com','lh3.google','pixel','tracker','1x1','spacer','banner','sprite','gnews'];
 
@@ -305,7 +327,7 @@ ${FAVICON}
 </div>
 <article>
   <nav class="crumbs"><a href="/">${homeLabel}</a> / <a href="${newsHref}">${newsLabel}</a> / ${esc(catLabel)}</nav>
-  ${image ? `<img class="hero" src="${esc(image)}" alt="${esc(title)}" loading="lazy">` : ''}
+  ${image ? `<img class="hero" src="${esc(image)}" alt="${esc(title)}" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_HERO}'">` : ''}
   <h1>${esc(title)}</h1>
   <p class="meta">${dateLabel} · EuroPath Education · ${esc(catLabel)}</p>
   ${bodyHtml}
@@ -495,11 +517,14 @@ function regenAllPages(articles) {
 
 // ─── Homepage top-10 news block (rewritten each run between markers) ───
 const HOME_BLOCK_RE = /<!-- AUTO-NEWS:START -->[\s\S]*?<!-- AUTO-NEWS:END -->/;
-const NF_CSS = `.nf{padding:60px 24px;max-width:900px;margin:0 auto}.nf-head{margin-bottom:24px}.nf-kicker{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#3ddfff;margin-bottom:8px}.nf-head h2{font-size:clamp(22px,4vw,30px);font-weight:900;color:#fff;letter-spacing:-.5px;margin:0}.nf-list{display:flex;flex-direction:column;gap:10px}.nf-item{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 18px;text-decoration:none;transition:background .2s,transform .2s}.nf-item:hover{background:rgba(255,255,255,.08);transform:translateX(4px)}.nf-tag{flex-shrink:0;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#080a14;background:linear-gradient(135deg,#3ddfff,#c6ff3d);padding:4px 10px;border-radius:20px}.nf-title{flex:1;font-size:14px;font-weight:600;color:#e5e7eb;line-height:1.4}.nf-date{flex-shrink:0;font-size:11px;color:#6b7280;white-space:nowrap}.nf-all{display:inline-block;margin-top:20px;font-size:13px;font-weight:700;color:#3ddfff;text-decoration:none}.nf-all:hover{text-decoration:underline}@media(max-width:600px){.nf-item{flex-wrap:wrap}.nf-date{display:none}}`;
+const NF_CSS = `.nf{padding:64px 24px;max-width:980px;margin:0 auto}.nf-head{margin-bottom:26px}.nf-kicker{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#0b74d1;margin-bottom:8px}.nf-head h2{font-size:clamp(24px,4vw,32px);font-weight:900;color:#0b1e3f;letter-spacing:-.5px;margin:0}.nf-list{display:grid;gap:14px}.nf-item{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:12px 18px 12px 12px;text-decoration:none;box-shadow:0 1px 4px rgba(11,30,63,.06);transition:box-shadow .2s,transform .2s}.nf-item:hover{box-shadow:0 10px 26px rgba(11,30,63,.14);transform:translateY(-2px)}.nf-img{flex-shrink:0;width:104px;height:76px;object-fit:cover;border-radius:10px}.nf-main{flex:1;min-width:0}.nf-tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#080a14;background:linear-gradient(135deg,#3ddfff,#c6ff3d);padding:3px 10px;border-radius:20px;margin-bottom:6px}.nf-title{display:block;font-size:15px;font-weight:700;color:#111827;line-height:1.4}.nf-date{flex-shrink:0;font-size:12px;color:#6b7280;white-space:nowrap;font-weight:600}.nf-all{display:inline-block;margin-top:24px;font-size:14px;font-weight:800;color:#0b74d1;text-decoration:none}.nf-all:hover{text-decoration:underline}@media(max-width:640px){.nf-img{width:76px;height:58px}.nf-date{display:none}.nf-title{font-size:14px}}`;
 function homeNewsBlock(articles) {
   const items = articles.slice(0, 10).map(a => `      <a class="nf-item" href="/news/${a.file}">
-        <span class="nf-tag">${esc(CAT_RU[a.category] || 'Новости')}</span>
-        <span class="nf-title" data-en="${esc(a.title_en)}">${esc(a.title_ru)}</span>
+        ${a.image ? `<img class="nf-img" src="${esc(a.image)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
+        <span class="nf-main">
+          <span class="nf-tag">${esc(CAT_RU[a.category] || 'Новости')}</span>
+          <span class="nf-title" data-en="${esc(a.title_en)}">${esc(a.title_ru)}</span>
+        </span>
         <span class="nf-date">${fmtDateRu(new Date(a.date + 'T12:00:00Z'))}</span>
       </a>`).join('\n');
   return `<!-- AUTO-NEWS:START -->
@@ -629,10 +654,7 @@ async function main() {
       let image = item.image && !isBadImage(item.image) ? item.image : null;
       if (!image) image = await fetchMeta(metaTarget, 'image');
       if (!image && item.sourceSiteUrl) image = await fetchMeta(item.sourceSiteUrl, 'image');
-      if (!image) {
-        const pool = FALLBACK_IMAGES[item.category] || FALLBACK_IMAGES.admission;
-        image = pool.find(u => !usedImages.has(u.toLowerCase())) || pool[0];
-      }
+      if (!image) image = fallbackImage(item.country, item.category, usedImages);
 
       let longDesc = (!item.description || isBoilerplate(item.description)) ? '' : item.description;
       if (isGoogleNews || !longDesc || longDesc.length < 120) {
