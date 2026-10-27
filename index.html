@@ -1538,44 +1538,82 @@
   <div class="section-title" data-en="Two packages — choose what fits your needs">Два пакета — выбирайте под потребности</div>
   <div class="section-sub" data-en="From basic admission to full support throughout the entire study period.">От базового поступления до полного сопровождения на весь срок обучения.</div>
 
-  <div class="pkg-grid">
-    <div class="pkg-card p1">
-      <div class="pkg-head">
-        <div class="pkg-tag" data-en="Package 1">Пакет 1</div>
-        <div class="pkg-name" data-en="Admission Concierge">Консьерж поступления</div>
-        <div class="pkg-price">€2 000</div>
-        <div class="pkg-duration" data-en="3 instalments: €900 / €800 / €300">3 платежа: €900 / €800 / €300</div>
-      </div>
-      <div class="pkg-body">
-        <ul>
-          <li data-en="Program selection and document submission">Подбор программ и подача документов</li>
-          <li data-en="Document audit and verification">Аудит и проверка документов</li>
-          <li data-en="Application forms and pre-enrolment letter">Анкеты и письмо о предзачислении</li>
-          <li data-en="Status tracking until pre-enrolment">Отслеживание статуса до предзачисления</li>
-          <li data-en="Emergency support 24/7">Экстренная поддержка 24/7</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="pkg-card p2">
-      <div class="pkg-head">
-        <div class="pkg-tag" data-en="Package 2">Пакет 2</div>
-        <div class="pkg-name" data-en="Full Package">Полный пакет</div>
-        <div class="pkg-price"><s style="font-size:0.55em;opacity:0.6">€3 000</s> €2 400</div>
-        <div class="pkg-duration" data-en="Early-stage discount · 3 instalments: €1,000 / €900 / €500 · support up to 12 months">Скидка на раннем этапе · 3 платежа: €1 000 / €900 / €500 · сопровождение до 12 месяцев</div>
-      </div>
-      <div class="pkg-body">
-        <ul>
-          <li data-en="Everything in Package 1, plus:">Всё из Пакета 1, а также:</li>
-          <li data-en="TOLC/IMAT entrance exam preparation">Подготовка к экзаменам TOLC/IMAT</li>
-          <li data-en="Regional scholarship application, ISEE calculation and annual renewal">Заявка на региональную стипендию, расчёт ISEE и ежегодное продление</li>
-          <li data-en="Codice Fiscale and Italian bank account setup">Codice Fiscale и открытие итальянского банковского счёта</li>
-          <li data-en="Accommodation assistance via partner agencies">Помощь с жильём через партнёрские агентства</li>
-          <li data-en="Continuous support for up to 12 months">Непрерывное сопровождение до 12 месяцев</li>
-          <li data-en="Emergency support 24/7">Экстренная поддержка 24/7</li>
-        </ul>
-      </div>
-    </div>
+  <style>
+    .pkg-table-wrap{max-width:980px;margin:0 auto;overflow-x:auto}
+    .pkg-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e5e7eb;border-radius:18px;overflow:hidden;box-shadow:0 6px 24px rgba(11,30,63,.08);font-size:15px}
+    .pkg-table th,.pkg-table td{padding:15px 20px;text-align:left;vertical-align:top;border-bottom:1px solid #eef0f3}
+    .pkg-table thead th{background:#0b1e3f;color:#fff;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;border-bottom:none}
+    .pkg-table thead th small{display:block;font-weight:700;letter-spacing:0;text-transform:none;font-size:15px;margin-top:4px;color:#3ddfff}
+    .pkg-table thead th.hl{background:#e6401f}
+    .pkg-table thead th.hl small{color:#ffd9d1}
+    .pkg-table tr:last-child td{border-bottom:none}
+    .pkg-table tbody tr:hover td{background:#f8faff}
+    .pkg-table td:first-child{font-weight:700;color:#0b1e3f;width:44%}
+    .pkg-table .yes{color:#16a34a;font-weight:800;white-space:nowrap}
+    .pkg-table .no{color:#b6bcc9;font-weight:700}
+    .pkg-table .extra{color:#d97706;font-weight:800;white-space:nowrap}
+    .pkg-price-cell{font-size:22px;font-weight:900;color:#0b1e3f}
+    .pkg-price-cell s{font-size:14px;color:#9ca3af;font-weight:600;margin-right:6px}
+    .pkg-inst{display:block;margin-top:6px;font-size:12px;color:#6b7280;font-weight:600;line-height:1.5}
+    @media(max-width:720px){.pkg-table{font-size:13px}.pkg-table th,.pkg-table td{padding:11px 12px}.pkg-price-cell{font-size:18px}}
+  </style>
+  <div class="pkg-table-wrap">
+    <table class="pkg-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th data-en="Package 1 · Admission Concierge">Пакет 1<small>Консьерж поступления</small></th>
+          <th class="hl" data-en="Package 2 · Full Package">Пакет 2<small>Полный пакет</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-en="Price">Цена</td>
+          <td><span class="pkg-price-cell">€2 000</span><span class="pkg-inst" data-en="3 instalments: €900 / €800 / €300">3 платежа: €900 / €800 / €300</span></td>
+          <td><span class="pkg-price-cell"><s>€3 000</s> €2 400</span><span class="pkg-inst" data-en="Early-stage discount · €1,000 / €900 / €500 · up to 12 months">скидка раннего этапа · €1 000 / €900 / €500 · до 12 месяцев</span></td>
+        </tr>
+        <tr>
+          <td data-en="Program selection &amp; document submission">Подбор программ и подача документов</td>
+          <td><span class="yes">✓ Да</span></td>
+          <td><span class="yes">✓ Да</span></td>
+        </tr>
+        <tr>
+          <td data-en="Preparation for entrance exams (IMAT, TOLC)">Подготовка к экзаменам (IMAT, TOLC)</td>
+          <td><span class="no">— Нет</span></td>
+          <td><span class="yes">✓ Да</span></td>
+        </tr>
+        <tr>
+          <td data-en="DSU/EDISU scholarship + ISEE + annual renewal">Стипендия DSU/EDISU + расчёт ISEE + продление</td>
+          <td><span class="no">— Нет</span></td>
+          <td><span class="yes">✓ Да</span></td>
+        </tr>
+        <tr>
+          <td data-en="Codice Fiscale + bank account">Codice Fiscale + банковский счёт</td>
+          <td><span class="no">— Нет</span></td>
+          <td><span class="yes">✓ Да</span></td>
+        </tr>
+        <tr>
+          <td data-en="Accommodation assistance (partner agencies)">Помощь с жильём (партнёрские агентства)</td>
+          <td><span class="no">— Нет</span></td>
+          <td><span class="yes">✓ Да</span></td>
+        </tr>
+        <tr>
+          <td data-en="Full-duration support">Сопровождение весь срок</td>
+          <td><span class="no">— Нет</span></td>
+          <td><span class="yes" data-en="✓ Yes (1 year)">✓ Да (1 год)</span></td>
+        </tr>
+        <tr>
+          <td data-en="24/7 emergency support">Экстренная поддержка 24/7</td>
+          <td><span class="yes">✓ Да</span></td>
+          <td><span class="yes">✓ Да</span></td>
+        </tr>
+        <tr>
+          <td data-en="In-person accompaniment to agencies / on-site help (1–2 days)">Личное сопровождение в ведомства (1–2 дня)</td>
+          <td><span class="extra" data-en="Extra charge">+ доплата</span></td>
+          <td><span class="extra" data-en="Extra charge">+ доплата</span></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
