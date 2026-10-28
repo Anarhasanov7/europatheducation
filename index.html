@@ -2609,8 +2609,8 @@
         document.getElementById('consultFormView').style.display = 'none';
         document.getElementById('consultSuccessView').style.display = 'block';
         document.getElementById('consultSuccessText').innerHTML = L(
-          'Ваша консультация назначена на<br><strong>' + dayStr + ' в ' + consultSelectedSlot.localTime + ' (' + consultSelectedSlot.localTz + ')</strong><br><br>Мы свяжемся с вами по <strong>' + email + '</strong> с ссылкой на встречу.',
-          'Your consultation is scheduled for<br><strong>' + dayStr + ' at ' + consultSelectedSlot.localTime + ' (' + consultSelectedSlot.localTz + ')</strong><br><br>We\'ll contact you at <strong>' + email + '</strong> with the meeting link.'
+          'Ваша консультация назначена на<br><strong>' + dayStr + ' в ' + consultSelectedSlot.localTime + ' (' + consultSelectedSlot.localTz + ')</strong><br><br>Мы свяжемся с вами по <strong>' + email + '</strong> с ссылкой на встречу.<br><br>Связаться с нами в Telegram: <a href="https://t.me/studywithanar" target="_blank" rel="noopener">@studywithanar</a>',
+          'Your consultation is scheduled for<br><strong>' + dayStr + ' at ' + consultSelectedSlot.localTime + ' (' + consultSelectedSlot.localTz + ')</strong><br><br>We\'ll contact you at <strong>' + email + '</strong> with the meeting link.<br><br>Reach us on Telegram: <a href="https://t.me/studywithanar" target="_blank" rel="noopener">@studywithanar</a>'
         );
       } else {
         const st = document.getElementById('consultStatus');
