@@ -288,7 +288,11 @@ function contextFor(item, ru) {
 
 // ─── HTML template (matches existing /news design) ───
 const CSS = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box}:root{--ink:#080a14;--navy:#0b1e3f;--electric:#3ddfff;--lime:#c6ff3d;--gray:#6b7280;--off:#f4f5f7}body{font-family:'Inter',-apple-system,sans-serif;background:var(--off);color:var(--ink);line-height:1.75}.topbar{background:var(--ink);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800;font-size:16px}.brand .mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--electric),var(--lime));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:900;font-size:16px}.topbar a.home{color:#9ca3af;text-decoration:none;font-size:13px;font-weight:600}.topbar a.cta{background:linear-gradient(135deg,var(--electric),var(--lime));color:var(--ink);padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none}article{max-width:780px;margin:0 auto;padding:40px 20px 60px}.crumbs{font-size:13px;color:var(--gray);margin-bottom:20px}.crumbs a{color:#2563eb;text-decoration:none}h1{font-size:clamp(26px,4.5vw,34px);font-weight:900;letter-spacing:-.5px;line-height:1.2;margin-bottom:14px}.meta{font-size:13px;color:var(--gray);margin-bottom:28px}h2{font-size:21px;font-weight:800;margin:32px 0 12px}p{margin-bottom:14px;color:#1f2937}.lead{font-size:17px}.hero{width:100%;border-radius:16px;margin:0 0 28px;aspect-ratio:16/9;object-fit:cover}ul{margin:0 0 16px 22px;color:#1f2937}li{margin-bottom:6px}.cta-box{margin:40px 0;background:linear-gradient(135deg,var(--navy),#16213e);color:#fff;border-radius:20px;padding:32px;text-align:center}.cta-box h2{color:#fff;margin:0 0 10px;font-size:22px}.cta-box p{color:#cbd5e1;margin-bottom:20px}.cta-box a{display:inline-block;background:linear-gradient(135deg,var(--electric),var(--lime));color:var(--ink);padding:14px 32px;border-radius:24px;font-weight:800;text-decoration:none}.related{border-top:1px solid #e5e7eb;padding-top:28px;margin-top:40px}.related h3{font-size:17px;margin-bottom:12px}.related a{display:block;color:#0369a1;text-decoration:none;font-weight:600;padding:6px 0}.src{font-size:13px;color:var(--gray);font-style:italic}footer{text-align:center;color:var(--gray);font-size:12px;padding:32px 20px}footer a{color:var(--gray)}.langlink{color:#9ca3af;font-size:12px;text-decoration:none;border:1px solid #4b5563;padding:3px 10px;border-radius:12px;margin-left:10px}`;
-const FAVICON = `<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233ddfff'/><stop offset='1' stop-color='%23c6ff3d'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='72' font-size='62' font-weight='900' text-anchor='middle' fill='%23080a14' font-family='Arial,sans-serif'>E</text></svg>">`;
+const FAVICON = `<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">`;
 
 function articlePage({ lang, title, desc, keywords, url, altUrl, altLabel, bodyHtml, image, dateIso, dateLabel, catLabel, homeLabel, newsLabel, newsHref, ctaH, ctaP, ctaBtn, footerText, jsonLd }) {
   return `<!DOCTYPE html>
@@ -373,7 +377,7 @@ function indexPage(lang, articles) {
     </a>`).join('\n');
 
   const newsCards = articles.map(a => `    <a class="ncard" href="${base}${a.file}">
-      <img src="${esc(a.image || fallbackImage(a.country || 'it', a.category, new Set()))}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_HERO}'">
+      <img src="${esc(a.image || fallbackImage(a.country || 'it', a.category, new Set()))}" alt="${esc(ru ? a.title_ru : a.title_en)}" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_HERO}'">
       <div class="body">
         <div class="ntitle">${esc(ru ? a.title_ru : a.title_en)}</div>
         <div class="nmeta">${ru ? fmtDateRu(new Date(a.date)) : fmtDateEn(new Date(a.date))} · ${esc(ru ? CAT_RU[a.category]||'Новости' : CAT_EN[a.category]||'News')} · ${esc(a.source_name||'')}</div>
@@ -525,7 +529,7 @@ function homeNewsBlock(articles) {
     const src = a.image || fb;
     usedImgs.add((src || '').toLowerCase()); usedImgs.add(fb.toLowerCase());
     return `      <a class="nf-item" href="/news/${a.file}">
-        <img class="nf-img" src="${esc(src)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${fb}'">
+        <img class="nf-img" src="${esc(src)}" alt="${esc(a.title_ru)}" loading="lazy" onerror="this.onerror=null;this.src='${fb}'">
         <span class="nf-main">
           <span class="nf-tag">${esc(CAT_RU[a.category] || 'Новости')}</span>
           <span class="nf-title" data-en="${esc(a.title_en)}">${esc(a.title_ru)}</span>
@@ -555,22 +559,24 @@ function updateHomeNews(articles) {
   console.log('  index.html: top-10 news block updated');
 }
 
-// ─── Sitemap ───
+// ─── Sitemap (Standard XML with multilingual xhtml:link annotations) ───
 function buildSitemap(articles) {
   const today = isoDate(new Date());
   const urls = [
-    { loc: '/', cf: 'weekly', pr: '1.0', lm: today },
-    { loc: '/news/', cf: 'daily', pr: '0.9', lm: today },
-    { loc: '/en/news/', cf: 'daily', pr: '0.8', lm: today },
+    { loc: '/', altEn: '/', altRu: '/', cf: 'weekly', pr: '1.0', lm: today },
+    { loc: '/news/', altEn: '/en/news/', altRu: '/news/', cf: 'daily', pr: '0.9', lm: today },
+    { loc: '/en/news/', altEn: '/en/news/', altRu: '/news/', cf: 'daily', pr: '0.8', lm: today },
     ...GUIDES.map(g => ({ loc: `/news/${g.file}`, cf: 'monthly', pr: '0.8', lm: '2026-10-27' })),
-    ...articles.map(a => ({ loc: `/news/${a.file}`, cf: 'monthly', pr: '0.7', lm: a.date })),
-    ...articles.map(a => ({ loc: `/en/news/${a.file}`, cf: 'monthly', pr: '0.6', lm: a.date })),
+    ...articles.map(a => ({ loc: `/news/${a.file}`, altRu: `/news/${a.file}`, altEn: `/en/news/${a.file}`, cf: 'monthly', pr: '0.7', lm: a.date })),
+    ...articles.map(a => ({ loc: `/en/news/${a.file}`, altRu: `/news/${a.file}`, altEn: `/en/news/${a.file}`, cf: 'monthly', pr: '0.6', lm: a.date })),
     { loc: '/privacy.html', cf: 'yearly', pr: '0.3', lm: '2026-09-11' },
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls.map(u => `  <url>
-    <loc>${SITE}${u.loc}</loc>
+    <loc>${SITE}${u.loc}</loc>${u.altRu && u.altEn ? `
+    <xhtml:link rel="alternate" hreflang="ru" href="${SITE}${u.altRu}"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${SITE}${u.altEn}"/>` : ''}
     <lastmod>${u.lm}</lastmod>
     <changefreq>${u.cf}</changefreq>
     <priority>${u.pr}</priority>

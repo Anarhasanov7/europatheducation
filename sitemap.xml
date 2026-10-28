@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://europatheducation.eu/</loc>
-    <lastmod>2026-10-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/</loc>
-    <lastmod>2026-10-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/</loc>
-    <lastmod>2026-10-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -50,180 +56,240 @@
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-universite-a-bordeaux-je-n-ai-pas-envie-de-continuer-ces-etudiants-nau.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-universite-a-bordeaux-je-n-ai-pas-envie-de-continuer-ces-etudiants-nau.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-universite-a-bordeaux-je-n-ai-pas-envie-de-continuer-ces-etudiants-nau.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-becas-de-la-agencia-efe-y-la-fundacion-la-caixa-ultima-fase-de-selecci.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-becas-de-la-agencia-efe-y-la-fundacion-la-caixa-ultima-fase-de-selecci.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-becas-de-la-agencia-efe-y-la-fundacion-la-caixa-ultima-fase-de-selecci.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-el-gobierno-aprueba-un-nuevo-estatuto-del-estudiantado-universitario-p.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-el-gobierno-aprueba-un-nuevo-estatuto-del-estudiantado-universitario-p.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-el-gobierno-aprueba-un-nuevo-estatuto-del-estudiantado-universitario-p.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-becas-complementarias-de-movilidad-destinadas-a-estudiantes-universita.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-becas-complementarias-de-movilidad-destinadas-a-estudiantes-universita.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-becas-complementarias-de-movilidad-destinadas-a-estudiantes-universita.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-remplacement-de-parcoursup-une-bourse-etudiante-sur-l-inflation-renove.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-remplacement-de-parcoursup-une-bourse-etudiante-sur-l-inflation-renove.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-remplacement-de-parcoursup-une-bourse-etudiante-sur-l-inflation-renove.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-universita-a-cesena-mentre-il-campus-cresce-in-citta-si-inaugurano-nuo.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-universita-a-cesena-mentre-il-campus-cresce-in-citta-si-inaugurano-nuo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-universita-a-cesena-mentre-il-campus-cresce-in-citta-si-inaugurano-nuo.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-liguria-universita-alloggi-per-studenti-nuova-residenza-con-52-posti-f.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-liguria-universita-alloggi-per-studenti-nuova-residenza-con-52-posti-f.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-liguria-universita-alloggi-per-studenti-nuova-residenza-con-52-posti-f.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-erasmus-days-2026-una-settimana-dedicata-alle-opportunita-di-mobilita.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-erasmus-days-2026-una-settimana-dedicata-alle-opportunita-di-mobilita.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-erasmus-days-2026-una-settimana-dedicata-alle-opportunita-di-mobilita.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-giovani-erasmus-23-studenti-internazionali-in-visita-alle-catacombe-di.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-giovani-erasmus-23-studenti-internazionali-in-visita-alle-catacombe-di.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-giovani-erasmus-23-studenti-internazionali-in-visita-alle-catacombe-di.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-fashion-art-and-food-management-studenti-internazionali-e-tasso-dioccu.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-fashion-art-and-food-management-studenti-internazionali-e-tasso-dioccu.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-fashion-art-and-food-management-studenti-internazionali-e-tasso-dioccu.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-sport-e-universita-prorogati-i-termini-per-partecipare-all-avviso-per.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-sport-e-universita-prorogati-i-termini-per-partecipare-all-avviso-per.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-sport-e-universita-prorogati-i-termini-per-partecipare-all-avviso-per.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-allenare-il-talento-nelle-corse-e-in-universita-i-protagonisti-di-ferr.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-allenare-il-talento-nelle-corse-e-in-universita-i-protagonisti-di-ferr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-allenare-il-talento-nelle-corse-e-in-universita-i-protagonisti-di-ferr.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-bando-alloggi-per-studenti-prorogata-la-scadenza-per-l-ultimazione-dei.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-bando-alloggi-per-studenti-prorogata-la-scadenza-per-l-ultimazione-dei.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-bando-alloggi-per-studenti-prorogata-la-scadenza-per-l-ultimazione-dei.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-sport-e-universita-borse-di-studio-per-studenti-atleti-bando-prorogato.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-sport-e-universita-borse-di-studio-per-studenti-atleti-bando-prorogato.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-sport-e-universita-borse-di-studio-per-studenti-atleti-bando-prorogato.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-27-erasmus-bando-di-mobilita-per-tirocinio-a-a-2026-27.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-erasmus-bando-di-mobilita-per-tirocinio-a-a-2026-27.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-erasmus-bando-di-mobilita-per-tirocinio-a-a-2026-27.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-universite-a-bordeaux-je-n-ai-pas-envie-de-continuer-ces-etudiants-nau.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-universite-a-bordeaux-je-n-ai-pas-envie-de-continuer-ces-etudiants-nau.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-universite-a-bordeaux-je-n-ai-pas-envie-de-continuer-ces-etudiants-nau.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-becas-de-la-agencia-efe-y-la-fundacion-la-caixa-ultima-fase-de-selecci.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-becas-de-la-agencia-efe-y-la-fundacion-la-caixa-ultima-fase-de-selecci.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-becas-de-la-agencia-efe-y-la-fundacion-la-caixa-ultima-fase-de-selecci.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-el-gobierno-aprueba-un-nuevo-estatuto-del-estudiantado-universitario-p.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-el-gobierno-aprueba-un-nuevo-estatuto-del-estudiantado-universitario-p.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-el-gobierno-aprueba-un-nuevo-estatuto-del-estudiantado-universitario-p.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-becas-complementarias-de-movilidad-destinadas-a-estudiantes-universita.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-becas-complementarias-de-movilidad-destinadas-a-estudiantes-universita.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-becas-complementarias-de-movilidad-destinadas-a-estudiantes-universita.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-remplacement-de-parcoursup-une-bourse-etudiante-sur-l-inflation-renove.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-remplacement-de-parcoursup-une-bourse-etudiante-sur-l-inflation-renove.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-remplacement-de-parcoursup-une-bourse-etudiante-sur-l-inflation-renove.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-universita-a-cesena-mentre-il-campus-cresce-in-citta-si-inaugurano-nuo.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-universita-a-cesena-mentre-il-campus-cresce-in-citta-si-inaugurano-nuo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-universita-a-cesena-mentre-il-campus-cresce-in-citta-si-inaugurano-nuo.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-liguria-universita-alloggi-per-studenti-nuova-residenza-con-52-posti-f.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-liguria-universita-alloggi-per-studenti-nuova-residenza-con-52-posti-f.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-liguria-universita-alloggi-per-studenti-nuova-residenza-con-52-posti-f.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-erasmus-days-2026-una-settimana-dedicata-alle-opportunita-di-mobilita.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-erasmus-days-2026-una-settimana-dedicata-alle-opportunita-di-mobilita.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-erasmus-days-2026-una-settimana-dedicata-alle-opportunita-di-mobilita.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-giovani-erasmus-23-studenti-internazionali-in-visita-alle-catacombe-di.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-giovani-erasmus-23-studenti-internazionali-in-visita-alle-catacombe-di.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-giovani-erasmus-23-studenti-internazionali-in-visita-alle-catacombe-di.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-fashion-art-and-food-management-studenti-internazionali-e-tasso-dioccu.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-fashion-art-and-food-management-studenti-internazionali-e-tasso-dioccu.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-fashion-art-and-food-management-studenti-internazionali-e-tasso-dioccu.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-sport-e-universita-prorogati-i-termini-per-partecipare-all-avviso-per.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-sport-e-universita-prorogati-i-termini-per-partecipare-all-avviso-per.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-sport-e-universita-prorogati-i-termini-per-partecipare-all-avviso-per.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-allenare-il-talento-nelle-corse-e-in-universita-i-protagonisti-di-ferr.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-allenare-il-talento-nelle-corse-e-in-universita-i-protagonisti-di-ferr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-allenare-il-talento-nelle-corse-e-in-universita-i-protagonisti-di-ferr.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-bando-alloggi-per-studenti-prorogata-la-scadenza-per-l-ultimazione-dei.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-bando-alloggi-per-studenti-prorogata-la-scadenza-per-l-ultimazione-dei.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-bando-alloggi-per-studenti-prorogata-la-scadenza-per-l-ultimazione-dei.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-sport-e-universita-borse-di-studio-per-studenti-atleti-bando-prorogato.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-sport-e-universita-borse-di-studio-per-studenti-atleti-bando-prorogato.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-sport-e-universita-borse-di-studio-per-studenti-atleti-bando-prorogato.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-27-erasmus-bando-di-mobilita-per-tirocinio-a-a-2026-27.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-27-erasmus-bando-di-mobilita-per-tirocinio-a-a-2026-27.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-27-erasmus-bando-di-mobilita-per-tirocinio-a-a-2026-27.html"/>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
