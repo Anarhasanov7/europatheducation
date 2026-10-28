@@ -19,10 +19,10 @@ Scope: eliminate render-blocking requests (external Google Fonts CSS + synchrono
   EXPECT: SCRIPTS-DEFERRED
   EVIDENCE: automatic-evidence=v1; definition-sha256=35845f19db75c02fa4ecef95ba263358f9d35cdd456c7e33a0acc4a123691b47; exit=0; EXPECT=matched; output-sha256=54f718b6073ddf51eecf571e8c30baa7bf7d383e4e0c536d5c8e65547abe176a; output-bytes=17; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
-- [x] G4: every letter referenced in index.html has a WebP thumb (<80KB), img tags use thumbs, anchors keep full JPGs
-  CHECK: sh -c 'N=$(ls letters/thumbs/*.webp 2>/dev/null | wc -l | tr -d " "); BIG=$(find letters/thumbs -name "*.webp" -size +80k 2>/dev/null | wc -l | tr -d " "); IMGS=$(grep -c "src=\"letters/thumbs/letter-.*\.webp\"" index.html); HREFS=$(grep -c "href=\"letters/letter-.*\.jpg\"" index.html); test "$N" -ge 24 && test "$BIG" = "0" && test "$IMGS" = "24" && test "$HREFS" = "24" && echo THUMBS-OK'
+- [x] G4: every letter referenced in index.html has a WebP thumb (<80KB) at /thumbs/ — the /letters/ subtree is hijacked by a Cloudflare Worker (verified via text/plain edge 404s); img tags use thumbs, anchors keep full JPGs
+  CHECK: sh -c 'N=$(ls thumbs/letter-*.webp 2>/dev/null | wc -l | tr -d " "); BIG=$(find thumbs -name "*.webp" -size +80k 2>/dev/null | wc -l | tr -d " "); IMGS=$(grep -c "src=\"thumbs/letter-.*\.webp\"" index.html); HREFS=$(grep -c "href=\"letters/letter-.*\.jpg\"" index.html); test "$N" -ge 24 && test "$BIG" = "0" && test "$IMGS" = "24" && test "$HREFS" = "24" && echo THUMBS-OK'
   EXPECT: THUMBS-OK
-  EVIDENCE: automatic-evidence=v1; definition-sha256=625f41a1d1ec372de7ce96899eb09e3af5beb1f4edd7e4cca574d5c6b0b04ee1; exit=0; EXPECT=matched; output-sha256=e26fd48eadeea9345c88a860923cee3828404a63b107f6fad50521e7c8ed8646; output-bytes=10; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=09686062eb643e0d2d29ff683d243bebefb13602e52fb42212726d462c95844e; exit=0; EXPECT=matched; output-sha256=e26fd48eadeea9345c88a860923cee3828404a63b107f6fad50521e7c8ed8646; output-bytes=10; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
 - [x] G5: every partner PNG referenced in index.html is <= 35KB after resize
   CHECK: sh -c 'BIG=$(find images/universities -name "*.png" -size +35k 2>/dev/null | wc -l | tr -d " "); test "$BIG" = "0" && echo LOGOS-OK'

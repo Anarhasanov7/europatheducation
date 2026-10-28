@@ -13,7 +13,7 @@ const TTL_MS = 10 * 60 * 1000;
 function apiKey() {
   if (process.env.PSI_API_KEY) return process.env.PSI_API_KEY;
   try {
-    return execSync(`${process.env.HOME}/.config/devin/skills/secrets-vault/vault.sh get google-custom-search-key`, { encoding: 'utf8' }).trim();
+    return execSync(`${process.env.HOME}/.config/devin/skills/secrets-vault/vault.sh get pagespeed-api-key`, { encoding: 'utf8' }).trim();
   } catch { return ''; }
 }
 
