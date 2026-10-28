@@ -2261,15 +2261,15 @@
 
       <div class="pub-field">
         <label data-en="Your name *">Ваше имя *</label>
-        <input type="text" id="consult-name" placeholder="Иван Иванов" data-en-placeholder="John Smith">
+        <input type="text" id="consult-name" placeholder="Иван Иванов" data-en-placeholder="John Smith" oninput="updateConsultSummary()">
       </div>
       <div class="pub-field">
         <label>Email *</label>
-        <input type="email" id="consult-email" placeholder="you@example.com">
+        <input type="email" id="consult-email" placeholder="you@example.com" oninput="updateConsultSummary()">
       </div>
       <div class="pub-field">
         <label data-en="Phone / WhatsApp">Телефон / WhatsApp</label>
-        <input type="text" id="consult-phone" placeholder="+994 50 123 45 67">
+        <input type="text" id="consult-phone" placeholder="+994 50 123 45 67" oninput="updateConsultSummary()">
       </div>
 
       <div class="pub-section-title" data-en="Choose a day">Выберите день</div>
@@ -2574,7 +2574,10 @@
   function updateConsultSummary() {
     const s = document.getElementById('consultSummary');
     const btn = document.getElementById('consultConfirmBtn');
-    if (consultSelectedDay && consultSelectedSlot) {
+    const name = document.getElementById('consult-name').value.trim();
+    const email = document.getElementById('consult-email').value.trim();
+    const phone = document.getElementById('consult-phone').value.trim();
+    if (consultSelectedDay && consultSelectedSlot && name && email && phone) {
       const dayStr = consultSelectedDay.toLocaleDateString(localeStr, { weekday: 'long', month: 'long', day: 'numeric' });
       document.getElementById('consultSummaryText').innerHTML = dayStr + ' ' + L('в', 'at') + ' ' + consultSelectedSlot.localTime + ' <span style="color:var(--gray);font-size:11px;">(' + consultSelectedSlot.localTz + ')</span><br><span style="color:var(--gray);font-size:11px;">' + L('Итальянское время:', 'Italian time:') + ' ' + consultSelectedSlot.italyTime + ' (Europe/Rome)</span>';
       s.style.display = 'block';
