@@ -7,6 +7,8 @@ const TO_EMAIL = 'hasanov.anar.2023@gmail.com';
 const FROM_EMAIL = 'onboarding@resend.dev';
 const MAX_PER_HOUR = 3;
 const HOUR_MS = 60 * 60 * 1000;
+const TELEGRAM_BOT_TOKEN = Deno.env.get('TELEGRAM_BOT_TOKEN') || '';
+const TELEGRAM_CHAT_ID = Deno.env.get('TELEGRAM_CHAT_ID') || '';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -94,6 +96,20 @@ Deno.serve(async (req: Request) => {
 
     // Log the submission for rate limiting
     await sb.from('contact_submissions').insert({ ip: clientIP, email });
+
+    // Telegram notification
+    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+      const tgMsg = `📨 New contact form submission\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}${whatsapp ? `\nWhatsApp: ${whatsapp}` : ''}${telegram ? `\nTelegram: ${telegram}` : ''}\n\nMessage:\n${message}`;
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: tgMsg })
+        });
+      } catch (tgErr) {
+        console.error('Telegram error:', tgErr);
+      }
+    }
 
     return new Response(JSON.stringify({ success: true, message: 'Email sent' }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (err) {

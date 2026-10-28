@@ -4,6 +4,8 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL = "noreply@europatheducation.eu";
 const ADMIN_EMAIL = "hasanov.anar.2023@gmail.com";
 const SITE_URL = "https://europatheducation.eu";
+const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") || "";
+const TELEGRAM_CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID") || "";
 
 // ─── Normalize phone number (strip everything except digits) ───
 function normalizePhone(phone: string): string {
@@ -198,6 +200,7 @@ Deno.serve(async (req) => {
         <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
         <p style="color: #888; font-size: 12px;">
           EuroPath Education<br>
+          Telegram: <a href="https://t.me/studywithanar">@studywithanar</a><br>
           WhatsApp: +39 328 081 0631<br>
           Instagram: @study.with.anar
         </p>
@@ -231,6 +234,20 @@ Deno.serve(async (req) => {
       adminHtml,
       email
     );
+
+    // Telegram notification
+    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+      const tgMsg = `📅 New consultation booking (pending)\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nDate: ${consultation_date}\nLocal time: ${consultation_time_local} (${consultation_time_local_tz})\nItaly time: ${consultation_time_italy}`;
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: tgMsg })
+        });
+      } catch (tgErr) {
+        console.error("Telegram error:", tgErr);
+      }
+    }
 
     return new Response(
       JSON.stringify({
