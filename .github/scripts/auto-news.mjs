@@ -242,6 +242,20 @@ async function fetchMeta(url, kind) {
   } catch { return null; }
 }
 
+async function fetchArticleParas(url) {
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; EuroPathNewsBot/1.0)' }, signal: AbortSignal.timeout(10000), redirect: 'follow' });
+    if (!res.ok) return [];
+    const html = await res.text();
+    const main = html.match(/<article[\s\S]*?<\/article>/i)?.[0] || html.match(/<main[\s\S]*?<\/main>/i)?.[0] || html;
+    const ps = [...main.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)]
+      .map(m => stripHtml(m[1]).replace(/\s+/g, ' ').trim())
+      .filter(t => t.length > 90 && t.length < 900 && !/cookie|newsletter|subscribe|sign up|all rights reserved|privacy policy| leggi anche| lire aussi| leer tambi|lees ook/i.test(t))
+      .slice(0, 4);
+    return ps;
+  } catch { return []; }
+}
+
 // ─── Translation (MyMemory, same as GTDIB engine) ───
 async function translate(text, from, to) {
   if (!text || from === to) return text;
@@ -262,6 +276,20 @@ async function translate(text, from, to) {
 }
 
 // ─── Category context paragraphs (internal-linking + brand voice) ───
+const CATEGORY_DESC_RU = {
+  scholarship: 'В контексте итальянской системы это важно, потому что большинство иностранных студентов финансируют учёбу через региональные стипендии и гранты — отслеживание таких программ напрямую влияет на бюджет студента.',
+  admission: 'Для абитуриентов это означает изменения в процедуре отбора, сроках или требованиях к документам — своевременная реакция определяет шансы на зачисление.',
+  visa: 'Для студентов из стран, которым нужна виза, такие новости означают обновлённые требования к финансированию, страховке или документам.',
+  mobility: 'Программы обмена влияют на академический план и стоимость обучения — участие в них часто даёт стипендию и признание кредитов.',
+  housing: 'Жильё — одна из главных статей расходов студента в Европе, поэтому новости о резиденциях и аренде имеют практическое значение для планирования бюджета.',
+};
+const CATEGORY_DESC_EN = {
+  scholarship: 'In the Italian system this matters because most international students fund their studies through regional scholarships and grants — tracking such programmes directly affects a student\'s budget.',
+  admission: 'For applicants this means changes to selection procedures, deadlines or document requirements — reacting in time determines admission chances.',
+  visa: 'For students from visa-required countries, news like this means updated requirements for funding, insurance or paperwork.',
+  mobility: 'Exchange programmes shape the academic plan and tuition costs — participation often brings a grant and credit recognition.',
+  housing: 'Housing is one of a student\'s biggest expenses in Europe, so news about residences and rent has practical budget implications.',
+};
 const CONTEXT_RU = {
   scholarship: `Стипендии — главный инструмент бесплатной учёбы в Италии. Региональная стипендия DSU даёт до €7 000 в год, общежитие и питание; подробный разбор — в нашем <a href="/news/regionalnaya-stipendiya-dsu-italiya.html">гайде по DSU</a>.`,
   admission: `Планируете поступление в 2027 году? Старт — предварительная запись на Universitaly и признание документов. Полный календарь: <a href="/news/postuplenie-v-universitet-italii-2027.html">пошаговый план поступления</a>.`,
@@ -452,12 +480,28 @@ function renderArticleFiles(a) {
   const country = a.country || 'it';
   const displayUrl = a.source_url || '';
 
+  const parasRu = Array.isArray(a.paras_ru) && a.paras_ru.length ? a.paras_ru : [];
+  const parasEn = Array.isArray(a.paras_en) && a.paras_en.length ? a.paras_en : [];
+  const CTRY_RU = { it: 'Италия', es: 'Испания', fr: 'Франция', be: 'Бельгия' };
+  const CTRY_EN = { it: 'Italy', es: 'Spain', fr: 'France', be: 'Belgium' };
+  const cRu = CTRY_RU[country] || CTRY_RU.it, cEn = CTRY_EN[country] || CTRY_EN.it;
+
   const bodyRu = `<p class="lead">${esc(a.desc_ru || a.title_ru)}</p>
+<h2>Что произошло</h2>
+${parasRu.length ? parasRu.map(t => `<p>${esc(t)}</p>`).join('\n') : `<p>${esc(a.desc_ru || a.title_ru)}</p>
+<p>${country === 'it' ? `Речь идёт о событии в сфере высшего образования ${cRu === 'Италия' ? 'Италии' : 'Европы'}, которое напрямую затрагивает иностранных студентов. ${CATEGORY_DESC_RU[a.category] || CATEGORY_DESC_RU.admission}` : `Это новость из сферы европейского высшего образования (${cRu === 'Италия' ? 'Италия' : cRu}). ${CATEGORY_DESC_RU[a.category] || CATEGORY_DESC_RU.admission}`}</p>`}
+<h2>Что это значит для студентов</h2>
 <p>${contextFor(a, true)}</p>
+<p>${country === 'it' ? 'EuroPath Education сопровождает поступление в итальянские университеты: подбор программ, документы, стипендия DSU и виза. ' : `EuroPath Education помогает с поступлением в вузы ${cRu === 'Италия' ? 'Италии' : 'Европы'} и Италии — от выбора программы до визы. `}<a href="/">Бесплатная консультация</a> — оценим ваш профиль и подскажем следующий шаг.</p>
 <p class="src">Источник: <a href="${esc(displayUrl)}" target="_blank" rel="noopener nofollow">${esc(a.source_name || '')}</a>. Материал переведён и адаптирован командой EuroPath Education.</p>`;
 
   const bodyEn = `<p class="lead">${esc(a.desc_en || a.title_en)}</p>
+<h2>What happened</h2>
+${parasEn.length ? parasEn.map(t => `<p>${esc(t)}</p>`).join('\n') : `<p>${esc(a.desc_en || a.title_en)}</p>
+<p>${country === 'it' ? `This concerns higher education in ${cEn}, directly affecting international students. ${CATEGORY_DESC_EN[a.category] || CATEGORY_DESC_EN.admission}` : `This is European higher-education news (${cEn}). ${CATEGORY_DESC_EN[a.category] || CATEGORY_DESC_EN.admission}`}</p>`}
+<h2>What it means for students</h2>
 <p>${contextFor(a, false)}</p>
+<p>${country === 'it' ? 'EuroPath Education guides admissions to Italian universities: program selection, documents, DSU scholarships and visas. ' : `EuroPath Education supports admissions across Europe and in Italy — from program selection to visas. `}<a href="/">Free consultation</a> — we assess your profile and outline the next step.</p>
 <p class="src">Source: <a href="${esc(displayUrl)}" target="_blank" rel="noopener nofollow">${esc(a.source_name || '')}</a>. Translated and adapted by the EuroPath Education team.</p>`;
 
   const titleRu = seoTitle(a.title_ru, true, country);
@@ -699,12 +743,21 @@ async function main() {
       const descRu = await translate(longDesc || cleanTitle, srcLang, 'ru');
       const descEn = srcLang === 'en' ? (longDesc || cleanTitle) : await translate(longDesc || cleanTitle, srcLang, 'en');
 
+      // Extract real body paragraphs from the source article for a full-text rewrite
+      let parasRu = [], parasEn = [];
+      const srcParas = await fetchArticleParas(metaTarget).catch(() => []);
+      if (srcParas.length) {
+        const joined = srcParas.slice(0, 3).join('\n\n');
+        parasRu = (await translate(joined, srcLang, 'ru')).split(/\n+/).filter(Boolean);
+        parasEn = srcLang === 'en' ? srcParas.slice(0, 3) : (await translate(joined, srcLang, 'en')).split(/\n+/).filter(Boolean);
+      }
+
       const slug = `${dateStr}-${slugify(cleanTitle) || 'news'}`;
       const fileName = `${slug}.html`;
 
       articles.unshift({
         slug, file: fileName, date: dateStr, category: item.category, country: item.country || 'it',
-        title_ru: titleRu, title_en: titleEn, desc_ru: descRu, desc_en: descEn,
+        title_ru: titleRu, title_en: titleEn, desc_ru: descRu, desc_en: descEn, paras_ru: parasRu, paras_en: parasEn,
         source_name: item.feedName, source_url: item.realUrl || item.link, image,
       });
       usedImages.add((image || '').toLowerCase());
