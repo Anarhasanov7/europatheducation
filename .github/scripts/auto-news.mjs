@@ -585,6 +585,8 @@ function buildSitemap(articles) {
     ...articles.map(a => ({ loc: `/news/${a.file}`, altRu: `/news/${a.file}`, altEn: `/en/news/${a.file}`, cf: 'monthly', pr: '0.7', lm: a.date })),
     ...articles.map(a => ({ loc: `/en/news/${a.file}`, altRu: `/news/${a.file}`, altEn: `/en/news/${a.file}`, cf: 'monthly', pr: '0.6', lm: a.date })),
     { loc: '/privacy.html', cf: 'yearly', pr: '0.3', lm: '2026-09-11' },
+    { loc: '/terms.html', cf: 'monthly', pr: '0.4', lm: '2026-10-27' },
+    { loc: '/guides-pdf/', cf: 'monthly', pr: '0.6', lm: '2026-10-28' },
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
