@@ -1,0 +1,17 @@
+name: Demand & Edge-Warming Bot
+on:
+  schedule:
+    # Runs every 6 hours across the day to simulate continuous worldwide visits
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  warm-and-demand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run Demand & Edge-Warming Bot
+        run: node .github/scripts/demand-bot.mjs
