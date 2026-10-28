@@ -1,17 +1,25 @@
 name: Demand & Edge-Warming Bot
 on:
   schedule:
-    # Runs every 6 hours across the day to simulate continuous worldwide visits
+    # Staggered every ~2h — each run lands on a different datacenter region,
+    # producing real requests from real egress IPs (Azure DCs, mostly US/EU).
     - cron: '0 */6 * * *'
+    - cron: '30 2,8,14,20 * * *'
   workflow_dispatch:
 
 jobs:
   warm-and-demand:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run Demand & Edge-Warming Bot
+      - name: Run Demand & Edge-Warming Bot (${{ matrix.os }})
         run: node .github/scripts/demand-bot.mjs
+        env:
+          MONITOR_REGION: ${{ matrix.os }}
