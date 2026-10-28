@@ -9,10 +9,10 @@ Scope: eliminate render-blocking requests (external Google Fonts CSS + synchrono
   EXPECT: FONTCSS-GONE
   EVIDENCE: automatic-evidence=v1; definition-sha256=b26556a5a5a1c775e54e1cd458081fee0e771cd2a90d2db99c1678c9d24a1078; exit=0; EXPECT=matched; output-sha256=0e272b877ab00d3cc8acdbdef6c524a8ee2993dcbe61d8ee5261a2c108f2512e; output-bytes=13; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
-- [x] G2: Inter is self-hosted — woff2 files exist under fonts/, index.html declares @font-face with font-display:swap and preloads a critical weight
-  CHECK: sh -c 'N=$(ls fonts/inter-*.woff2 2>/dev/null | wc -l | tr -d " "); F=$(grep -c "font-display:swap" index.html); P=$(grep -cE "rel=\"preload\"[^>]*inter-" index.html); test "$N" -ge 10 && test "$F" -ge 5 && test "$P" -ge 1 && echo FONTS-SELFHOSTED'
+- [x] G2: Inter is self-hosted — variable woff2 files exist under fonts/ (one file per subset covers weights 100-900), index.html declares @font-face with font-display:swap and preloads the critical subsets
+  CHECK: sh -c 'N=$(ls fonts/inter-var-*.woff2 2>/dev/null | wc -l | tr -d " "); F=$(grep -c "font-display:swap" index.html); P=$(grep -cE "rel=\"preload\"[^>]*inter-var-" index.html); test "$N" -ge 4 && test "$F" -ge 4 && test "$P" -ge 1 && echo FONTS-SELFHOSTED'
   EXPECT: FONTS-SELFHOSTED
-  EVIDENCE: automatic-evidence=v1; definition-sha256=e08d5a8a4e445b718f5273742df8b61aa181375184cd1722de98289e50422391; exit=0; EXPECT=matched; output-sha256=dd162dbcc0a9f6922ec1a58a54abad1c2ea4a04cb65247a34c58e23716daff04; output-bytes=17; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=2b7f6a409cc6adf0047b725f13a6422f76649324b4f42ac0bd30a8c663b23c04; exit=0; EXPECT=matched; output-sha256=dd162dbcc0a9f6922ec1a58a54abad1c2ea4a04cb65247a34c58e23716daff04; output-bytes=17; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
 - [x] G3: i18n.js is deferred and chat-kb.js (480KB) is lazy-loaded on first chat open — no sync script blocks main content and the KB is off the critical path entirely
   CHECK: sh -c 'A=$(grep -c "script src=\"i18n.js?v=2\" defer" index.html); B=$(grep -c "src=\"chat-kb.js\"" index.html); C=$(grep -c "__epKbLoaded" index.html); test "$A" = "1" && test "$B" = "0" && test "$C" -ge 2 && echo SCRIPTS-OK'
@@ -47,12 +47,12 @@ Scope: eliminate render-blocking requests (external Google Fonts CSS + synchrono
 - [x] G9: live PSI mobile — combined image-delivery savings under 400 KiB on deployed URL
   CHECK: node .github/scripts/psi-check.mjs image-delivery
   EXPECT: PSI-PASS
-  EVIDENCE: automatic-evidence=v1; definition-sha256=fa034bec29a7e4f2e9ec59dbc1c8bae42f0e68e583fe2c71a0579ef32e4b64db; exit=0; EXPECT=matched; output-sha256=1157fee263180bfb89b09a024026bc98eb8f4f48bc87b38573299053472db8c1; output-bytes=69; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=fa034bec29a7e4f2e9ec59dbc1c8bae42f0e68e583fe2c71a0579ef32e4b64db; exit=0; EXPECT=matched; output-sha256=7c8bf1af3ed4044dbe73e79f5318f2b42c91437d86efa8106cb81b88a0236d7c; output-bytes=71; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
-- [ ] G10: live PSI mobile — efficient-cache-lifetimes flagged bytes under 250 KiB (requires Cloudflare cache rule; ABANDON with handoff if dashboard unreachable)
+- [x] G10: live PSI mobile — efficient-cache-lifetimes flagged bytes under 250 KiB (requires Cloudflare cache rule; ABANDON with handoff if dashboard unreachable)
   CHECK: node .github/scripts/psi-check.mjs cache-ttl
   EXPECT: PSI-PASS
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=ca88d3ce00073de44c122f20527e52c1a93f05f2eba6b8f7ea3dd67bb636abb2; exit=0; EXPECT=matched; output-sha256=20207ff2d3d7b64448a67d5c7fd26408470bd9baa5a9dfbf5af7c345d495cd39; output-bytes=62; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
-- [ ] G11: visual non-regression — homepage renders in Inter, letter thumbs load, lightbox opens full image (Playwright screenshot + DOM assertions)
-  EVIDENCE: pending
+- [x] G11: visual non-regression — homepage renders in Inter, letter thumbs load, lightbox opens full image (Playwright screenshot + DOM assertions)
+  EVIDENCE: Playwright 2026-10-28 01:38 UTC — document.fonts shows 2 Inter faces loaded, computed font-family "Inter"; all 24/24 thumbs/letter-*.webp complete with naturalWidth>0 after scroll; click opens lv-overlay ("lv-overlay open") loading letters/letter-07.jpg full JPG (naturalWidth>0), no navigation; screenshot g11-verify.png shows Sapienza letter viewer 1/24.
