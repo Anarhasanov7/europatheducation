@@ -14,10 +14,10 @@ Scope: eliminate render-blocking requests (external Google Fonts CSS + synchrono
   EXPECT: FONTS-SELFHOSTED
   EVIDENCE: automatic-evidence=v1; definition-sha256=e08d5a8a4e445b718f5273742df8b61aa181375184cd1722de98289e50422391; exit=0; EXPECT=matched; output-sha256=dd162dbcc0a9f6922ec1a58a54abad1c2ea4a04cb65247a34c58e23716daff04; output-bytes=17; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
-- [x] G3: i18n.js and chat-kb.js are deferred (no sync script blocks the main content)
-  CHECK: sh -c 'A=$(grep -c "script src=\"i18n.js?v=2\" defer" index.html); B=$(grep -c "script src=\"chat-kb.js\" defer" index.html); test "$A" = "1" && test "$B" = "1" && echo SCRIPTS-DEFERRED'
-  EXPECT: SCRIPTS-DEFERRED
-  EVIDENCE: automatic-evidence=v1; definition-sha256=35845f19db75c02fa4ecef95ba263358f9d35cdd456c7e33a0acc4a123691b47; exit=0; EXPECT=matched; output-sha256=54f718b6073ddf51eecf571e8c30baa7bf7d383e4e0c536d5c8e65547abe176a; output-bytes=17; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
+- [x] G3: i18n.js is deferred and chat-kb.js (480KB) is lazy-loaded on first chat open — no sync script blocks main content and the KB is off the critical path entirely
+  CHECK: sh -c 'A=$(grep -c "script src=\"i18n.js?v=2\" defer" index.html); B=$(grep -c "src=\"chat-kb.js\"" index.html); C=$(grep -c "__epKbLoaded" index.html); test "$A" = "1" && test "$B" = "0" && test "$C" -ge 2 && echo SCRIPTS-OK'
+  EXPECT: SCRIPTS-OK
+  EVIDENCE: automatic-evidence=v1; definition-sha256=ef07143547c1d264432b60e36e421d9d09246c77f78c19f62c620b465296ac35; exit=0; EXPECT=matched; output-sha256=0c18a55b327af9647f4667888fa097f9fa0561684e7dccdf41a6eb6bc5f616b7; output-bytes=11; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
 - [x] G4: every letter referenced in index.html has a WebP thumb (<80KB) at /thumbs/ — the /letters/ subtree is hijacked by a Cloudflare Worker (verified via text/plain edge 404s); img tags use thumbs, anchors keep full JPGs
   CHECK: sh -c 'N=$(ls thumbs/letter-*.webp 2>/dev/null | wc -l | tr -d " "); BIG=$(find thumbs -name "*.webp" -size +80k 2>/dev/null | wc -l | tr -d " "); IMGS=$(grep -c "src=\"thumbs/letter-.*\.webp\"" index.html); HREFS=$(grep -c "href=\"letters/letter-.*\.jpg\"" index.html); test "$N" -ge 24 && test "$BIG" = "0" && test "$IMGS" = "24" && test "$HREFS" = "24" && echo THUMBS-OK'
@@ -39,15 +39,15 @@ Scope: eliminate render-blocking requests (external Google Fonts CSS + synchrono
   EXPECT: /0 failed/
   EVIDENCE: automatic-evidence=v1; definition-sha256=4ae186cf965348b364726328e2ca49a63c0a556829430b56e20627e6c33ba52c; exit=0; EXPECT=matched; output-sha256=042aa87c2803856acef1b6444995113e76fc859bc4ec7887097fad3627174203; output-bytes=2400; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
-- [ ] G8: live PSI mobile — render-blocking-resources audit passes on deployed URL
+- [x] G8: live PSI mobile — render-blocking-resources audit passes on deployed URL
   CHECK: node .github/scripts/psi-check.mjs render-blocking
   EXPECT: PSI-PASS
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=bd11d093a4541aa8495bdd0e05d8128738d5b9051a2792c451a4fdcd73303260; exit=0; EXPECT=matched; output-sha256=4a6855ab62bd9c6453fe31ff137575d9efb2976bb44fab4ca14fb05e31abc771; output-bytes=51; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
-- [ ] G9: live PSI mobile — combined image-delivery savings under 400 KiB on deployed URL
+- [x] G9: live PSI mobile — combined image-delivery savings under 400 KiB on deployed URL
   CHECK: node .github/scripts/psi-check.mjs image-delivery
   EXPECT: PSI-PASS
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=fa034bec29a7e4f2e9ec59dbc1c8bae42f0e68e583fe2c71a0579ef32e4b64db; exit=0; EXPECT=matched; output-sha256=1157fee263180bfb89b09a024026bc98eb8f4f48bc87b38573299053472db8c1; output-bytes=69; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
 - [ ] G10: live PSI mobile — efficient-cache-lifetimes flagged bytes under 250 KiB (requires Cloudflare cache rule; ABANDON with handoff if dashboard unreachable)
   CHECK: node .github/scripts/psi-check.mjs cache-ttl

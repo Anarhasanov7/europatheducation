@@ -1577,7 +1577,7 @@
       <div class="partner-desc" data-en="Founded in 1404, the University of Turin is one of Italy's oldest and largest universities, with over 70,000 students. It is a comprehensive research university with strong programs in medicine, law, sciences, and humanities. The university has produced notable alumni including Nobel laureates and Italian political leaders. Its medical school is among the most prestigious in Italy, and the university maintains strong ties with Turin's automotive and tech industries. UniTo offers numerous English-taught programs and has extensive international partnerships. The historic campus is spread across the city center of Turin, a major business and cultural hub in northern Italy.">Основана в 1404 году — один из старейших и крупнейших вузов Италии, более 70 000 студентов. Университет полного профиля с сильными программами по медицине, праву, естественным и гуманитарным наукам. Среди выпускников — нобелевские лауреаты и политические лидеры Италии. Медицинский факультет — один из самых престижных в стране. Сильные связи с автомобильной и технологической индустрией Турина. Многочисленные программы на английском, обширные международные партнёрства. Исторический кампус в центре Турина — крупного делового и культурного центра севера Италии.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/padova.svg" alt="Padova" class="partner-logo" width="71" height="72"></div>
+      <div class="partner-crest"><img src="images/universities/padova.png" alt="Padova" class="partner-logo" width="71" height="72"></div>
       <div class="partner-name">Università di Padova</div>
       <div class="partner-city">Padua · Veneto</div>
       <div class="partner-badge" data-en="QS #219 · est. 1222">QS #219 · 1222 г.</div>
@@ -2703,7 +2703,6 @@
     <button type="submit" aria-label="Отправить" data-en-aria="Send">➤</button>
   </form>
 </div>
-<script src="chat-kb.js" defer></script>
 <script>
 (function(){
   const win = document.getElementById('epChatWindow');
@@ -2715,7 +2714,15 @@
   function openChat(){ win.classList.add('open'); }
   function closeChat(){ win.classList.remove('open'); }
 
-  document.getElementById('epChatLauncher').addEventListener('click', () => win.classList.toggle('open'));
+  document.getElementById('epChatLauncher').addEventListener('click', () => {
+    win.classList.toggle('open');
+    if (!window.__epKbLoaded) {
+      window.__epKbLoaded = true;
+      const s = document.createElement('script');
+      s.src = 'chat-kb.js';
+      document.body.appendChild(s);
+    }
+  });
   document.getElementById('epChatClose').addEventListener('click', closeChat);
 
   const lang = () => (window.edupathI18n ? window.edupathI18n.getCurrentLang() : 'ru');
