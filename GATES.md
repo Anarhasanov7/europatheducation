@@ -42,7 +42,7 @@ Scope: eliminate render-blocking requests (external Google Fonts CSS + synchrono
 - [x] G8: live PSI mobile — render-blocking-resources audit passes on deployed URL
   CHECK: node .github/scripts/psi-check.mjs render-blocking
   EXPECT: PSI-PASS
-  EVIDENCE: automatic-evidence=v1; definition-sha256=bd11d093a4541aa8495bdd0e05d8128738d5b9051a2792c451a4fdcd73303260; exit=0; EXPECT=matched; output-sha256=4a6855ab62bd9c6453fe31ff137575d9efb2976bb44fab4ca14fb05e31abc771; output-bytes=51; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=bd11d093a4541aa8495bdd0e05d8128738d5b9051a2792c451a4fdcd73303260; exit=0; EXPECT=matched; output-sha256=c536b2c6cb6f77d72b8200f4dbfcdd4d0317cd9cdf68d99dcabec3643cd1d590; output-bytes=114; shell=/bin/sh; cwd=/Users/ricci/europatheducation; path=3c24cdda195d/20 entries
 
 - [x] G9: live PSI mobile — combined image-delivery savings under 400 KiB on deployed URL
   CHECK: node .github/scripts/psi-check.mjs image-delivery
