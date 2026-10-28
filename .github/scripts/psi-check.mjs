@@ -32,8 +32,17 @@ async function getResult() {
   return json;
 }
 
-function savingsBytes(audit) {
-  return audit?.details?.overallSavingsBytes || audit?.numericValue || 0;
+// Sum wasted bytes across an insight's items (Lighthouse 13 shape).
+function wastedBytes(audit) {
+  const items = audit?.details?.items || [];
+  let total = 0;
+  const walk = (arr) => arr.forEach(i => {
+    if (typeof i.wastedBytes === 'number') total += i.wastedBytes;
+    if (Array.isArray(i.items)) walk(i.items);
+    if (i.children && typeof i.children === 'object') Object.values(i.children).forEach(c => walk([c]));
+  });
+  walk(items);
+  return total;
 }
 
 const res = await getResult();
@@ -42,48 +51,37 @@ const perf = res.lighthouseResult?.categories?.performance?.score;
 
 if (MODE === 'report') {
   console.log('Performance score:', Math.round((perf ?? 0) * 100));
-  const rb = audits['render-blocking-resources'];
-  console.log('render-blocking-resources: score', rb?.score, 'items', rb?.details?.items?.length ?? 0);
-  (rb?.details?.items || []).forEach(i => console.log('   -', i.url?.slice(0, 110)));
-  const ttl = audits['uses-long-cache-ttl'];
-  console.log('uses-long-cache-ttl: score', ttl?.score, 'savings', Math.round((savingsBytes(ttl) || 0) / 1024), 'KiB');
-  for (const [id, a] of Object.entries(audits)) {
-    const s = savingsBytes(a);
-    if (/image|webp|responsive|optimized/i.test(id) && s > 0)
-      console.log(`${id}: savings ${Math.round(s / 1024)} KiB`);
+  for (const m of ['first-contentful-paint', 'largest-contentful-paint', 'speed-index', 'total-blocking-time', 'cumulative-layout-shift'])
+    console.log(' ', m, '=', audits[m]?.displayValue);
+  for (const id of ['render-blocking-insight', 'image-delivery-insight', 'cache-insight', 'network-dependency-tree-insight', 'unsized-images', 'font-display-insight']) {
+    const a = audits[id];
+    console.log(`${id}: score=${a?.score} wasted=${Math.round(wastedBytes(a) / 1024)}KiB`);
   }
   process.exit(0);
 }
 
 if (MODE === 'render-blocking') {
-  const rb = audits['render-blocking-resources'];
+  const rb = audits['render-blocking-insight'];
   const items = rb?.details?.items || [];
-  console.log('render-blocking items:', items.length);
-  items.forEach(i => console.log('   -', i.url?.slice(0, 110)));
-  if ((rb?.score === 1 || items.length === 0) && rb) { console.log('PSI-PASS'); process.exit(0); }
-  console.log('PSI-FAIL score=' + rb?.score); process.exit(1);
+  console.log('render-blocking-insight score:', rb?.score, 'items:', items.length);
+  items.forEach(i => console.log('   -', (i.url || '').slice(0, 110)));
+  if (rb?.score === 1) { console.log('PSI-PASS'); process.exit(0); }
+  console.log('PSI-FAIL'); process.exit(1);
 }
 
 if (MODE === 'image-delivery') {
-  let total = 0;
-  for (const [id, a] of Object.entries(audits)) {
-    const s = savingsBytes(a);
-    if (/image|webp|responsive|optimized/i.test(id) && s > 0) {
-      total += s;
-      console.log(`${id}: ${Math.round(s / 1024)} KiB`);
-    }
-  }
-  console.log('total image-delivery savings:', Math.round(total / 1024), 'KiB (limit 400)');
+  const a = audits['image-delivery-insight'];
+  const total = wastedBytes(a);
+  console.log('image-delivery-insight score:', a?.score, 'wasted:', Math.round(total / 1024), 'KiB (limit 400)');
   if (total < 400 * 1024) { console.log('PSI-PASS'); process.exit(0); }
   console.log('PSI-FAIL'); process.exit(1);
 }
 
 if (MODE === 'cache-ttl') {
-  const ttl = audits['uses-long-cache-ttl'];
-  const s = savingsBytes(ttl);
-  console.log('cache-ttl flagged savings:', Math.round(s / 1024), 'KiB (limit 250)');
-  (ttl?.details?.items || []).slice(0, 15).forEach(i => console.log('   -', i.url?.slice(0, 100), Math.round((i.totalBytes || 0) / 1024) + 'KiB', 'TTL', i.cacheLifetimeMs ? Math.round(i.cacheLifetimeMs / 3600000) + 'h' : '?'));
-  if (s < 250 * 1024) { console.log('PSI-PASS'); process.exit(0); }
+  const a = audits['cache-insight'];
+  const total = wastedBytes(a);
+  console.log('cache-insight score:', a?.score, 'wasted:', Math.round(total / 1024), 'KiB (limit 250)');
+  if (total < 250 * 1024) { console.log('PSI-PASS'); process.exit(0); }
   console.log('PSI-FAIL'); process.exit(1);
 }
 

@@ -20,10 +20,8 @@
 <link rel="alternate" hreflang="x-default" href="https://europatheducation.eu/">
 
 <!-- Self-hosted Inter font — no render-blocking external CSS -->
-<link rel="preload" href="/fonts/inter-400-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/inter-700-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/inter-900-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/inter-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -108,34 +106,39 @@
 }
 </script>
 <style>
-@font-face{font-family:'Inter';font-style:normal;font-weight:300;font-display:swap;src:url('/fonts/inter-300-cyrillic-ext.woff2') format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
-@font-face{font-family:'Inter';font-style:normal;font-weight:300;font-display:swap;src:url('/fonts/inter-300-cyrillic.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Inter';font-style:normal;font-weight:300;font-display:swap;src:url('/fonts/inter-300-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Inter';font-style:normal;font-weight:300;font-display:swap;src:url('/fonts/inter-300-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/inter-400-cyrillic-ext.woff2') format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
-@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/inter-400-cyrillic.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/inter-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/inter-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/inter-500-cyrillic-ext.woff2') format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
-@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/inter-500-cyrillic.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/inter-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/inter-500-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/inter-600-cyrillic-ext.woff2') format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
-@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/inter-600-cyrillic.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/inter-600-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/inter-600-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/inter-700-cyrillic-ext.woff2') format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
-@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/inter-700-cyrillic.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/inter-700-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/inter-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/inter-800-cyrillic-ext.woff2') format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
-@font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/inter-800-cyrillic.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/inter-800-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/inter-800-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:900;font-display:swap;src:url('/fonts/inter-900-cyrillic-ext.woff2') format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
-@font-face{font-family:'Inter';font-style:normal;font-weight:900;font-display:swap;src:url('/fonts/inter-900-cyrillic.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Inter';font-style:normal;font-weight:900;font-display:swap;src:url('/fonts/inter-900-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Inter';font-style:normal;font-weight:900;font-display:swap;src:url('/fonts/inter-900-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/inter-var-cyrillic-ext.woff2') format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/inter-var-cyrillic.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/inter-var-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/inter-var-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   :root {
     --ink: #080a14;
@@ -1388,7 +1391,7 @@
         <span class="nf-date">27 октября 2026 г.</span>
       </a>
       <a class="nf-item" href="/news/2026-10-27-becas-de-la-agencia-efe-y-la-fundacion-la-caixa-ultima-fase-de-selecci.html">
-        <img class="nf-img" src="https://agenciaefe.es/wp-content/uploads/2025/10/2025_10_23_1904-1.jpg" alt="Стипендии от Агентства «Окружающая среда для Европы» и Фонда «La Caixa», последний этап отбора студентов" width="104" height="76" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=240&amp;h=160&amp;fit=crop&amp;auto=format&amp;q=80'">
+        <img class="nf-img" src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=240&amp;h=160&amp;fit=crop&amp;auto=format&amp;q=80" alt="Стипендии от Агентства «Окружающая среда для Европы» и Фонда «La Caixa», последний этап отбора студентов" width="104" height="76" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=240&amp;h=160&amp;fit=crop&amp;auto=format&amp;q=80'">
         <span class="nf-main">
           <span class="nf-tag">Стипендии</span>
           <span class="nf-title" data-en="Scholarships from the EfE Agency and the &quot;la Caixa&quot; Foundation, last phase of student selection">Стипендии от Агентства «Окружающая среда для Европы» и Фонда «La Caixa», последний этап отбора студентов</span>
@@ -1542,7 +1545,7 @@
 
   <div class="partners-grid">
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/sapienza.svg" alt="Sapienza" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/sapienza.svg" alt="Sapienza" class="partner-logo" width="72" height="21"></div>
       <div class="partner-name">Sapienza Università di Roma</div>
       <div class="partner-city">Rome · Lazio</div>
       <div class="partner-badge">QS #134</div>
@@ -1550,7 +1553,7 @@
       <div class="partner-desc" data-en="Founded in 1303, Sapienza is the largest university in Europe by enrollment, with over 110,000 students. It is consistently ranked as the top university in Italy and among the best in Europe. Notable alumni include Nobel laureates, heads of state, and scientists. The university offers over 250 degree programs across all disciplines, with strong programs in medicine, engineering, physics, and archaeology. Its main campus is located in the heart of Rome, designed by architect Marcello Piacentini. Sapienza is a leading research institution, producing over 10,000 scientific publications annually.">Основана в 1303 году, Сапиенца — крупнейший университет Европы по числу студентов (более 110 000). Занимает первое место в Италии и входит в топ-50 Европы. Выпускники включают нобелевских лауреатов, глав государств и учёных. Предлагает более 250 программ по всем направлениям, особенно сильна в медицине, инженерии, физике и археологии. Главный кампус расположен в центре Рима. Сапиенца — ведущий исследовательский центр, публикующий более 10 000 научных работ ежегодно.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/bologna.png" alt="Bologna" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/bologna.png" alt="Bologna" class="partner-logo" width="72" height="72"></div>
       <div class="partner-name">Università di Bologna</div>
       <div class="partner-city">Bologna · Emilia-Romagna</div>
       <div class="partner-badge" data-en="QS #133 · est. 1088">QS #133 · 1088 г.</div>
@@ -1558,7 +1561,7 @@
       <div class="partner-desc" data-en="Founded in 1088, the University of Bologna is the oldest university in the Western world. It has over 85,000 students across 5 campuses in Bologna, Cesena, Forlì, Ravenna, and Rimini. The university coined the term 'universitas' and established the model for higher education in Europe. It is consistently ranked among the top 150 universities globally. Strong programs include law, medicine, engineering, agriculture, and political science. The university maintains partnerships with over 1,000 international institutions and offers numerous English-taught programs. Bologna is a vibrant student city, known for its food culture and medieval architecture.">Основана в 1088 году — старейший университет Западного мира. Более 85 000 студентов на 5 кампусах. Университет придумал термин 'universitas' и заложил модель высшего образования в Европе. Входит в топ-150 мирового рейтинга. Сильные направления: право, медицина, инженерия, сельское хозяйство, политология. Более 1 000 международных партнёрств, множество программ на английском. Болонья — живой студенческий город, известный гастрономией и средневековой архитектурой.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/pavia.png" alt="UniPv" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/pavia.png" alt="UniPv" class="partner-logo" width="72" height="72"></div>
       <div class="partner-name">Università di Pavia</div>
       <div class="partner-city">Pavia · Lombardy</div>
       <div class="partner-badge" data-en="QS #350 · est. 1361">QS #350 · 1361 г.</div>
@@ -1566,7 +1569,7 @@
       <div class="partner-desc" data-en="Founded in 1361, the University of Pavia is one of the oldest universities in Europe and a leading Italian research institution. It has over 24,000 students and is renowned for medicine, physics, engineering, and law. The university has produced notable alumni including Nobel laureate Camillo Golgi and explorer Gerolamo Cardano. Pavia is a true college town, with students making up a large portion of the population. The university's medical school is among Italy's best, with a historic teaching hospital. UniPv offers numerous English-taught programs and has strong international partnerships. The historic campus features medieval colleges, Renaissance courtyards, and modern research facilities.">Основана в 1361 году — один из старейших университетов Европы и ведущий исследовательский центр Италии. Более 24 000 студентов, известна медициной, физикой, инженерией и правом. Среди выпускников — нобелевский лауреат Камилло Гольджи и учёный Джероламо Кардано. Павия — настоящий университетский город, студенты составляют значительную часть населения. Медицинский факультет — один из лучших в Италии с исторической клинической базой. Многочисленные программы на английском, сильные международные партнёрства. Исторический кампус сочетает средневековые коллегии, ренессансные дворы и современные лаборатории.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/torino.png" alt="UniTo" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/torino.png" alt="UniTo" class="partner-logo" width="72" height="72"></div>
       <div class="partner-name">Università degli Studi di Torino</div>
       <div class="partner-city">Turin · Piedmont</div>
       <div class="partner-badge" data-en="QS #300 · est. 1404">QS #300 · 1404 г.</div>
@@ -1574,7 +1577,7 @@
       <div class="partner-desc" data-en="Founded in 1404, the University of Turin is one of Italy's oldest and largest universities, with over 70,000 students. It is a comprehensive research university with strong programs in medicine, law, sciences, and humanities. The university has produced notable alumni including Nobel laureates and Italian political leaders. Its medical school is among the most prestigious in Italy, and the university maintains strong ties with Turin's automotive and tech industries. UniTo offers numerous English-taught programs and has extensive international partnerships. The historic campus is spread across the city center of Turin, a major business and cultural hub in northern Italy.">Основана в 1404 году — один из старейших и крупнейших вузов Италии, более 70 000 студентов. Университет полного профиля с сильными программами по медицине, праву, естественным и гуманитарным наукам. Среди выпускников — нобелевские лауреаты и политические лидеры Италии. Медицинский факультет — один из самых престижных в стране. Сильные связи с автомобильной и технологической индустрией Турина. Многочисленные программы на английском, обширные международные партнёрства. Исторический кампус в центре Турина — крупного делового и культурного центра севера Италии.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/padova.svg" alt="Padova" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/padova.svg" alt="Padova" class="partner-logo" width="71" height="72"></div>
       <div class="partner-name">Università di Padova</div>
       <div class="partner-city">Padua · Veneto</div>
       <div class="partner-badge" data-en="QS #219 · est. 1222">QS #219 · 1222 г.</div>
@@ -1582,7 +1585,7 @@
       <div class="partner-desc" data-en="Founded in 1222, the University of Padua is one of the oldest universities in the world and a leading Italian research institution. It has over 70,000 students and is renowned for medicine, physics, astronomy, and law. Galileo Galilei taught here for 18 years, and the university's botanical garden, founded in 1545, is the world's oldest. Padua produced pioneering research in anatomy, with the first permanent anatomy theater built in 1594. The university offers numerous English-taught programs and has strong international partnerships. Elena Lucrezia Cornaro Piscopia, the world's first woman to receive a university degree, graduated here in 1678.">Основана в 1222 году — один из старейших университетов мира и ведущий исследовательский центр Италии. Более 70 000 студентов, известна медициной, физикой, астрономией и правом. Галилео Галилей преподавал здесь 18 лет, а ботанический сад (1545) — старейший в мире. Университет внёс новаторский вклад в анатомию: первый постоянный анатомический театр построен в 1594 году. Множество программ на английском, сильные международные связи. Елена Корнаро Пископия — первая в мире женщина, получившая университетскую степень — окончила этот университет в 1678 году.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/milano.png?v=2" alt="UniMi" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/milano.png?v=2" alt="UniMi" class="partner-logo" width="72" height="72"></div>
       <div class="partner-name">Università degli Studi di Milano</div>
       <div class="partner-city">Milan · Lombardy</div>
       <div class="partner-badge">QS #285</div>
@@ -1590,7 +1593,7 @@
       <div class="partner-desc" data-en="Founded in 1924, the University of Milan (UniMi) is one of Italy's largest and most prestigious universities, with over 60,000 students. It is the only Italian university in the League of European Research Universities (LERU). The university offers programs across all disciplines, with particular strength in medicine, law, sciences, and humanities. Its research output is among the highest in Italy, with significant EU funding. The main campus is in the historic Cà Granda building in central Milan. UniMi has strong ties with Milan's business and financial community, offering excellent internship and career opportunities. The university maintains over 500 international partnerships worldwide.">Основана в 1924 году — один из крупнейших и самых престижных вузов Италии, более 60 000 студентов. Единственный итальянский университет в Лиге европейских исследовательских университетов (LERU). Программы по всем направлениям, особенно сильна в медицине, праве, естественных и гуманитарных науках. Один из лидеров Италии по объёму исследований и финансированию ЕС. Главный кампус — в историческом здании Cà Granda в центре Милана. Тесные связи с бизнес-сообществом Милана, отличные возможности для стажировок. Более 500 международных партнёрств.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/pisa.png" alt="UniPi" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/pisa.png" alt="UniPi" class="partner-logo" width="72" height="72"></div>
       <div class="partner-name">Università di Pisa</div>
       <div class="partner-city">Pisa · Tuscany</div>
       <div class="partner-badge" data-en="QS #400 · est. 1343">QS #400 · 1343 г.</div>
@@ -1598,7 +1601,7 @@
       <div class="partner-desc" data-en="Founded in 1343, the University of Pisa is one of Italy's most prestigious and historic universities, with over 50,000 students. It is renowned for physics, mathematics, computer science, and engineering — Galileo Galilei was a student and later a professor here. The university is part of the Pisa University System together with the Scuola Normale Superiore and Sant'Anna School of Advanced Studies, creating one of Europe's most concentrated research hubs. The physics department is world-famous, with close ties to CERN and the European Gravitational Observatory. UniPi offers numerous English-taught programs and has strong international research partnerships. Pisa is a compact, student-friendly city with a rich scientific and cultural heritage.">Основана в 1343 году — один из самых престижных и исторических вузов Италии, более 50 000 студентов. Известна физикой, математикой, информатикой и инженерией — здесь учился и преподавал Галилео Галилей. Входит в Пизанскую университетскую систему со Scuola Normale Superiore и Sant'Anna — один из самых концентрированных исследовательских центров Европы. Физический факультет мирового уровня с тесными связями с CERN и Европейской гравитационной обсерваторией. Многочисленные программы на английском, сильные международные исследовательские партнёрства. Пиза — компактный студенческий город с богатым научным и культурным наследием.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/firenze.png" alt="Firenze" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/firenze.png" alt="Firenze" class="partner-logo" width="66" height="72"></div>
       <div class="partner-name">Università di Firenze</div>
       <div class="partner-city">Florence · Tuscany</div>
       <div class="partner-badge">QS #358</div>
@@ -1606,7 +1609,7 @@
       <div class="partner-desc" data-en="Founded in 1321, the University of Florence is one of Italy's oldest and largest universities, with over 50,000 students. It is a major research institution, particularly strong in Renaissance studies, art history, engineering, and agricultural sciences. The university has produced notable alumni including Nobel laureates and prominent Italian politicians. Its campuses are spread across the historic city of Florence, offering students a unique cultural environment. The university maintains strong international partnerships and offers several English-taught programs. Florence itself is a living museum of Renaissance art and architecture, making it an ideal setting for humanities and arts studies.">Основана в 1321 году — один из старейших и крупнейших вузов Италии, более 50 000 студентов. Крупный исследовательский центр, особенно сильна в ренессансоведении, истории искусств, инженерии и сельскохозяйственных науках. Среди выпускников — нобелевские лауреаты и видные политики. Кампусы расположены по всему историческому центру Флоренции. Сильные международные партнёрства, несколько программ на английском. Флоренция — живой музей искусства и архитектуры эпохи Возрождения, идеальное место для изучения гуманитарных наук.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/roma3.png" alt="Roma Tre" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/roma3.png" alt="Roma Tre" class="partner-logo" width="72" height="15"></div>
       <div class="partner-name">Università degli Studi Roma Tre</div>
       <div class="partner-city">Rome · Lazio</div>
       <div class="partner-badge" data-en="Modern · Growing">Современный · Растущий</div>
@@ -1614,7 +1617,7 @@
       <div class="partner-desc" data-en="Established in 1992, Roma Tre is Rome's youngest and most dynamic public university, with over 35,000 students. Despite its young age, it has quickly become one of Italy's top universities for research quality and internationalization. The university is known for its modern approach to education, with strong programs in engineering, architecture, law, and economics. Roma Tre has a vibrant international community, with numerous English-taught programs and exchange agreements. The campus is located in the Ostiense district of Rome, a rapidly developing creative and tech hub. The university is particularly strong in STEM fields and has growing partnerships with tech companies in Rome.">Основана в 1992 году — самый молодой и динамичный государственный университет Рима, более 35 000 студентов. Несмотря на молодой возраст, быстро вошла в число лучших вузов Италии по качеству исследований и интернационализации. Известна современным подходом к образованию, сильные программы по инженерии, архитектуре, праву и экономике. Активное международное сообщество, множество программ на английском. Кампус в районе Остиенсе — развивающемся креативном и технологическом центре Рима. Особенно сильна в STEM-дисциплинах.</div>
     </div>
     <div class="partner-card" onclick="this.classList.toggle('expanded')">
-      <div class="partner-crest"><img src="images/universities/torvergata.png" alt="Tor Vergata" class="partner-logo"></div>
+      <div class="partner-crest"><img src="images/universities/torvergata.png" alt="Tor Vergata" class="partner-logo" width="72" height="18"></div>
       <div class="partner-name">Università di Roma Tor Vergata</div>
       <div class="partner-city">Rome · Lazio</div>
       <div class="partner-badge" data-en="Research-focused">Исследовательский</div>
