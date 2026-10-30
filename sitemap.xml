@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-10-30-info-day-erasmus-tirocinio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-info-day-erasmus-tirocinio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-info-day-erasmus-tirocinio.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-10-30-erasmus-practicas-2026-2027-adjudicacion-provisional-de-becas-segundo.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-erasmus-practicas-2026-2027-adjudicacion-provisional-de-becas-segundo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-erasmus-practicas-2026-2027-adjudicacion-provisional-de-becas-segundo.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-10-30-se-otorgaron-40-becas-en-el-marco-del-programa-por-el-futuro-de-vietna.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-se-otorgaron-40-becas-en-el-marco-del-programa-por-el-futuro-de-vietna.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-se-otorgaron-40-becas-en-el-marco-del-programa-por-el-futuro-de-vietna.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-10-30-la-universidad-de-salamanca-convoca-dos-becas-de-master-de-8-800-euros.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-la-universidad-de-salamanca-convoca-dos-becas-de-master-de-8-800-euros.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-la-universidad-de-salamanca-convoca-dos-becas-de-master-de-8-800-euros.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-10-30-mas-de-1-000-estudiantes-recibiran-1-6-millones-en-becas-universitaria.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-mas-de-1-000-estudiantes-recibiran-1-6-millones-en-becas-universitaria.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-mas-de-1-000-estudiantes-recibiran-1-6-millones-en-becas-universitaria.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-10-29-resa-abre-su-segunda-residencia-de-estudiantes-en-el-campus-universita.html</loc>
@@ -253,6 +293,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-10-30-info-day-erasmus-tirocinio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-info-day-erasmus-tirocinio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-info-day-erasmus-tirocinio.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-10-30-erasmus-practicas-2026-2027-adjudicacion-provisional-de-becas-segundo.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-erasmus-practicas-2026-2027-adjudicacion-provisional-de-becas-segundo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-erasmus-practicas-2026-2027-adjudicacion-provisional-de-becas-segundo.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-10-30-se-otorgaron-40-becas-en-el-marco-del-programa-por-el-futuro-de-vietna.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-se-otorgaron-40-becas-en-el-marco-del-programa-por-el-futuro-de-vietna.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-se-otorgaron-40-becas-en-el-marco-del-programa-por-el-futuro-de-vietna.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-10-30-la-universidad-de-salamanca-convoca-dos-becas-de-master-de-8-800-euros.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-la-universidad-de-salamanca-convoca-dos-becas-de-master-de-8-800-euros.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-la-universidad-de-salamanca-convoca-dos-becas-de-master-de-8-800-euros.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-10-30-mas-de-1-000-estudiantes-recibiran-1-6-millones-en-becas-universitaria.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-10-30-mas-de-1-000-estudiantes-recibiran-1-6-millones-en-becas-universitaria.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-10-30-mas-de-1-000-estudiantes-recibiran-1-6-millones-en-becas-universitaria.html"/>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-10-29-resa-abre-su-segunda-residencia-de-estudiantes-en-el-campus-universita.html</loc>
