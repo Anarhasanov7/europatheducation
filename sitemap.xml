@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-04</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-04</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-04</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-05-la-universidad-destina-mas-de-1-4-millones-de-euros-a-su-programa-de-b.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-la-universidad-destina-mas-de-1-4-millones-de-euros-a-su-programa-de-b.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-la-universidad-destina-mas-de-1-4-millones-de-euros-a-su-programa-de-b.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-05-tasse-universitarie-pesanti-per-gli-studenti-stranieri-sit-in-a-bari-c.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-tasse-universitarie-pesanti-per-gli-studenti-stranieri-sit-in-a-bari-c.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-tasse-universitarie-pesanti-per-gli-studenti-stranieri-sit-in-a-bari-c.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-05-dossier-vert-demande-d-admission-prealable-dap-pour-une-premiere-inscr.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-dossier-vert-demande-d-admission-prealable-dap-pour-une-premiere-inscr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-dossier-vert-demande-d-admission-prealable-dap-pour-une-premiere-inscr.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-05-congrega-bando-alloggi-per-studenti-universitari.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-congrega-bando-alloggi-per-studenti-universitari.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-congrega-bando-alloggi-per-studenti-universitari.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-05-analyse-la-survie-par-les-etrangers-comment-les-universites-occidental.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-analyse-la-survie-par-les-etrangers-comment-les-universites-occidental.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-analyse-la-survie-par-les-etrangers-comment-les-universites-occidental.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-04-uniba-tasse-piu-alte-per-gli-studenti-stranieri-aumenti-fino-a-2-600-e.html</loc>
@@ -493,6 +533,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-05-la-universidad-destina-mas-de-1-4-millones-de-euros-a-su-programa-de-b.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-la-universidad-destina-mas-de-1-4-millones-de-euros-a-su-programa-de-b.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-la-universidad-destina-mas-de-1-4-millones-de-euros-a-su-programa-de-b.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-05-tasse-universitarie-pesanti-per-gli-studenti-stranieri-sit-in-a-bari-c.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-tasse-universitarie-pesanti-per-gli-studenti-stranieri-sit-in-a-bari-c.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-tasse-universitarie-pesanti-per-gli-studenti-stranieri-sit-in-a-bari-c.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-05-dossier-vert-demande-d-admission-prealable-dap-pour-une-premiere-inscr.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-dossier-vert-demande-d-admission-prealable-dap-pour-une-premiere-inscr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-dossier-vert-demande-d-admission-prealable-dap-pour-une-premiere-inscr.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-05-congrega-bando-alloggi-per-studenti-universitari.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-congrega-bando-alloggi-per-studenti-universitari.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-congrega-bando-alloggi-per-studenti-universitari.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-05-analyse-la-survie-par-les-etrangers-comment-les-universites-occidental.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-05-analyse-la-survie-par-les-etrangers-comment-les-universites-occidental.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-05-analyse-la-survie-par-les-etrangers-comment-les-universites-occidental.html"/>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-04-uniba-tasse-piu-alte-per-gli-studenti-stranieri-aumenti-fino-a-2-600-e.html</loc>
