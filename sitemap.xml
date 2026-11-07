@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-07-gni-otorgo-becas-a-46-estudiantes-de-nuevo-ingreso-de-escasos-recursos.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-gni-otorgo-becas-a-46-estudiantes-de-nuevo-ingreso-de-escasos-recursos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-gni-otorgo-becas-a-46-estudiantes-de-nuevo-ingreso-de-escasos-recursos.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-07-becas-y-ayudas-que-pueden-solicitar-los-estudiantes-de-salamanca-guia.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-becas-y-ayudas-que-pueden-solicitar-los-estudiantes-de-salamanca-guia.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-becas-y-ayudas-que-pueden-solicitar-los-estudiantes-de-salamanca-guia.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-07-la-universidad-san-jorge-reconoce-a-los-estudiantes-que-compaginan-for.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-la-universidad-san-jorge-reconoce-a-los-estudiantes-que-compaginan-for.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-la-universidad-san-jorge-reconoce-a-los-estudiantes-que-compaginan-for.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-07-la-universidad-de-malaga-analiza-como-apoyar-a-los-estudiantes-univers.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-la-universidad-de-malaga-analiza-como-apoyar-a-los-estudiantes-univers.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-la-universidad-de-malaga-analiza-como-apoyar-a-los-estudiantes-univers.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-07-iscrizioni-al-programma-di-mobilita-nazionale-erasmus-italiano-2026-27.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-iscrizioni-al-programma-di-mobilita-nazionale-erasmus-italiano-2026-27.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-iscrizioni-al-programma-di-mobilita-nazionale-erasmus-italiano-2026-27.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-06-erasmus-italiano-a-a-2026-2027-mobilita-nazionale-degli-studenti.html</loc>
@@ -573,6 +613,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-07-gni-otorgo-becas-a-46-estudiantes-de-nuevo-ingreso-de-escasos-recursos.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-gni-otorgo-becas-a-46-estudiantes-de-nuevo-ingreso-de-escasos-recursos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-gni-otorgo-becas-a-46-estudiantes-de-nuevo-ingreso-de-escasos-recursos.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-07-becas-y-ayudas-que-pueden-solicitar-los-estudiantes-de-salamanca-guia.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-becas-y-ayudas-que-pueden-solicitar-los-estudiantes-de-salamanca-guia.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-becas-y-ayudas-que-pueden-solicitar-los-estudiantes-de-salamanca-guia.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-07-la-universidad-san-jorge-reconoce-a-los-estudiantes-que-compaginan-for.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-la-universidad-san-jorge-reconoce-a-los-estudiantes-que-compaginan-for.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-la-universidad-san-jorge-reconoce-a-los-estudiantes-que-compaginan-for.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-07-la-universidad-de-malaga-analiza-como-apoyar-a-los-estudiantes-univers.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-la-universidad-de-malaga-analiza-como-apoyar-a-los-estudiantes-univers.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-la-universidad-de-malaga-analiza-como-apoyar-a-los-estudiantes-univers.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-07-iscrizioni-al-programma-di-mobilita-nazionale-erasmus-italiano-2026-27.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-07-iscrizioni-al-programma-di-mobilita-nazionale-erasmus-italiano-2026-27.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-07-iscrizioni-al-programma-di-mobilita-nazionale-erasmus-italiano-2026-27.html"/>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-06-erasmus-italiano-a-a-2026-2027-mobilita-nazionale-degli-studenti.html</loc>
