@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-08-claves-de-la-nueva-ley-de-universidades-mas-porcentaje-por-patentes-be.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-claves-de-la-nueva-ley-de-universidades-mas-porcentaje-por-patentes-be.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-claves-de-la-nueva-ley-de-universidades-mas-porcentaje-por-patentes-be.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-08-la-diputacion-de-huelva-convoca-27-becas-erasmus-plus-para-realizar-pr.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-la-diputacion-de-huelva-convoca-27-becas-erasmus-plus-para-realizar-pr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-la-diputacion-de-huelva-convoca-27-becas-erasmus-plus-para-realizar-pr.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-08-asturias-extendera-la-gratuidad-de-la-matricula-universitaria-a-todos.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-asturias-extendera-la-gratuidad-de-la-matricula-universitaria-a-todos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-asturias-extendera-la-gratuidad-de-la-matricula-universitaria-a-todos.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-08-melania-trump-y-la-universidad-de-luisiana-anuncian-becas-para-estudia.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-melania-trump-y-la-universidad-de-luisiana-anuncian-becas-para-estudia.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-melania-trump-y-la-universidad-de-luisiana-anuncian-becas-para-estudia.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-08-cuatro-universidades-espanolas-ofrecen-becas-del-100-de-la-matricula-d.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-cuatro-universidades-espanolas-ofrecen-becas-del-100-de-la-matricula-d.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-cuatro-universidades-espanolas-ofrecen-becas-del-100-de-la-matricula-d.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-07-gni-otorgo-becas-a-46-estudiantes-de-nuevo-ingreso-de-escasos-recursos.html</loc>
@@ -613,6 +653,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-08-claves-de-la-nueva-ley-de-universidades-mas-porcentaje-por-patentes-be.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-claves-de-la-nueva-ley-de-universidades-mas-porcentaje-por-patentes-be.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-claves-de-la-nueva-ley-de-universidades-mas-porcentaje-por-patentes-be.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-08-la-diputacion-de-huelva-convoca-27-becas-erasmus-plus-para-realizar-pr.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-la-diputacion-de-huelva-convoca-27-becas-erasmus-plus-para-realizar-pr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-la-diputacion-de-huelva-convoca-27-becas-erasmus-plus-para-realizar-pr.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-08-asturias-extendera-la-gratuidad-de-la-matricula-universitaria-a-todos.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-asturias-extendera-la-gratuidad-de-la-matricula-universitaria-a-todos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-asturias-extendera-la-gratuidad-de-la-matricula-universitaria-a-todos.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-08-melania-trump-y-la-universidad-de-luisiana-anuncian-becas-para-estudia.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-melania-trump-y-la-universidad-de-luisiana-anuncian-becas-para-estudia.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-melania-trump-y-la-universidad-de-luisiana-anuncian-becas-para-estudia.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-08-cuatro-universidades-espanolas-ofrecen-becas-del-100-de-la-matricula-d.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-08-cuatro-universidades-espanolas-ofrecen-becas-del-100-de-la-matricula-d.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-08-cuatro-universidades-espanolas-ofrecen-becas-del-100-de-la-matricula-d.html"/>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-07-gni-otorgo-becas-a-46-estudiantes-de-nuevo-ingreso-de-escasos-recursos.html</loc>
