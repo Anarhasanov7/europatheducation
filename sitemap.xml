@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-09-universites-francaises-campus-france-algerie-prolonge-les-delais-d-ins.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-universites-francaises-campus-france-algerie-prolonge-les-delais-d-ins.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-universites-francaises-campus-france-algerie-prolonge-les-delais-d-ins.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-09-la-consejeria-de-fomento-universitario-modificara-el-pliego-de-licitac.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-la-consejeria-de-fomento-universitario-modificara-el-pliego-de-licitac.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-la-consejeria-de-fomento-universitario-modificara-el-pliego-de-licitac.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-09-las-universidades-pierden-estudiantes-mientras-las-carreras-tecnicas-g.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-las-universidades-pierden-estudiantes-mientras-las-carreras-tecnicas-g.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-las-universidades-pierden-estudiantes-mientras-las-carreras-tecnicas-g.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-09-borse-di-studio-a-varenna-aperto-il-bando-per-diplomati-e-laureati.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-borse-di-studio-a-varenna-aperto-il-bando-per-diplomati-e-laureati.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-borse-di-studio-a-varenna-aperto-il-bando-per-diplomati-e-laureati.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-09-diputacion-oferta-27-becas-erasmus-para-que-estudiantes-de-huelva-pued.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-diputacion-oferta-27-becas-erasmus-para-que-estudiantes-de-huelva-pued.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-diputacion-oferta-27-becas-erasmus-para-que-estudiantes-de-huelva-pued.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-08-claves-de-la-nueva-ley-de-universidades-mas-porcentaje-por-patentes-be.html</loc>
@@ -653,6 +693,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-09-universites-francaises-campus-france-algerie-prolonge-les-delais-d-ins.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-universites-francaises-campus-france-algerie-prolonge-les-delais-d-ins.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-universites-francaises-campus-france-algerie-prolonge-les-delais-d-ins.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-09-la-consejeria-de-fomento-universitario-modificara-el-pliego-de-licitac.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-la-consejeria-de-fomento-universitario-modificara-el-pliego-de-licitac.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-la-consejeria-de-fomento-universitario-modificara-el-pliego-de-licitac.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-09-las-universidades-pierden-estudiantes-mientras-las-carreras-tecnicas-g.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-las-universidades-pierden-estudiantes-mientras-las-carreras-tecnicas-g.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-las-universidades-pierden-estudiantes-mientras-las-carreras-tecnicas-g.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-09-borse-di-studio-a-varenna-aperto-il-bando-per-diplomati-e-laureati.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-borse-di-studio-a-varenna-aperto-il-bando-per-diplomati-e-laureati.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-borse-di-studio-a-varenna-aperto-il-bando-per-diplomati-e-laureati.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-09-diputacion-oferta-27-becas-erasmus-para-que-estudiantes-de-huelva-pued.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-09-diputacion-oferta-27-becas-erasmus-para-que-estudiantes-de-huelva-pued.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-09-diputacion-oferta-27-becas-erasmus-para-que-estudiantes-de-huelva-pued.html"/>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-08-claves-de-la-nueva-ley-de-universidades-mas-porcentaje-por-patentes-be.html</loc>
