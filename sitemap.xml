@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-12-fundacion-endesa-y-la-universidad-pontificia-comillas-conceden-sus-xi.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-fundacion-endesa-y-la-universidad-pontificia-comillas-conceden-sus-xi.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-fundacion-endesa-y-la-universidad-pontificia-comillas-conceden-sus-xi.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-12-la-huelga-general-llega-a-las-universidades-facultades-cerradas-piquet.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-la-huelga-general-llega-a-las-universidades-facultades-cerradas-piquet.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-la-huelga-general-llega-a-las-universidades-facultades-cerradas-piquet.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-12-la-escuela-universitaria-real-madrid-universidad-europea-y-la-universi.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-la-escuela-universitaria-real-madrid-universidad-europea-y-la-universi.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-la-escuela-universitaria-real-madrid-universidad-europea-y-la-universi.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-12-l-ecole-universitaire-real-madrid-universidad-europea-et-l-universite.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-l-ecole-universitaire-real-madrid-universidad-europea-et-l-universite.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-l-ecole-universitaire-real-madrid-universidad-europea-et-l-universite.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-12-el-cabildo-resuelve-las-becas-erasmus-y-sicue-de-los-estudiantes-gomer.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-el-cabildo-resuelve-las-becas-erasmus-y-sicue-de-los-estudiantes-gomer.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-el-cabildo-resuelve-las-becas-erasmus-y-sicue-de-los-estudiantes-gomer.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-11-el-cabildo-de-tenerife-destina-75-000-euros-a-becas-erasmus-de-formaci.html</loc>
@@ -773,6 +813,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-12-fundacion-endesa-y-la-universidad-pontificia-comillas-conceden-sus-xi.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-fundacion-endesa-y-la-universidad-pontificia-comillas-conceden-sus-xi.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-fundacion-endesa-y-la-universidad-pontificia-comillas-conceden-sus-xi.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-12-la-huelga-general-llega-a-las-universidades-facultades-cerradas-piquet.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-la-huelga-general-llega-a-las-universidades-facultades-cerradas-piquet.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-la-huelga-general-llega-a-las-universidades-facultades-cerradas-piquet.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-12-la-escuela-universitaria-real-madrid-universidad-europea-y-la-universi.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-la-escuela-universitaria-real-madrid-universidad-europea-y-la-universi.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-la-escuela-universitaria-real-madrid-universidad-europea-y-la-universi.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-12-l-ecole-universitaire-real-madrid-universidad-europea-et-l-universite.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-l-ecole-universitaire-real-madrid-universidad-europea-et-l-universite.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-l-ecole-universitaire-real-madrid-universidad-europea-et-l-universite.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-12-el-cabildo-resuelve-las-becas-erasmus-y-sicue-de-los-estudiantes-gomer.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-12-el-cabildo-resuelve-las-becas-erasmus-y-sicue-de-los-estudiantes-gomer.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-12-el-cabildo-resuelve-las-becas-erasmus-y-sicue-de-los-estudiantes-gomer.html"/>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-11-el-cabildo-de-tenerife-destina-75-000-euros-a-becas-erasmus-de-formaci.html</loc>
