@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-14-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per-la-r.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per-la-r.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per-la-r.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-14-iss-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-iss-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-iss-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-14-logement-etudiant-rentree-universitaire-les-candidatures-pour-un-logem.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-logement-etudiant-rentree-universitaire-les-candidatures-pour-un-logem.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-logement-etudiant-rentree-universitaire-les-candidatures-pour-un-logem.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-14-fundacion-cuatrecasas-lanza-varias-becas-de-4-000-euros-cada-una-para.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-fundacion-cuatrecasas-lanza-varias-becas-de-4-000-euros-cada-una-para.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-fundacion-cuatrecasas-lanza-varias-becas-de-4-000-euros-cada-una-para.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-14-la-universidad-de-malaga-refuerza-su-compromiso-con-los-estudiantes-co.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-la-universidad-de-malaga-refuerza-su-compromiso-con-los-estudiantes-co.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-la-universidad-de-malaga-refuerza-su-compromiso-con-los-estudiantes-co.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-13-bando-alloggi-per-studenti-prorogata-la-scadenza-per-l-ultimazione-dei.html</loc>
@@ -853,6 +893,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-14-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per-la-r.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per-la-r.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per-la-r.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-14-iss-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-iss-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-iss-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-14-logement-etudiant-rentree-universitaire-les-candidatures-pour-un-logem.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-logement-etudiant-rentree-universitaire-les-candidatures-pour-un-logem.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-logement-etudiant-rentree-universitaire-les-candidatures-pour-un-logem.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-14-fundacion-cuatrecasas-lanza-varias-becas-de-4-000-euros-cada-una-para.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-fundacion-cuatrecasas-lanza-varias-becas-de-4-000-euros-cada-una-para.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-fundacion-cuatrecasas-lanza-varias-becas-de-4-000-euros-cada-una-para.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-14-la-universidad-de-malaga-refuerza-su-compromiso-con-los-estudiantes-co.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-14-la-universidad-de-malaga-refuerza-su-compromiso-con-los-estudiantes-co.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-14-la-universidad-de-malaga-refuerza-su-compromiso-con-los-estudiantes-co.html"/>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-13-bando-alloggi-per-studenti-prorogata-la-scadenza-per-l-ultimazione-dei.html</loc>
