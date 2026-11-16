@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-16-scienze-e-tecnologie-quantistiche-accordo-tra-l-universita-di-parma-e.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-scienze-e-tecnologie-quantistiche-accordo-tra-l-universita-di-parma-e.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-scienze-e-tecnologie-quantistiche-accordo-tra-l-universita-di-parma-e.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-16-etudiants-etrangers-en-france-un-universitaire-demonte-les-chiffres-su.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-etudiants-etrangers-en-france-un-universitaire-demonte-les-chiffres-su.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-etudiants-etrangers-en-france-un-universitaire-demonte-les-chiffres-su.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-16-master-erasmus-mundus-resco-en-ferrol-plazas-y-becas.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-master-erasmus-mundus-resco-en-ferrol-plazas-y-becas.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-master-erasmus-mundus-resco-en-ferrol-plazas-y-becas.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-16-beca-para-estudiantes-universitarios-que-incluye-la-exencion-de-las-ta.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-beca-para-estudiantes-universitarios-que-incluye-la-exencion-de-las-ta.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-beca-para-estudiantes-universitarios-que-incluye-la-exencion-de-las-ta.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-16-novelda-dara-74-becas-de-300-euros-a-estudiantes-universitarios-o-de-f.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-novelda-dara-74-becas-de-300-euros-a-estudiantes-universitarios-o-de-f.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-novelda-dara-74-becas-de-300-euros-a-estudiantes-universitarios-o-de-f.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-15-iss-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per.html</loc>
@@ -933,6 +973,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-16-scienze-e-tecnologie-quantistiche-accordo-tra-l-universita-di-parma-e.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-scienze-e-tecnologie-quantistiche-accordo-tra-l-universita-di-parma-e.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-scienze-e-tecnologie-quantistiche-accordo-tra-l-universita-di-parma-e.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-16-etudiants-etrangers-en-france-un-universitaire-demonte-les-chiffres-su.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-etudiants-etrangers-en-france-un-universitaire-demonte-les-chiffres-su.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-etudiants-etrangers-en-france-un-universitaire-demonte-les-chiffres-su.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-16-master-erasmus-mundus-resco-en-ferrol-plazas-y-becas.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-master-erasmus-mundus-resco-en-ferrol-plazas-y-becas.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-master-erasmus-mundus-resco-en-ferrol-plazas-y-becas.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-16-beca-para-estudiantes-universitarios-que-incluye-la-exencion-de-las-ta.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-beca-para-estudiantes-universitarios-que-incluye-la-exencion-de-las-ta.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-beca-para-estudiantes-universitarios-que-incluye-la-exencion-de-las-ta.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-16-novelda-dara-74-becas-de-300-euros-a-estudiantes-universitarios-o-de-f.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-16-novelda-dara-74-becas-de-300-euros-a-estudiantes-universitarios-o-de-f.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-16-novelda-dara-74-becas-de-300-euros-a-estudiantes-universitarios-o-de-f.html"/>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-15-iss-al-via-borse-di-studio-per-neolaureati-grazie-all-evento-note-per.html</loc>
