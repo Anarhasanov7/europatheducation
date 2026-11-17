@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-17-villa-san-pietro-borse-di-studio-per-diplomati-e-laureati-domande-entr.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-villa-san-pietro-borse-di-studio-per-diplomati-e-laureati-domande-entr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-villa-san-pietro-borse-di-studio-per-diplomati-e-laureati-domande-entr.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-17-erasmus-bips-2026-2027-resolucion-definitiva-de-becas-segundo-plazo.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-erasmus-bips-2026-2027-resolucion-definitiva-de-becas-segundo-plazo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-erasmus-bips-2026-2027-resolucion-definitiva-de-becas-segundo-plazo.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-17-los-estudiantes-internacionales-se-alejan-de-las-universidades-de-ee-u.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-los-estudiantes-internacionales-se-alejan-de-las-universidades-de-ee-u.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-los-estudiantes-internacionales-se-alejan-de-las-universidades-de-ee-u.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-17-lavoro-stage-e-borse-di-studio-per-diplomati-e-laureati-opportunita-di.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-lavoro-stage-e-borse-di-studio-per-diplomati-e-laureati-opportunita-di.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-lavoro-stage-e-borse-di-studio-per-diplomati-e-laureati-opportunita-di.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-17-el-ayuntamiento-aprueba-la-distribucion-de-las-ayudas-a-estudiantes-un.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-el-ayuntamiento-aprueba-la-distribucion-de-las-ayudas-a-estudiantes-un.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-el-ayuntamiento-aprueba-la-distribucion-de-las-ayudas-a-estudiantes-un.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-16-scienze-e-tecnologie-quantistiche-accordo-tra-l-universita-di-parma-e.html</loc>
@@ -973,6 +1013,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-17-villa-san-pietro-borse-di-studio-per-diplomati-e-laureati-domande-entr.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-villa-san-pietro-borse-di-studio-per-diplomati-e-laureati-domande-entr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-villa-san-pietro-borse-di-studio-per-diplomati-e-laureati-domande-entr.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-17-erasmus-bips-2026-2027-resolucion-definitiva-de-becas-segundo-plazo.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-erasmus-bips-2026-2027-resolucion-definitiva-de-becas-segundo-plazo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-erasmus-bips-2026-2027-resolucion-definitiva-de-becas-segundo-plazo.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-17-los-estudiantes-internacionales-se-alejan-de-las-universidades-de-ee-u.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-los-estudiantes-internacionales-se-alejan-de-las-universidades-de-ee-u.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-los-estudiantes-internacionales-se-alejan-de-las-universidades-de-ee-u.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-17-lavoro-stage-e-borse-di-studio-per-diplomati-e-laureati-opportunita-di.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-lavoro-stage-e-borse-di-studio-per-diplomati-e-laureati-opportunita-di.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-lavoro-stage-e-borse-di-studio-per-diplomati-e-laureati-opportunita-di.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-17-el-ayuntamiento-aprueba-la-distribucion-de-las-ayudas-a-estudiantes-un.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-17-el-ayuntamiento-aprueba-la-distribucion-de-las-ayudas-a-estudiantes-un.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-17-el-ayuntamiento-aprueba-la-distribucion-de-las-ayudas-a-estudiantes-un.html"/>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-16-scienze-e-tecnologie-quantistiche-accordo-tra-l-universita-di-parma-e.html</loc>
