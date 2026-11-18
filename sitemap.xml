@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-18-la-fundacion-privada-reddis-entrega-17-becas-de-movilidad-para-el-curs.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-la-fundacion-privada-reddis-entrega-17-becas-de-movilidad-para-el-curs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-la-fundacion-privada-reddis-entrega-17-becas-de-movilidad-para-el-curs.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-18-los-estudiantes-y-caritas-ofrecen-75-becas-sociales-para-universitario.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-los-estudiantes-y-caritas-ofrecen-75-becas-sociales-para-universitario.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-los-estudiantes-y-caritas-ofrecen-75-becas-sociales-para-universitario.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-18-aragon-concede-160-becas-de-excelencia-para-reconocer-el-talento-y-el.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-aragon-concede-160-becas-de-excelencia-para-reconocer-el-talento-y-el.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-aragon-concede-160-becas-de-excelencia-para-reconocer-el-talento-y-el.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-18-las-universitarios-ya-pueden-solicitar-las-becas-medrano-de-movilidad.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-las-universitarios-ya-pueden-solicitar-las-becas-medrano-de-movilidad.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-las-universitarios-ya-pueden-solicitar-las-becas-medrano-de-movilidad.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-18-el-ministerio-de-ciencia-innovacion-y-universidades-pone-en-marcha-el.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-el-ministerio-de-ciencia-innovacion-y-universidades-pone-en-marcha-el.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-el-ministerio-de-ciencia-innovacion-y-universidades-pone-en-marcha-el.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-17-villa-san-pietro-borse-di-studio-per-diplomati-e-laureati-domande-entr.html</loc>
@@ -1013,6 +1053,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-18-la-fundacion-privada-reddis-entrega-17-becas-de-movilidad-para-el-curs.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-la-fundacion-privada-reddis-entrega-17-becas-de-movilidad-para-el-curs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-la-fundacion-privada-reddis-entrega-17-becas-de-movilidad-para-el-curs.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-18-los-estudiantes-y-caritas-ofrecen-75-becas-sociales-para-universitario.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-los-estudiantes-y-caritas-ofrecen-75-becas-sociales-para-universitario.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-los-estudiantes-y-caritas-ofrecen-75-becas-sociales-para-universitario.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-18-aragon-concede-160-becas-de-excelencia-para-reconocer-el-talento-y-el.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-aragon-concede-160-becas-de-excelencia-para-reconocer-el-talento-y-el.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-aragon-concede-160-becas-de-excelencia-para-reconocer-el-talento-y-el.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-18-las-universitarios-ya-pueden-solicitar-las-becas-medrano-de-movilidad.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-las-universitarios-ya-pueden-solicitar-las-becas-medrano-de-movilidad.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-las-universitarios-ya-pueden-solicitar-las-becas-medrano-de-movilidad.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-18-el-ministerio-de-ciencia-innovacion-y-universidades-pone-en-marcha-el.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-18-el-ministerio-de-ciencia-innovacion-y-universidades-pone-en-marcha-el.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-18-el-ministerio-de-ciencia-innovacion-y-universidades-pone-en-marcha-el.html"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-17-villa-san-pietro-borse-di-studio-per-diplomati-e-laureati-domande-entr.html</loc>
