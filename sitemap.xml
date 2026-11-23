@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-22</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-22</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-22</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-23-la-eurocamara-pide-becas-mas-altas-y-acceso-a-la-vivienda-para-los-era.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-la-eurocamara-pide-becas-mas-altas-y-acceso-a-la-vivienda-para-los-era.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-la-eurocamara-pide-becas-mas-altas-y-acceso-a-la-vivienda-para-los-era.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-23-gli-universitari-del-polo-pontino-alloggi-per-studenti-fuori-latina-no.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-gli-universitari-del-polo-pontino-alloggi-per-studenti-fuori-latina-no.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-gli-universitari-del-polo-pontino-alloggi-per-studenti-fuori-latina-no.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-23-jesi-marconi-pieralisi-nuovo-bando-per-la-mobilita-erasmus.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-jesi-marconi-pieralisi-nuovo-bando-per-la-mobilita-erasmus.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-jesi-marconi-pieralisi-nuovo-bando-per-la-mobilita-erasmus.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-23-universita-di-torino-bando-di-ammissione-alla-scuola-di-specializzazio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-universita-di-torino-bando-di-ammissione-alla-scuola-di-specializzazio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-universita-di-torino-bando-di-ammissione-alla-scuola-di-specializzazio.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-23-fratelli-d-italia-propone-retirar-becas-a-estudiantes-investigados-y-a.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-fratelli-d-italia-propone-retirar-becas-a-estudiantes-investigados-y-a.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-fratelli-d-italia-propone-retirar-becas-a-estudiantes-investigados-y-a.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-22-unicaja-y-unir-ofreceran-100-becas-para-cursar-el-titulo-propio-univer.html</loc>
@@ -1213,6 +1253,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-23-la-eurocamara-pide-becas-mas-altas-y-acceso-a-la-vivienda-para-los-era.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-la-eurocamara-pide-becas-mas-altas-y-acceso-a-la-vivienda-para-los-era.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-la-eurocamara-pide-becas-mas-altas-y-acceso-a-la-vivienda-para-los-era.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-23-gli-universitari-del-polo-pontino-alloggi-per-studenti-fuori-latina-no.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-gli-universitari-del-polo-pontino-alloggi-per-studenti-fuori-latina-no.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-gli-universitari-del-polo-pontino-alloggi-per-studenti-fuori-latina-no.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-23-jesi-marconi-pieralisi-nuovo-bando-per-la-mobilita-erasmus.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-jesi-marconi-pieralisi-nuovo-bando-per-la-mobilita-erasmus.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-jesi-marconi-pieralisi-nuovo-bando-per-la-mobilita-erasmus.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-23-universita-di-torino-bando-di-ammissione-alla-scuola-di-specializzazio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-universita-di-torino-bando-di-ammissione-alla-scuola-di-specializzazio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-universita-di-torino-bando-di-ammissione-alla-scuola-di-specializzazio.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-23-fratelli-d-italia-propone-retirar-becas-a-estudiantes-investigados-y-a.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-23-fratelli-d-italia-propone-retirar-becas-a-estudiantes-investigados-y-a.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-23-fratelli-d-italia-propone-retirar-becas-a-estudiantes-investigados-y-a.html"/>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-22-unicaja-y-unir-ofreceran-100-becas-para-cursar-el-titulo-propio-univer.html</loc>
