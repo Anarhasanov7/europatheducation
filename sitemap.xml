@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-24</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-24</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-24</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-25-imprese-sarde-a-cagliari-riparte-il-master-luiss-confindustria-borsa-d.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-imprese-sarde-a-cagliari-riparte-il-master-luiss-confindustria-borsa-d.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-imprese-sarde-a-cagliari-riparte-il-master-luiss-confindustria-borsa-d.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-25-bando-unico-per-la-mobilita-europea-e-internazionale-domande-entro-il.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-bando-unico-per-la-mobilita-europea-e-internazionale-domande-entro-il.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-bando-unico-per-la-mobilita-europea-e-internazionale-domande-entro-il.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-25-kadora-apuesta-por-el-desarrollo-de-los-estudiantes-como-diferencial-e.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-kadora-apuesta-por-el-desarrollo-de-los-estudiantes-como-diferencial-e.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-kadora-apuesta-por-el-desarrollo-de-los-estudiantes-como-diferencial-e.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-25-la-diputacion-permite-que-18-estudiantes-de-la-escuela-de-hosteleria-c.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-la-diputacion-permite-que-18-estudiantes-de-la-escuela-de-hosteleria-c.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-la-diputacion-permite-que-18-estudiantes-de-la-escuela-de-hosteleria-c.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-25-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-24-what-the-cpt-dispute-reveals-about-the-promise-of-a-us-education.html</loc>
@@ -1293,6 +1333,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-25-imprese-sarde-a-cagliari-riparte-il-master-luiss-confindustria-borsa-d.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-imprese-sarde-a-cagliari-riparte-il-master-luiss-confindustria-borsa-d.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-imprese-sarde-a-cagliari-riparte-il-master-luiss-confindustria-borsa-d.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-25-bando-unico-per-la-mobilita-europea-e-internazionale-domande-entro-il.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-bando-unico-per-la-mobilita-europea-e-internazionale-domande-entro-il.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-bando-unico-per-la-mobilita-europea-e-internazionale-domande-entro-il.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-25-kadora-apuesta-por-el-desarrollo-de-los-estudiantes-como-diferencial-e.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-kadora-apuesta-por-el-desarrollo-de-los-estudiantes-como-diferencial-e.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-kadora-apuesta-por-el-desarrollo-de-los-estudiantes-como-diferencial-e.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-25-la-diputacion-permite-que-18-estudiantes-de-la-escuela-de-hosteleria-c.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-la-diputacion-permite-que-18-estudiantes-de-la-escuela-de-hosteleria-c.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-la-diputacion-permite-que-18-estudiantes-de-la-escuela-de-hosteleria-c.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-25-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-25-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-25-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html"/>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-24-what-the-cpt-dispute-reveals-about-the-promise-of-a-us-education.html</loc>
