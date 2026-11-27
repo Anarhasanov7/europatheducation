@@ -4,7 +4,7 @@
     <loc>https://europatheducation.eu/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/"/>
-    <lastmod>2026-11-26</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
     <loc>https://europatheducation.eu/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-26</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
     <loc>https://europatheducation.eu/en/news/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/"/>
-    <lastmod>2026-11-26</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,6 +53,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-27-laura-vinos-becada-por-la-residencia-de-estudiantes-de-madrid-fundacio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-laura-vinos-becada-por-la-residencia-de-estudiantes-de-madrid-fundacio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-laura-vinos-becada-por-la-residencia-de-estudiantes-de-madrid-fundacio.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-27-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-27-la-ual-premia-el-talento-de-sus-estudiantes-con-la-entrega-de-27-becas.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-la-ual-premia-el-talento-de-sus-estudiantes-con-la-entrega-de-27-becas.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-la-ual-premia-el-talento-de-sus-estudiantes-con-la-entrega-de-27-becas.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-27-bourses-orientation-insertion-etudiants-et-presidents-d-universite-pro.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-bourses-orientation-insertion-etudiants-et-presidents-d-universite-pro.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-bourses-orientation-insertion-etudiants-et-presidents-d-universite-pro.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/news/2026-11-27-la-universidad-de-almeria-concede-27-becas-de-excelencia-a-sus-estudia.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-la-universidad-de-almeria-concede-27-becas-de-excelencia-a-sus-estudia.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-la-universidad-de-almeria-concede-27-becas-de-excelencia-a-sus-estudia.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/news/2026-11-26-uk-tne-expands-amid-uzbekistan-8217-s-higher-education-boom.html</loc>
@@ -1373,6 +1413,46 @@
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-27-laura-vinos-becada-por-la-residencia-de-estudiantes-de-madrid-fundacio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-laura-vinos-becada-por-la-residencia-de-estudiantes-de-madrid-fundacio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-laura-vinos-becada-por-la-residencia-de-estudiantes-de-madrid-fundacio.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-27-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-borse-di-studio-a-studenti-universitari-migranti-della-fondazione-erri.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-27-la-ual-premia-el-talento-de-sus-estudiantes-con-la-entrega-de-27-becas.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-la-ual-premia-el-talento-de-sus-estudiantes-con-la-entrega-de-27-becas.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-la-ual-premia-el-talento-de-sus-estudiantes-con-la-entrega-de-27-becas.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-27-bourses-orientation-insertion-etudiants-et-presidents-d-universite-pro.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-bourses-orientation-insertion-etudiants-et-presidents-d-universite-pro.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-bourses-orientation-insertion-etudiants-et-presidents-d-universite-pro.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://europatheducation.eu/en/news/2026-11-27-la-universidad-de-almeria-concede-27-becas-de-excelencia-a-sus-estudia.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://europatheducation.eu/news/2026-11-27-la-universidad-de-almeria-concede-27-becas-de-excelencia-a-sus-estudia.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://europatheducation.eu/en/news/2026-11-27-la-universidad-de-almeria-concede-27-becas-de-excelencia-a-sus-estudia.html"/>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://europatheducation.eu/en/news/2026-11-26-uk-tne-expands-amid-uzbekistan-8217-s-higher-education-boom.html</loc>
